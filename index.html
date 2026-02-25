@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>WR Cleaning Service</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,41 +211,39 @@ textarea.form-control{resize:vertical;min-height:80px}
   .sidebar-overlay.open{display:block}
 }
 
-/* ── LOADING ── */
-#loading-overlay{position:fixed;inset:0;background:rgba(15,23,42,.88);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#f1f5f9}
+/* LOADING */
+#loading-overlay{position:fixed;inset:0;background:rgba(15,23,42,.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#f1f5f9}
 #loading-overlay.hidden{display:none}
 .spinner{width:46px;height:46px;border:4px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* ── PASS TOGGLE ── */
+/* PASS */
 .pass-wrapper{position:relative;display:flex;align-items:center}
 .pass-wrapper .form-control{flex:1;padding-right:44px}
 .pass-toggle{position:absolute;right:10px;background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;-webkit-tap-highlight-color:transparent}
-/* ── ROLE BADGES ── */
+/* BADGES */
 .role-badge-adm{background:#dbeafe;color:#1d4ed8;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
 .role-badge-col{background:#d1fae5;color:#065f46;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
 .no-login-badge{background:#f1f5f9;color:#94a3b8;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600}
-/* ── NOTIF ── */
+/* NOTIF */
 .notif-item{border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
 .notif-item.pending{background:#fef2f2;border-color:rgba(239,68,68,.2)}.notif-item.read{background:var(--card);opacity:.8}
-/* ── AGENDA SCROLL ── */
+/* AGENDA */
 .week-scroll-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
-.week-scroll-wrapper::-webkit-scrollbar{height:4px}.week-scroll-wrapper::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .schedule-header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .schedule-nav-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .schedule-item{position:relative}
 .sch-edit-btn{display:none;position:absolute;top:2px;right:2px;background:rgba(255,255,255,.92);border:1px solid #e2e8f0;border-radius:4px;padding:2px 5px;cursor:pointer;font-size:10px;z-index:2}
 .schedule-item:hover .sch-edit-btn{display:block}
-/* ── TABLE → CARDS MOBILE ── */
+/* TABLE MOBILE */
 @media(max-width:620px){
   .table{display:block}.table thead{display:none}.table tbody{display:block}
   .table tr{display:flex;flex-wrap:wrap;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;padding:10px;background:var(--card);gap:4px}
-  .table td{display:inline-flex;align-items:center;font-size:13px;padding:2px 6px;border:none}
-  .table td:last-child{margin-left:auto}
+  .table td{display:inline-flex;align-items:center;font-size:13px;padding:2px 6px;border:none}.table td:last-child{margin-left:auto}
 }
-/* ── SIDEBAR OVERLAY ── */
+/* SIDEBAR OVERLAY */
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:199}
 .sidebar-overlay.show{display:block}
-/* ── MOBILE LAYOUT ── */
+/* MOBILE */
 @media(max-width:768px){
   .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:200;transform:translateX(-100%);transition:transform .25s ease;width:240px!important;box-shadow:4px 0 24px rgba(0,0,0,.18)}
   .sidebar.open{transform:translateX(0)}
@@ -254,36 +253,23 @@ textarea.form-control{resize:vertical;min-height:80px}
   .page-header{flex-direction:column;align-items:flex-start;gap:8px}
   .page-header h2{font-size:18px}
 }
-@media(min-width:769px){
-  .mobile-menu-btn{display:none!important}
-  .sidebar-overlay{display:none!important}
-}
-/* ── GRIDS MOBILE ── */
+@media(min-width:769px){.mobile-menu-btn{display:none!important}.sidebar-overlay{display:none!important}}
 @media(max-width:600px){
   .grid-4,.grid-3{grid-template-columns:1fr 1fr!important}
   .stat-card{padding:12px 10px}.stat-value{font-size:22px}
-}
-@media(max-width:360px){.grid-4,.grid-3{grid-template-columns:1fr!important}}
-/* ── MODAL BOTTOM SHEET ── */
-@media(max-width:600px){
   .modal-overlay{align-items:flex-end!important;padding:0!important}
   .modal,.modal-lg{border-radius:20px 20px 0 0!important;max-height:92dvh;overflow-y:auto!important;padding:20px 14px 32px!important;width:100%!important;max-width:100%!important}
 }
-/* ── LOGIN MOBILE ── */
+@media(max-width:360px){.grid-4,.grid-3{grid-template-columns:1fr!important}}
 @media(max-width:480px){.login-card{padding:28px 14px;margin:8px}.login-logo h1{font-size:20px}}
-/* ── PAGE HEADER ── */
+/* PAGE HEADER */
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap}
 .page-header h2{margin:0;font-size:20px;font-weight:800}
-/* ── TOUCH TARGETS ── */
 .btn{min-height:36px;-webkit-tap-highlight-color:transparent}.btn-icon{min-width:36px}
-/* ── WEEK GRID MOBILE ── */
 @media(max-width:768px){.week-scroll-wrapper .week-grid{min-width:560px}.day-col{padding:5px}.day-label{font-size:10px}.day-num{font-size:16px}}
-/* ── EMP TABS SCROLL ── */
 .emp-tabs{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;flex-wrap:nowrap}
 .emp-tab-btn{white-space:nowrap;flex-shrink:0}
-/* ── PRINT ── */
-@media print{.sidebar,.app-header,.mobile-menu-btn,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
-/* ── DARK MODE ── */
+/* DARK */
 @media(prefers-color-scheme:dark){
   :root{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--border:#334155}
   .form-control{background:#0f172a;color:#f1f5f9;border-color:#334155}
@@ -292,9 +278,9 @@ textarea.form-control{resize:vertical;min-height:80px}
   #login-page{background:linear-gradient(135deg,#1e293b 0%,#0f172a 60%,#064e3b 100%)}
   .table tr:hover td{background:rgba(30,58,95,.6)}.day-col.today{background:#1e3a5f}
   .notif-item.read{background:#1e293b}.sch-edit-btn{background:rgba(30,41,59,.95);color:#94a3b8;border-color:#334155}
-  .modal,.modal-lg{background:var(--card)}
-  .no-login-badge{background:#334155;color:#94a3b8}
+  .modal,.modal-lg{background:var(--card)}.no-login-badge{background:#334155;color:#94a3b8}
 }
+@media print{.sidebar,.app-header,.mobile-menu-btn,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
 
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -317,7 +303,7 @@ textarea.form-control{resize:vertical;min-height:80px}
       <div class="form-group"><label>Email</label>
         <input type="email" class="form-control" id="login-email" placeholder="seu@email.com" autocomplete="email" inputmode="email"/></div>
       <div class="form-group"><label>Senha</label>
-        <div class="pass-wrapper"><input type="password" class="form-control" id="login-pass" placeholder="••••••" autocomplete="new-password"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('login-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <div class="pass-wrapper"><input type="password" class="form-control" id="login-pass" placeholder="••••••"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('login-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <button class="btn btn-primary btn-full" id="btn-login" style="height:48px;font-size:16px">Entrar</button>
       <div class="login-switch"><button id="btn-to-forgot">Esqueci minha senha</button></div>
       <div class="login-switch">Não tem conta? <button id="btn-to-register">Criar conta</button></div>
@@ -658,7 +644,7 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal"><h2>💼 Adicionar Funcionário</h2>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="emp-name" placeholder="Nome completo"/></div>
     <div class="form-group"><label>Email</label><input type="email" class="form-control" id="emp-email" placeholder="email@exemplo.com" inputmode="email"/></div>
-    <div class="form-group"><label>Senha (mín. 6)</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Senha (mín. 6)</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="Mínimo 6 caracteres"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-emp">✅ Criar</button><button class="btn btn-outline" id="btn-cancel-emp">Cancelar</button></div>
   </div>
@@ -668,7 +654,7 @@ textarea.form-control{resize:vertical;min-height:80px}
     <input type="hidden" id="edit-emp-id"/>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="edit-emp-name"/></div>
     <div class="form-group"><label>Email</label><input type="email" class="form-control" id="edit-emp-email" inputmode="email"/></div>
-    <div class="form-group"><label>Nova Senha <span style="font-size:11px;opacity:.7">(em branco = manter)</span></label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)" autocomplete="new-password"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Nova Senha <span style="font-size:11px;opacity:.7">(em branco = manter)</span></label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="edit-emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-edit-emp">💾 Salvar</button><button class="btn btn-outline" id="btn-cancel-edit-emp">Cancelar</button></div>
   </div>
@@ -697,7 +683,7 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal"><h2>✅ Aprovar Usuário</h2>
     <input type="hidden" id="approve-user-id"/>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="approve-name" placeholder="Nome completo"/></div>
-    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Senha inicial" value="123456" autocomplete="new-password"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Senha inicial" value="123456"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="approve-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-secondary" id="btn-approve-user">✅ Aprovar</button><button class="btn btn-outline" id="btn-cancel-approve">Cancelar</button></div>
   </div>
@@ -730,49 +716,66 @@ textarea.form-control{resize:vertical;min-height:80px}
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   SUPABASE CONFIG
-═══════════════════════════════════════════ */
+/* ─── SUPABASE ─── */
 const SUPA_URL='https://ekmdsxumterpqjypzuza.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrbWRzeHVtdGVycHFqeXB6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzMxNDQsImV4cCI6MjA4NzU0OTE0NH0.LNwzl4OKzhK2WEcSgvnnwWMS-kE_IYmpih_8ONs0-MU';
-const supa=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 
-/* helpers */
-async function sbUpsert(table,data){const{error}=await supa.from(table).upsert(data);if(error)console.error(`[${table}] upsert`,error.message);}
-async function sbDelete(table,id){const{error}=await supa.from(table).delete().eq('id',id);if(error)console.error(`[${table}] delete`,error.message);}
-async function sbUpdate(table,id,fields){const{error}=await supa.from(table).update(fields).eq('id',id);if(error)console.error(`[${table}] update`,error.message);}
-
-/* ── Garante admin Renata no banco ── */
-async function ensureAdminExists(){
-  const ADM_EMAIL='renatawaldehm@gmail.com';
-  const ADM_PASS='angelina123@';
-  const ADM_NAME='Renata Waldehm';
-  const ADM_EMP_ID='emp_admin_renata';
-  const ADM_UL_ID='ul_admin_renata';
-  try{
-    const{data}=await supa.from('users_login').select('id').eq('email',ADM_EMAIL).maybeSingle();
-    if(!data){
-      const today=new Date().toISOString().split('T')[0];
-      await supa.from('employees').upsert({id:ADM_EMP_ID,name:ADM_NAME,email:ADM_EMAIL,created_at:today});
-      await supa.from('users_login').upsert({id:ADM_UL_ID,email:ADM_EMAIL,role:'adm',username:ADM_NAME,password:ADM_PASS,employee_id:ADM_EMP_ID});
-      console.log('[Admin] Renata criada com sucesso no banco');
-    }
-  }catch(e){console.warn('[Admin] Não foi possível verificar admin:',e.message);}
+// ✅ PROTEÇÃO: verifica se o CDN carregou antes de usar
+let supa = null;
+function initSupabase(){
+  if(window.supabase && !supa){
+    supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  }
+  return supa;
 }
 
-/* ── Carrega tudo do banco ── */
+async function sbUpsert(table,data){
+  const sb=initSupabase();if(!sb)return;
+  const{error}=await sb.from(table).upsert(data);
+  if(error)console.error(`[${table}] upsert:`,error.message);
+}
+async function sbDelete(table,id){
+  const sb=initSupabase();if(!sb)return;
+  const{error}=await sb.from(table).delete().eq('id',id);
+  if(error)console.error(`[${table}] delete:`,error.message);
+}
+async function sbUpdate(table,id,fields){
+  const sb=initSupabase();if(!sb)return;
+  const{error}=await sb.from(table).update(fields).eq('id',id);
+  if(error)console.error(`[${table}] update:`,error.message);
+}
+
+/* ✅ FIX: roda em background, NÃO bloqueia os listeners */
+function ensureAdminExists(){
+  const sb=initSupabase();if(!sb)return;
+  const ADM_EMAIL='renatawaldehm@gmail.com',ADM_PASS='angelina123@',ADM_NAME='Renata Waldehm';
+  const ADM_EMP='emp_admin_renata',ADM_UL='ul_admin_renata';
+  sb.from('users_login').select('id').eq('email',ADM_EMAIL).maybeSingle()
+    .then(({data,error})=>{
+      if(error){console.warn('[Admin] Tabela users_login não encontrada. Execute o schema.sql no Supabase.');return;}
+      if(!data){
+        const today=new Date().toISOString().split('T')[0];
+        sb.from('employees').upsert({id:ADM_EMP,name:ADM_NAME,email:ADM_EMAIL,created_at:today})
+          .then(()=>sb.from('users_login').upsert({id:ADM_UL,email:ADM_EMAIL,role:'adm',username:ADM_NAME,password:ADM_PASS,employee_id:ADM_EMP}))
+          .then(()=>console.log('[Admin] Renata criada no banco ✅'))
+          .catch(e=>console.warn('[Admin] Erro ao criar:',e.message));
+      }
+    }).catch(e=>console.warn('[Admin] Erro:',e.message));
+}
+
 async function loadAllFromSupabase(){
+  const sb=initSupabase();if(!sb)return;
   const[r1,r2,r3,r4,r5,r6,r7,r8,r9,r10]=await Promise.all([
-    supa.from('employees').select('*'),
-    supa.from('clients').select('*'),
-    supa.from('schedule_entries').select('*'),
-    supa.from('work_logs').select('*'),
-    supa.from('costs').select('*'),
-    supa.from('notifications').select('*').order('created_at',{ascending:false}),
-    supa.from('pending_users').select('*'),
-    supa.from('frequencies').select('*'),
-    supa.from('referrals').select('*'),
-    supa.from('users_login').select('*'),
+    sb.from('employees').select('*'),
+    sb.from('clients').select('*'),
+    sb.from('schedule_entries').select('*'),
+    sb.from('work_logs').select('*'),
+    sb.from('costs').select('*'),
+    sb.from('notifications').select('*').order('created_at',{ascending:false}),
+    sb.from('pending_users').select('*'),
+    sb.from('frequencies').select('*'),
+    sb.from('referrals').select('*'),
+    sb.from('users_login').select('*'),
   ]);
   db.employees=r1.data||[];db.clients=r2.data||[];db.scheduleEntries=r3.data||[];
   db.workLogs=r4.data||[];db.costs=r5.data||[];db.notifications=r6.data||[];
@@ -781,27 +784,23 @@ async function loadAllFromSupabase(){
   (r10.data||[]).forEach(u=>{USERS[u.email]={role:u.role,email:u.email,username:u.username,password:u.password,employeeId:u.employee_id,ulId:u.id};});
 }
 
-/* ═══════════════════════════════════════════
-   ESTADO GLOBAL
-═══════════════════════════════════════════ */
+/* ─── ESTADO ─── */
 const USERS={};
 const db={employees:[],clients:[],scheduleEntries:[],workLogs:[],costs:[],notifications:[],pendingUsers:[],frequencies:[],referrals:[]};
 let currentUser=null,currentEmpId=null,weekOffset=0,costsFilter='all';
 
-/* ═══════════════════════════════════════════
-   UTILS
-═══════════════════════════════════════════ */
+/* ─── UTILS ─── */
 const $=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6);}
 function fmt(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);}
 function fmtDate(d){if(!d)return'';const p=(d+'').split('T')[0].split('-');return`${p[2]}/${p[1]}/${p[0]}`;}
 function getClient(id){return db.clients.find(c=>c.id===id);}
 function getEmployee(id){return db.employees.find(e=>e.id===id);}
-function getWeekStart(d){const day=d.getDay();return new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);}
+function getWeekStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()-d.getDay());}
 function toast(msg,type='success'){
   const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3200);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3500);
 }
 function openModal(id){$(id)?.classList.remove('hidden');}
 function closeModal(id){$(id)?.classList.add('hidden');}
@@ -814,16 +813,21 @@ function toggleFieldPass(fid,btn){
     :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
-/* ═══════════════════════════════════════════
-   AUTH
-═══════════════════════════════════════════ */
+/* ─── LOGIN ─── */
 async function doLogin(){
+  const sb=initSupabase();
+  if(!sb){toast('Erro: Supabase não carregou. Verifique sua internet.','error');return;}
   const email=($('login-email').value||'').trim().toLowerCase(),pass=$('login-pass').value;
   if(!email||!pass){toast('Preencha email e senha','error');return;}
   const btn=$('btn-login');btn.disabled=true;btn.textContent='Entrando...';
   try{
-    const{data,error}=await supa.from('users_login').select('*').eq('email',email).eq('password',pass).maybeSingle();
-    if(error)throw error;
+    const{data,error}=await sb.from('users_login').select('*').eq('email',email).eq('password',pass).maybeSingle();
+    if(error){
+      if(error.message&&error.message.includes('does not exist')){
+        toast('Banco de dados não configurado. Execute o schema.sql no Supabase.','error');
+      }else{toast('Erro de conexão: '+error.message,'error');}
+      return;
+    }
     if(!data){toast('Email ou senha incorretos','error');return;}
     $('loading-overlay').classList.remove('hidden');
     await loadAllFromSupabase();
@@ -843,7 +847,7 @@ async function doLogin(){
       initEmpApp(data.employee_id);
     }
   }catch(err){
-    $('loading-overlay').classList.add('hidden');console.error(err);toast('Erro de conexão','error');
+    $('loading-overlay').classList.add('hidden');console.error(err);toast('Erro inesperado: '+err.message,'error');
   }finally{btn.disabled=false;btn.textContent='Entrar';}
 }
 function doLogout(){
@@ -853,18 +857,16 @@ function doLogout(){
   $('login-email').value='';$('login-pass').value='';
 }
 
-/* ═══════════════════════════════════════════
-   NAVEGAÇÃO
-═══════════════════════════════════════════ */
+/* ─── NAVEGAÇÃO ─── */
 function navigate(tab){
   document.querySelectorAll('#sidebar .nav-item').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
   document.querySelector(`#sidebar [data-tab="${tab}"]`)?.classList.add('active');
   document.querySelectorAll('#admin-tabs .tab-content').forEach(t=>t.classList.remove('active'));
   $('tab-'+tab)?.classList.add('active');
   $('sidebar')?.classList.remove('open');$('sidebar-overlay')?.classList.remove('show');
-  ({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,
-    employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,
-    frequencies:renderFrequencies,referrals:renderReferrals})[tab]?.();
+  ({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,
+    clients:renderClients,employees:renderEmployees,costs:renderCosts,
+    notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals})[tab]?.();
 }
 function empNavigate(tab){
   document.querySelectorAll('.emp-tab-btn').forEach(b=>b.classList.remove('active'));
@@ -897,9 +899,7 @@ function updateNotifBadge(){
   if(cb)cb.textContent=cnt>0?`${cnt} pendente${cnt>1?'s':''}`:'';
 }
 
-/* ═══════════════════════════════════════════
-   DASHBOARD
-═══════════════════════════════════════════ */
+/* ─── DASHBOARD ─── */
 function renderDashboard(){
   const today=new Date().toISOString().split('T')[0],ym=today.substr(0,7);
   const start=$('dash-start')?.value||ym+'-01',end=$('dash-end')?.value||today;
@@ -928,16 +928,14 @@ function exportRankingCSV(){
   const start=$('dash-start')?.value||'',end=$('dash-end')?.value||'';
   const confirmed=db.workLogs.filter(l=>(!start||l.work_date>=start)&&(!end||l.work_date<=end)&&l.status==='Confirmado');
   const cm={};confirmed.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.id])cm[c.id]={name:c.name,freq:c.frequency,rev:0,pay:0};cm[c.id].rev+=l.revenue;cm[c.id].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
-  const rows=[['#','Cliente','Freq','Receita','Custo M.O.','Lucro'],...Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).map((c,i)=>[i+1,c.name,c.freq,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)])];
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'}));a.download=`ranking.csv`;a.click();
+  const rows=[['#','Cliente','Freq','Receita','Custo MO','Lucro'],...Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).map((c,i)=>[i+1,c.name,c.freq,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'}));a.download='ranking.csv';a.click();
 }
 
-/* ═══════════════════════════════════════════
-   AGENDA
-═══════════════════════════════════════════ */
+/* ─── AGENDA ─── */
 function renderSchedule(){
   const base=getWeekStart(new Date());base.setDate(base.getDate()+weekOffset*7);
-  const days=[];for(let i=0;i<7;i++){const d=new Date(base.getFullYear(),base.getMonth(),base.getDate()+i);days.push(d);}
+  const days=[];for(let i=0;i<7;i++)days.push(new Date(base.getFullYear(),base.getMonth(),base.getDate()+i));
   const s0=days[0].toISOString().split('T')[0],s6=days[6].toISOString().split('T')[0],today=new Date().toISOString().split('T')[0];
   $('week-label').textContent=`${days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} – ${days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}`;
   const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -978,25 +976,19 @@ async function saveSchedule(){
   const date=$('sch-date').value,clientId=$('sch-client').value,empId=$('sch-emp').value,status=$('sch-status').value,notes=($('sch-notes').value||'').trim();
   if(!date||!clientId){toast('Preencha data e cliente','error');return;}
   let entryId=editId;
-  if(editId){
-    const e=db.scheduleEntries.find(x=>x.id===editId);
-    if(e){e.work_date=date;e.client_id=clientId;if(empId)e.employee_ids=[empId];e.status=status;e.notes=notes;}
-  }else{
-    entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});
-  }
+  if(editId){const e=db.scheduleEntries.find(x=>x.id===editId);if(e){e.work_date=date;e.client_id=clientId;if(empId)e.employee_ids=[empId];e.status=status;e.notes=notes;}}
+  else{entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});}
   const entry=db.scheduleEntries.find(x=>x.id===entryId);
   if(entry)await sbUpsert('schedule_entries',{id:entry.id,work_date:entry.work_date,client_id:entry.client_id,employee_ids:entry.employee_ids,status:entry.status,notes:entry.notes});
   $('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
   closeModal('schedule-modal');toast(editId?'Atualizado!':'Criado!','success');renderSchedule();
 }
 
-/* ═══════════════════════════════════════════
-   REGISTROS DE TRABALHO
-═══════════════════════════════════════════ */
+/* ─── REGISTROS ─── */
 function renderChecklist(){
   const list=[...db.workLogs].sort((a,b)=>b.work_date.localeCompare(a.work_date));
   $('checklist-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💵</div>Nenhum registro</div>'
-    :list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const emp=getEmployee(e.employee_id);return`${emp?emp.name:'?'}: ${fmt(e.payment_amount)}`;}).join(' · ');
+    :list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const em=getEmployee(e.employee_id);return`${em?em.name:'?'}: ${fmt(e.payment_amount)}`;}).join(' · ');
       return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div style="flex:1;min-width:140px"><div class="log-date">${fmtDate(l.work_date)}</div>
           <div class="log-client">${cl?cl.name:'?'}</div>
@@ -1022,8 +1014,8 @@ function editWorkLog(id){
   $('cl-date').value=l.work_date;$('cl-status').value=l.status;$('cl-reason').value=l.cancellation_reason||'';$('cl-revenue').value=l.revenue;
   populateSelects();setTimeout(()=>$('cl-client').value=l.client_id,50);
   $('cl-emp-rows').innerHTML='';
-  const rows=l.work_log_employees||[];rows.forEach(e=>addEmpRow(e.employee_id,e.payment_amount));
-  if(!rows.length)addEmpRow();openModal('checklist-modal');
+  (l.work_log_employees||[]).forEach(e=>addEmpRow(e.employee_id,e.payment_amount));
+  if(!(l.work_log_employees||[]).length)addEmpRow();openModal('checklist-modal');
 }
 function addEmpRow(empId='',pay=''){
   const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';
@@ -1044,9 +1036,7 @@ async function saveWorkLog(){
   closeModal('checklist-modal');toast('Salvo!','success');renderChecklist();renderDashboard();
 }
 
-/* ═══════════════════════════════════════════
-   CLIENTES
-═══════════════════════════════════════════ */
+/* ─── CLIENTES ─── */
 function renderClients(){
   $('clients-table-body').innerHTML=db.clients.map(c=>{
     const emps=(c.client_employees||[]).map(ce=>{const e=getEmployee(ce.employee_id);return e?e.name:'?';}).join(', ');
@@ -1082,15 +1072,13 @@ async function saveClient(){
   closeModal('client-modal');toast('Cliente salvo!','success');renderClients();populateSelects();
 }
 
-/* ═══════════════════════════════════════════
-   FUNCIONÁRIOS  ← sync 100% automático
-═══════════════════════════════════════════ */
+/* ─── FUNCIONÁRIOS ─── */
 function renderEmployees(){
   $('emp-table-body').innerHTML=db.employees.map(e=>{
     const u=Object.values(USERS).find(u=>u.email===e.email);
     const badge=u?(u.role==='adm'?'<span class="role-badge-adm">Admin</span>':'<span class="role-badge-col">Colaborador</span>'):'<span class="no-login-badge">Sem login</span>';
     return`<tr><td><strong>${e.name}</strong></td><td style="font-size:12px">${e.email||''}</td><td>${badge}</td><td>${fmtDate(e.created_at)}</td>
-    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}" title="Editar">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}" title="Remover">🗑</button></div></td></tr>`;}).join('');
+    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}">🗑</button></div></td></tr>`;}).join('');
   $('pending-list').innerHTML=db.pendingUsers.length===0?'<div class="empty"><div class="icon">📩</div>Nenhum cadastro pendente</div>'
     :db.pendingUsers.map(u=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px">
       <span style="font-size:13px">📧 ${u.email}</span>
@@ -1106,10 +1094,9 @@ async function saveEmployee(){
   const empRec={id:newId,name,email,created_at:today};
   const ulRec={id:'ul_'+newId,email,role,username:name,password:pass,employee_id:newId};
   db.employees.push(empRec);USERS[email]={role,email,username:name,password:pass,employeeId:newId,ulId:'ul_'+newId};
-  // Sync automático para Supabase
   await Promise.all([sbUpsert('employees',empRec),sbUpsert('users_login',ulRec)]);
   closeModal('emp-modal');$('emp-name').value='';$('emp-email').value='';$('emp-pass').value='';$('emp-role').value='colaborador';
-  toast(`"${name}" criado com sucesso!`,'success');renderEmployees();populateSelects();
+  toast(`"${name}" criado!`,'success');renderEmployees();populateSelects();
 }
 function openEditEmpModal(empId){
   const emp=db.employees.find(e=>e.id===empId);if(!emp)return;
@@ -1125,15 +1112,11 @@ async function saveEditEmployee(){
   const emp=db.employees.find(e=>e.id===empId);if(!emp)return;
   if(Object.values(USERS).find(u=>u.email===newEmail&&u.email!==emp.email)){toast('Email já em uso','error');return;}
   const oldKey=Object.keys(USERS).find(k=>USERS[k].email===emp.email);
-  const oldPass=oldKey?USERS[oldKey].password:'123456';
-  const oldUlId=oldKey?USERS[oldKey].ulId:('ul_'+empId);
+  const oldPass=oldKey?USERS[oldKey].password:'123456';const oldUlId=oldKey?USERS[oldKey].ulId:'ul_'+empId;
   if(oldKey)delete USERS[oldKey];
   emp.name=name;emp.email=newEmail;
   USERS[newEmail]={role:newRole,email:newEmail,username:name,password:newPass||oldPass,employeeId:empId,ulId:oldUlId};
-  const empRec={id:empId,name,email:newEmail,created_at:emp.created_at};
-  const ulRec={id:oldUlId,email:newEmail,role:newRole,username:name,password:newPass||oldPass,employee_id:empId};
-  // Sync automático para Supabase
-  await Promise.all([sbUpsert('employees',empRec),sbUpsert('users_login',ulRec)]);
+  await Promise.all([sbUpsert('employees',{id:empId,name,email:newEmail,created_at:emp.created_at}),sbUpsert('users_login',{id:oldUlId,email:newEmail,role:newRole,username:name,password:newPass||oldPass,employee_id:empId})]);
   closeModal('edit-emp-modal');toast(`"${name}" atualizado!`,'success');renderEmployees();populateSelects();
 }
 async function approveUser(){
@@ -1145,14 +1128,11 @@ async function approveUser(){
   const ulRec={id:'ul_'+newId,email:u.email,role,username:name,password:pass,employee_id:newId};
   db.employees.push(empRec);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==id);
   USERS[u.email]={role,email:u.email,username:name,password:pass,employeeId:newId,ulId:'ul_'+newId};
-  // Sync automático para Supabase
   await Promise.all([sbUpsert('employees',empRec),sbUpsert('users_login',ulRec),sbDelete('pending_users',id)]);
   closeModal('approve-modal');toast(`"${name}" aprovado!`,'success');renderEmployees();
 }
 
-/* ═══════════════════════════════════════════
-   CUSTOS
-═══════════════════════════════════════════ */
+/* ─── CUSTOS ─── */
 function renderCosts(){
   const rec=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0);
   const uniq=db.costs.filter(c=>c.cost_type==='unico').reduce((s,c)=>s+c.amount,0);
@@ -1179,9 +1159,7 @@ async function saveCost(){
   closeModal('cost-modal');toast('Custo adicionado!','success');renderCosts();
 }
 
-/* ═══════════════════════════════════════════
-   NOTIFICAÇÕES
-═══════════════════════════════════════════ */
+/* ─── NOTIFICAÇÕES ─── */
 function renderNotifications(){
   updateNotifBadge();
   $('notifications-list').innerHTML=db.notifications.length===0?'<div class="empty"><div class="icon">🔔</div>Nenhuma notificação</div>'
@@ -1197,9 +1175,7 @@ function renderNotifications(){
       </div></div>`;}).join('');
 }
 
-/* ═══════════════════════════════════════════
-   FREQUÊNCIAS
-═══════════════════════════════════════════ */
+/* ─── FREQUÊNCIAS ─── */
 function renderFrequencies(){
   $('freq-list').innerHTML=db.frequencies.length===0?'<div class="empty"><div class="icon">📆</div>Nenhuma frequência</div>'
     :db.frequencies.map(f=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px">
@@ -1218,9 +1194,7 @@ async function saveFreq(){
   toast(id?'Atualizada!':'Adicionada!','success');renderFrequencies();populateSelects();
 }
 
-/* ═══════════════════════════════════════════
-   INDICAÇÕES
-═══════════════════════════════════════════ */
+/* ─── INDICAÇÕES ─── */
 function renderReferrals(){
   const p=db.referrals.filter(r=>r.status==='pending'),ap=db.referrals.filter(r=>r.status==='approved'),rej=db.referrals.filter(r=>r.status==='rejected');
   if($('referral-stats'))$('referral-stats').innerHTML=`
@@ -1242,9 +1216,7 @@ function renderReferrals(){
       </div></div>`;}).join('');
 }
 
-/* ═══════════════════════════════════════════
-   VISÃO FUNCIONÁRIO
-═══════════════════════════════════════════ */
+/* ─── FUNCIONÁRIO (visão) ─── */
 let empPeriodStart='',empPeriodEnd='';
 function setEmpPeriod(period,custom){
   const today=new Date().toISOString().split('T')[0],ym=today.substr(0,7);
@@ -1298,51 +1270,50 @@ function renderEmpReferrals(){
     </div></div>`).join('');
 }
 
-/* ═══════════════════════════════════════════
-   EVENT LISTENERS
-═══════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded',async()=>{
-  // Garante admin no banco ao carregar a página
-  await ensureAdminExists();
+/* ─── EVENT LISTENERS ─────────────────────────────────────────────
+   ✅ FIX: ensureAdminExists() roda em BACKGROUND (sem await)
+           Os listeners são registrados IMEDIATAMENTE
+─────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  // Admin criado em background — NÃO bloqueia nada
+  ensureAdminExists();
 
-  // Login
+  /* LOGIN — funciona imediatamente */
   $('btn-login').addEventListener('click',()=>doLogin());
   $('login-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  // Sidebar
+
+  /* SIDEBAR */
   document.querySelectorAll('#sidebar .nav-item').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.tab)));
-  // Mobile menu
   $('mobile-menu-btn')?.addEventListener('click',()=>{$('sidebar')?.classList.toggle('open');$('sidebar-overlay')?.classList.toggle('show');});
   $('sidebar-overlay')?.addEventListener('click',()=>{$('sidebar')?.classList.remove('open');$('sidebar-overlay')?.classList.remove('show');});
-  // Emp tabs
+  /* EMP TABS */
   document.querySelectorAll('.emp-tab-btn').forEach(btn=>btn.addEventListener('click',()=>empNavigate(btn.dataset.etab)));
-  // Logout
+  /* LOGOUT */
   $('btn-logout')?.addEventListener('click',doLogout);$('btn-emp-logout')?.addEventListener('click',doLogout);
-  // Dashboard
+  /* DASHBOARD */
   $('dash-apply')?.addEventListener('click',renderDashboard);
   $('btn-export-csv')?.addEventListener('click',exportRankingCSV);
   $('btn-print-dash')?.addEventListener('click',()=>window.print());
-  // Agenda
+  /* AGENDA */
   $('prev-week')?.addEventListener('click',()=>{weekOffset--;renderSchedule();});
   $('next-week')?.addEventListener('click',()=>{weekOffset++;renderSchedule();});
   $('btn-add-schedule')?.addEventListener('click',()=>{
-    if($('sch-edit-id'))$('sch-edit-id').value='';
-    if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
-    $('sch-date').value='';$('sch-notes').value='';$('sch-status').value='pendente';
-    populateSelects();openModal('schedule-modal');
+    if($('sch-edit-id'))$('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
+    $('sch-date').value='';$('sch-notes').value='';$('sch-status').value='pendente';populateSelects();openModal('schedule-modal');
   });
   $('btn-save-schedule')?.addEventListener('click',saveSchedule);
   $('btn-cancel-schedule')?.addEventListener('click',()=>closeModal('schedule-modal'));
-  // Registros
+  /* REGISTROS */
   $('btn-add-log')?.addEventListener('click',openAddWorkLog);
   $('btn-add-emp-row')?.addEventListener('click',()=>addEmpRow());
   $('btn-save-log')?.addEventListener('click',saveWorkLog);
   $('btn-cancel-log')?.addEventListener('click',()=>closeModal('checklist-modal'));
-  // Clientes
+  /* CLIENTES */
   $('btn-add-client')?.addEventListener('click',openAddClient);
   $('btn-add-client-emp')?.addEventListener('click',()=>addClientEmpRow());
   $('btn-save-client')?.addEventListener('click',saveClient);
   $('btn-cancel-client')?.addEventListener('click',()=>closeModal('client-modal'));
-  // Funcionários
+  /* FUNCIONÁRIOS */
   $('btn-add-emp')?.addEventListener('click',()=>openModal('emp-modal'));
   $('btn-save-emp')?.addEventListener('click',saveEmployee);
   $('btn-cancel-emp')?.addEventListener('click',()=>closeModal('emp-modal'));
@@ -1350,63 +1321,53 @@ document.addEventListener('DOMContentLoaded',async()=>{
   $('btn-cancel-edit-emp')?.addEventListener('click',()=>closeModal('edit-emp-modal'));
   $('btn-approve-user')?.addEventListener('click',approveUser);
   $('btn-cancel-approve')?.addEventListener('click',()=>closeModal('approve-modal'));
-  // Custos
+  /* CUSTOS */
   $('btn-add-cost')?.addEventListener('click',()=>openModal('cost-modal'));
   $('btn-save-cost')?.addEventListener('click',saveCost);
   $('btn-cancel-cost')?.addEventListener('click',()=>closeModal('cost-modal'));
   document.querySelectorAll('.cost-filter-btn').forEach(btn=>btn.addEventListener('click',()=>{costsFilter=btn.dataset.filter;document.querySelectorAll('.cost-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCosts();}));
-  // Frequências
+  /* FREQUÊNCIAS */
   $('btn-add-freq')?.addEventListener('click',()=>{$('freq-edit-id').value='';$('freq-name').value='';openModal('freq-modal');});
   $('btn-save-freq')?.addEventListener('click',saveFreq);
   $('btn-cancel-freq')?.addEventListener('click',()=>closeModal('freq-modal'));
-  // Notifs bulk
+  /* NOTIFS */
   $('btn-mark-all-read')?.addEventListener('click',async()=>{await Promise.all(db.notifications.map(n=>{n.status='read';return sbUpdate('notifications',n.id,{status:'read'});}));toast('Todas lidas','success');updateNotifBadge();renderNotifications();});
-  $('btn-del-read-notifs')?.addEventListener('click',async()=>{const ids=db.notifications.filter(n=>n.status==='read').map(n=>n.id);if(!ids.length){toast('Nenhuma lida','error');return;}if(!confirm(`Excluir ${ids.length} lida(s)?`))return;await Promise.all(ids.map(id=>sbDelete('notifications',id)));db.notifications=db.notifications.filter(n=>n.status!=='read');toast(`${ids.length} excluída(s)`,'success');updateNotifBadge();renderNotifications();});
-  $('btn-del-all-notifs')?.addEventListener('click',async()=>{if(!db.notifications.length){toast('Nenhuma notificação','error');return;}if(!confirm('Excluir todas?'))return;await Promise.all(db.notifications.map(n=>sbDelete('notifications',n.id)));db.notifications=[];toast('Todas excluídas','success');updateNotifBadge();renderNotifications();});
-  // Indicações
-  $('btn-approve-ref')?.addEventListener('click',async()=>{const id=$('ref-edit-id').value,bonus=parseFloat($('ref-bonus').value)||0;if(bonus<=0){toast('Informe um bônus','error');return;}const r=db.referrals.find(r=>r.id===id);if(r){r.status='approved';r.bonus=bonus;await sbUpsert('referrals',r);}closeModal('ref-modal');toast('Aprovada!','success');renderReferrals();});
+  $('btn-del-read-notifs')?.addEventListener('click',async()=>{const ids=db.notifications.filter(n=>n.status==='read').map(n=>n.id);if(!ids.length){toast('Nenhuma lida','error');return;}if(!confirm(`Excluir ${ids.length}?`))return;await Promise.all(ids.map(id=>sbDelete('notifications',id)));db.notifications=db.notifications.filter(n=>n.status!=='read');toast('Excluídas','success');updateNotifBadge();renderNotifications();});
+  $('btn-del-all-notifs')?.addEventListener('click',async()=>{if(!db.notifications.length){toast('Vazio','error');return;}if(!confirm('Excluir tudo?'))return;await Promise.all(db.notifications.map(n=>sbDelete('notifications',n.id)));db.notifications=[];toast('Tudo excluído','success');updateNotifBadge();renderNotifications();});
+  /* INDICAÇÕES */
+  $('btn-approve-ref')?.addEventListener('click',async()=>{const id=$('ref-edit-id').value,bonus=parseFloat($('ref-bonus').value)||0;if(bonus<=0){toast('Informe bônus','error');return;}const r=db.referrals.find(r=>r.id===id);if(r){r.status='approved';r.bonus=bonus;await sbUpsert('referrals',r);}closeModal('ref-modal');toast('Aprovada!','success');renderReferrals();});
   $('btn-cancel-ref')?.addEventListener('click',()=>closeModal('ref-modal'));
-  // Nota funcionário
+  /* NOTA EMP */
   $('btn-save-note')?.addEventListener('click',async()=>{const clientId=$('note-client-sel')?.value,note=($('note-text')?.value||'').trim();if(!note){toast('Escreva uma nota','error');return;}const rec={id:uid(),client_id:clientId,employee_id:currentEmpId,note,status:'pending',created_at:new Date().toISOString()};db.notifications.unshift(rec);await sbUpsert('notifications',rec);if($('note-text'))$('note-text').value='';closeModal('emp-note-modal');toast('Nota enviada!','success');});
   $('btn-cancel-note')?.addEventListener('click',()=>closeModal('emp-note-modal'));
   $('btn-add-note')?.addEventListener('click',()=>openModal('emp-note-modal'));
-  // Indicação funcionário
+  /* INDICAÇÃO EMP */
   $('btn-save-emp-ref')?.addEventListener('click',async()=>{const cn=($('emp-ref-client')?.value||'').trim();if(!cn){toast('Informe o nome','error');return;}const rec={id:uid(),referrer_employee_id:currentEmpId,client_name:cn,bonus:0,status:'pending',created_at:new Date().toISOString().split('T')[0]};db.referrals.push(rec);await sbUpsert('referrals',rec);if($('emp-ref-client'))$('emp-ref-client').value='';closeModal('emp-ref-modal');toast('Enviada!','success');renderEmpReferrals();});
   $('btn-cancel-emp-ref')?.addEventListener('click',()=>closeModal('emp-ref-modal'));
   $('btn-add-emp-ref')?.addEventListener('click',()=>openModal('emp-ref-modal'));
-  // Período emp
+  /* PERÍODO EMP */
   document.querySelectorAll('.period-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');setEmpPeriod(btn.dataset.period,null);}));
 
   /* ── DELEGAÇÃO GLOBAL ── */
   document.addEventListener('click',async e=>{
     const t=e.target;
-    // Editar agendamento
     const esch=t.closest('[data-edit-schedule]');if(esch){editSchedule(esch.dataset.editSchedule);return;}
-    // Editar log
     if(t.dataset.editLog){editWorkLog(t.dataset.editLog);return;}
-    // Editar cliente
     if(t.dataset.editClient){editClient(t.dataset.editClient);return;}
-    // Editar funcionário
     const eemp=t.closest('[data-edit-emp]');if(eemp){openEditEmpModal(eemp.dataset.editEmp);return;}
-    // Editar freq
     if(t.dataset.editFreq){$('freq-edit-id').value=t.dataset.editFreq;const f=db.frequencies.find(f=>f.id===t.dataset.editFreq);if(f)$('freq-name').value=f.name;openModal('freq-modal');return;}
-    // Aprovar indicação
     if(t.dataset.approveRef){$('ref-edit-id').value=t.dataset.approveRef;$('ref-bonus').value='';openModal('ref-modal');return;}
-    // Rejeitar indicação
     if(t.dataset.rejectRef){if(!confirm('Rejeitar?'))return;const r=db.referrals.find(r=>r.id===t.dataset.rejectRef);if(r){r.status='rejected';await sbUpsert('referrals',r);}toast('Rejeitada','success');renderReferrals();return;}
-    // Aprovar usuário pendente
     if(t.dataset.approveUser){$('approve-user-id').value=t.dataset.approveUser;$('approve-name').value='';$('approve-pass').value='123456';openModal('approve-modal');return;}
-    // Notif lida
     if(t.dataset.notifRead){const n=db.notifications.find(n=>n.id===t.dataset.notifRead);if(n){n.status='read';await sbUpdate('notifications',n.id,{status:'read'});}updateNotifBadge();renderNotifications();return;}
-    // DELETES — todos sincronizados com Supabase
-    if(t.dataset.delEmp){const em=db.employees.find(x=>x.id===t.dataset.delEmp);if(!confirm(`Remover "${em?.name||'funcionário'}"?`))return;const uk=Object.keys(USERS).find(k=>USERS[k].email===em?.email);const ulId=uk?USERS[uk].ulId:('ul_'+t.dataset.delEmp);if(uk)delete USERS[uk];await Promise.all([sbDelete('employees',t.dataset.delEmp),sbDelete('users_login',ulId)]);db.employees=db.employees.filter(x=>x.id!==t.dataset.delEmp);toast('Funcionário removido','success');renderEmployees();return;}
-    if(t.dataset.delClient){if(!confirm('Remover cliente?'))return;await sbDelete('clients',t.dataset.delClient);db.clients=db.clients.filter(c=>c.id!==t.dataset.delClient);toast('Removido','success');renderClients();return;}
-    if(t.dataset.delSchedule){if(!confirm('Remover agendamento?'))return;await sbDelete('schedule_entries',t.dataset.delSchedule);db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==t.dataset.delSchedule);toast('Removido','success');renderSchedule();return;}
-    if(t.dataset.delLog){if(!confirm('Remover registro?'))return;await sbDelete('work_logs',t.dataset.delLog);db.workLogs=db.workLogs.filter(l=>l.id!==t.dataset.delLog);toast('Removido','success');renderChecklist();renderDashboard();return;}
-    if(t.dataset.delCost){if(!confirm('Remover custo?'))return;await sbDelete('costs',t.dataset.delCost);db.costs=db.costs.filter(c=>c.id!==t.dataset.delCost);toast('Removido','success');renderCosts();return;}
-    if(t.dataset.delFreq){if(!confirm('Remover frequência?'))return;await sbDelete('frequencies',t.dataset.delFreq);db.frequencies=db.frequencies.filter(f=>f.id!==t.dataset.delFreq);toast('Removida','success');renderFrequencies();return;}
-    if(t.dataset.delRef){if(!confirm('Remover indicação?'))return;await sbDelete('referrals',t.dataset.delRef);db.referrals=db.referrals.filter(r=>r.id!==t.dataset.delRef);toast('Removida','success');renderReferrals();return;}
-    if(t.dataset.notifDel){if(!confirm('Excluir notificação?'))return;await sbDelete('notifications',t.dataset.notifDel);db.notifications=db.notifications.filter(n=>n.id!==t.dataset.notifDel);updateNotifBadge();renderNotifications();return;}
+    if(t.dataset.delEmp){const em=db.employees.find(x=>x.id===t.dataset.delEmp);if(!confirm(`Remover "${em?.name||'funcionário'}"?`))return;const uk=Object.keys(USERS).find(k=>USERS[k].email===em?.email);const ulId=uk?USERS[uk].ulId:('ul_'+t.dataset.delEmp);if(uk)delete USERS[uk];await Promise.all([sbDelete('employees',t.dataset.delEmp),sbDelete('users_login',ulId)]);db.employees=db.employees.filter(x=>x.id!==t.dataset.delEmp);toast('Removido','success');renderEmployees();return;}
+    if(t.dataset.delClient){if(!confirm('Remover?'))return;await sbDelete('clients',t.dataset.delClient);db.clients=db.clients.filter(c=>c.id!==t.dataset.delClient);toast('Removido','success');renderClients();return;}
+    if(t.dataset.delSchedule){if(!confirm('Remover?'))return;await sbDelete('schedule_entries',t.dataset.delSchedule);db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==t.dataset.delSchedule);toast('Removido','success');renderSchedule();return;}
+    if(t.dataset.delLog){if(!confirm('Remover?'))return;await sbDelete('work_logs',t.dataset.delLog);db.workLogs=db.workLogs.filter(l=>l.id!==t.dataset.delLog);toast('Removido','success');renderChecklist();renderDashboard();return;}
+    if(t.dataset.delCost){if(!confirm('Remover?'))return;await sbDelete('costs',t.dataset.delCost);db.costs=db.costs.filter(c=>c.id!==t.dataset.delCost);toast('Removido','success');renderCosts();return;}
+    if(t.dataset.delFreq){if(!confirm('Remover?'))return;await sbDelete('frequencies',t.dataset.delFreq);db.frequencies=db.frequencies.filter(f=>f.id!==t.dataset.delFreq);toast('Removida','success');renderFrequencies();return;}
+    if(t.dataset.delRef){if(!confirm('Remover?'))return;await sbDelete('referrals',t.dataset.delRef);db.referrals=db.referrals.filter(r=>r.id!==t.dataset.delRef);toast('Removida','success');renderReferrals();return;}
+    if(t.dataset.notifDel){if(!confirm('Excluir?'))return;await sbDelete('notifications',t.dataset.notifDel);db.notifications=db.notifications.filter(n=>n.id!==t.dataset.notifDel);updateNotifBadge();renderNotifications();return;}
     if(t.dataset.rejectUser){if(!confirm('Rejeitar?'))return;await sbDelete('pending_users',t.dataset.rejectUser);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==t.dataset.rejectUser);toast('Rejeitado','success');renderEmployees();return;}
   });
 });
