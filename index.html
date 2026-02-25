@@ -7,6 +7,7 @@
 <title>WR Cleaning Service</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--primary:#2563eb;--primary-light:#dbeafe;--primary-dark:#1d4ed8;--secondary:#10b981;--secondary-light:#d1fae5;--destructive:#ef4444;--destructive-light:#fee2e2;--warning:#f97316;--warning-light:#ffedd5;--bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;--text:#0f172a;--text-muted:#64748b;--sidebar-w:240px;--header-h:64px;--radius:10px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -747,8 +748,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 // CONFIGURAÇÃO SUPABASE
 const SUPABASE_URL = 'https://gdemuefknpfaajfrzvpu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ESTADO GLOBAL (Substituindo db e USERS)
 let currentUser = null;
@@ -797,7 +797,7 @@ async function doLogin() {
     return;
   }
 
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
   
   if(error) {
     toast('Erro no login: ' + error.message, 'error');
@@ -805,7 +805,7 @@ async function doLogin() {
   }
 
   currentUser = data.user;
-  const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
   
   if(!profile) {
     toast('Perfil não encontrado!', 'error');
@@ -815,19 +815,19 @@ async function doLogin() {
   $('login-page').classList.add('hidden');
   if(profile.role === 'adm') {
     $('app-page').classList.remove('hidden');
-    $('header-username').textContent = profile.display_name;
+    $('header-username').textContent = profile.username;
     $('header-email').textContent = currentUser.email;
     initApp();
   } else {
     $('emp-app-page').classList.remove('hidden');
-    $('emp-header-username').textContent = profile.display_name;
+    $('emp-header-username').textContent = profile.username;
     $('emp-header-email').textContent = currentUser.email;
-    initEmpApp(currentUser.id);
+    initEmpApp(profile.employee_id);
   }
 }
 
 async function doLogout() {
-  await sb.auth.signOut();
+  await supabase.auth.signOut();
   location.reload();
 }
 
@@ -861,10 +861,10 @@ async function renderTab(tab) {
 
 // EXPLO: RENDERIZAR CLIENTES (Conectado ao Supabase)
 async function renderClients() {
-  const { data: clients, error } = await sb.from('clients').select('*, client_employees(employee_id, payment_amount)');
+  const { data: clients, error } = await supabase.from('clients').select('*, client_employees(employee_id, payment_amount)');
   if(error) { toast('Erro ao carregar clientes', 'error'); return; }
   
-  const { data: employees } = await sb.from('employees').select('id, name');
+  const { data: employees } = await supabase.from('employees').select('id, name');
   const empMap = Object.fromEntries(employees.map(e => [e.id, e.name]));
 
   $('clients-table-body').innerHTML = clients.map(c => {
@@ -889,45 +889,18 @@ async function renderClients() {
 }
 
 // INICIALIZAÇÃO
-async async function initApp() {
+async function initApp() {
   await renderDashboard();
   // Carregar outros dados conforme necessário
 }
 
 // EVENTOS DE CLICK (Delegation ou diretos)
 document.addEventListener('DOMContentLoaded', () => {
-  // Verifica se já tem sessão ativa (mantém login entre recarregamentos)
-  sb.auth.getSession().then(async ({ data: { session } }) => {
-    if (session) {
-      const user = session.user;
-      const { data: profile } = await sb.from('profiles').select('role, display_name').eq('id', user.id).single();
-      if (profile) {
-        currentUser = { role: profile.role, email: user.email, username: profile.display_name, employeeId: user.id };
-        $('login-page').classList.add('hidden');
-        if (profile.role === 'adm') {
-          $('app-page').classList.remove('hidden');
-          $('header-username').textContent = profile.display_name;
-          $('header-email').textContent = user.email;
-          $('profile-name') && ($('profile-name').textContent = profile.display_name);
-          $('profile-avatar') && ($('profile-avatar').textContent = profile.display_name.charAt(0).toUpperCase());
-          await initApp();
-        } else {
-          $('emp-app-page').classList.remove('hidden');
-          $('emp-header-username').textContent = profile.display_name;
-          $('emp-header-email').textContent = user.email;
-          initEmpApp(user.id);
-        }
-      }
-    }
-  });
-
   const loginBtn = $('btn-login');
   if(loginBtn) loginBtn.onclick = doLogin;
   
   const logoutBtn = $('btn-logout');
   if(logoutBtn) logoutBtn.onclick = doLogout;
-  const logoutAdmBtn = $('btn-logout-adm');
-  if(logoutAdmBtn) logoutAdmBtn.onclick = doLogout;
   
   const logoutEmpBtn = $('btn-logout-emp');
   if(logoutEmpBtn) logoutEmpBtn.onclick = doLogout;
@@ -940,6 +913,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // NOTA: Esta é uma versão simplificada para mostrar a estrutura.
 // Para um sistema completo, cada função (saveClient, saveEmployee, etc) 
-// deve ser convertida para usar /* TODO sb.from('tabela') */.insert/update().
+// deve ser convertida para usar supabase.from('tabela').insert/update().
 </script>
 </body></html>
