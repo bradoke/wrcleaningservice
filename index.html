@@ -851,21 +851,14 @@ function doLogin(){
   if(!ok)return;
 
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
-    if(res.error){
-      toast('Erro login: '+res.error.message,'error');
-      return;
-    }
+    if(res.error){toast('Erro login: '+res.error.message,'error');return;}
     var user=res.data.user;
     sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
-      if(r.error||!r.data){
-        toast('Perfil não encontrado: '+(r.error?r.error.message:'vazio'),'error');
-        return;
-      }
-      var profile=r.data;
-      var nome=profile.username||user.email;
-      currentUser={role:profile.role,email:user.email,username:nome,employeeId:user.id};
+      if(r.error||!r.data){toast('Perfil não encontrado: '+(r.error?r.error.message:'vazio'),'error');return;}
+      var nome=r.data.username||user.email;
+      currentUser={role:r.data.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
-      if(profile.role==='adm'){
+      if(r.data.role==='adm'){
         $('app-page').classList.remove('hidden');
         if($('header-username'))$('header-username').textContent=nome;
         if($('header-email'))$('header-email').textContent=user.email;
@@ -889,8 +882,7 @@ function doLogin(){
 function doLogout(){
   sb.auth.signOut().then(function(){
     currentUser=null;
-    $('app-page').classList.add('hidden');
-    $('emp-app-page').classList.add('hidden');
+    ['app-page','emp-app-page'].forEach(function(id){$( id).classList.add('hidden');});
     $('login-page').classList.remove('hidden');
   });
 }
@@ -1252,11 +1244,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     var user=session.user;
     sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
       if(r.error||!r.data)return;
-      var profile=r.data;
-      var nome=profile.username||user.email;
-      currentUser={role:profile.role,email:user.email,username:nome,employeeId:user.id};
+      var nome=r.data.username||user.email;
+      currentUser={role:r.data.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
-      if(profile.role==='adm'){
+      if(r.data.role==='adm'){
         $('app-page').classList.remove('hidden');
         if($('header-username'))$('header-username').textContent=nome;
         if($('header-email'))$('header-email').textContent=user.email;
