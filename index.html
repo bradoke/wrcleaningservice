@@ -260,9 +260,11 @@ textarea.form-control{resize:vertical;min-height:80px}
 }
 
 
-/* ═══ MOBILE RESPONSIVO ═══ */
+/* Gráficos ocultados */
+.charts-grid { display: none !important; }
+
+/* === MOBILE === */
 @media (max-width: 768px) {
-  :root { --header-h: 56px; }
   .app-header { padding: 0 12px; }
   .header-logo h2 { font-size: 14px; }
   .header-logo span { display: none; }
@@ -270,7 +272,6 @@ textarea.form-control{resize:vertical;min-height:80px}
   .main-content { padding: 12px; }
   .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
   .page-header h2 { font-size: 18px; }
-  .page-header > div, .page-header > button { width: 100%; }
   .grid-4 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
@@ -285,22 +286,20 @@ textarea.form-control{resize:vertical;min-height:80px}
   .btn-sm { min-height: 34px; }
   .tabs-nav { overflow-x: auto; flex-wrap: nowrap; }
   .tab-btn { white-space: nowrap; flex: none; padding: 7px 14px; }
-  .notif-banner { flex-direction: column; gap: 8px; }
 }
 @media (max-width: 480px) {
   .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
   .main-content { padding: 10px; }
   .modal { padding: 16px 12px; }
-  .login-card { padding: 22px 14px; border-radius: 14px; }
+  .login-card { padding: 22px 14px; }
   .toast-container { bottom: 12px; right: 12px; left: 12px; }
   .toast { min-width: unset; width: 100%; }
   .btn-full { font-size: 15px; padding: 12px; }
-  .page-header h2 { font-size: 16px; }
 }
-/* ══════════════════════════ */
-
+/* =============== */
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -404,7 +403,9 @@ textarea.form-control{resize:vertical;min-height:80px}
         <div class="grid-4 mb-4" id="dash-stats"></div>
         <div class="grid-3 mb-4" id="dash-secondary"></div>
         <div class="charts-grid mb-4">
-          
+          <div class="card"><div class="card-header"><h3>📊 Receita vs Custo M.O.</h3></div><div class="chart-container"><canvas id="chart-revenue-cost"></canvas></div></div>
+          <div class="card"><div class="card-header"><h3>📈 Lucro por Trabalho</h3></div><div class="chart-container"><canvas id="chart-profit"></canvas></div></div>
+        </div>
         <div class="card">
           <div class="card-header"><h3>Ranking de Lucratividade por Cliente</h3><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" id="btn-export-csv">📥 CSV</button><button class="btn btn-outline btn-sm" id="btn-print-dash">🖨 Imprimir</button></div></div>
           <div class="card-body table-responsive">
@@ -788,7 +789,6 @@ var SUPA_URL = 'https://uolstjzzytcelyoflwpw.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
 var sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 // ════════════════
-
 // ════════════ DATA ════════════
 const db = {
   employees:[
@@ -891,7 +891,7 @@ function doLogin(){
     if(res.error){toast('Erro login: '+res.error.message,'error');return;}
     var user=res.data.user;
     sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
-      if(r.error||!r.data){toast('Perfil não encontrado: '+(r.error?r.error.message:'vazio'),'error');return;}
+      if(r.error||!r.data){toast('Perfil nao encontrado: '+(r.error?r.error.message:'vazio'),'error');return;}
       var nome=r.data.username||user.email;
       currentUser={role:r.data.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
@@ -992,6 +992,7 @@ function renderDashboard(){
     <div class="stat-card"><div class="stat-label">❌ Cancelados</div><div class="stat-value" style="color:var(--destructive)">${filtered.filter(l=>l.status==='Cancelado').length}</div></div>`;
   const ranking=db.clients.map(c=>{const lc=(c.client_employees||[]).reduce((s,ce)=>s+ce.payment_amount,0);return{...c,laborCost:lc,profit:c.price-lc}}).sort((a,b)=>b.profit-a.profit);
   $('ranking-body').innerHTML=ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td><td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td><td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');
+  renderCharts(confirmed);
 }
 
 // ════════════ SCHEDULE ════════════
@@ -1553,9 +1554,17 @@ function saveEditEmployee(){
 }
 
 // ════════════ CHARTS ════════════
-function{
+let _chartRC=null,_chartP=null;
+function renderCharts(confirmed){
+  const cm={};
+  confirmed.forEach(l=>{
+    const c=getClient(l.client_id);if(!c)return;
+    if(!cm[c.name])cm[c.name]={rev:0,pay:0};
+    cm[c.name].rev+=l.revenue;
+    cm[c.name].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);
   });
   const labels=Object.keys(cm);
+  const ctx1=document.getElementById('chart-revenue-cost');
   if(ctx1){
     if(_chartRC)_chartRC.destroy();
     _chartRC=new Chart(ctx1,{type:'bar',
@@ -1571,6 +1580,7 @@ function{
   const sorted=[...confirmed].sort((a,b)=>a.work_date.localeCompare(b.work_date));
   const bd={};
   sorted.forEach(l=>{const pay=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);bd[l.work_date]=(bd[l.work_date]||0)+(l.revenue-pay);});
+  const ctx2=document.getElementById('chart-profit');
   if(ctx2){
     if(_chartP)_chartP.destroy();
     _chartP=new Chart(ctx2,{type:'line',
@@ -1587,6 +1597,12 @@ function{
 function exportRankingCSV(){
   const start=$('dash-start').value,end=$('dash-end').value;
   const confirmed=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado');
+  const cm={};
+  confirmed.forEach(l=>{
+    const c=getClient(l.client_id);if(!c)return;
+    if(!cm[c.id])cm[c.id]={name:c.name,freq:c.frequency,rev:0,pay:0};
+    cm[c.id].rev+=l.revenue;
+    cm[c.id].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);
   });
   const rows=[['#','Cliente','Frequência','Receita','Custo M.O.','Lucro']];
   Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).forEach((c,i)=>{
