@@ -217,7 +217,9 @@ textarea.form-control{resize:vertical;min-height:80px}
 /* FORM VALIDATION */
 .form-control.is-error{border-color:var(--destructive)!important;box-shadow:0 0 0 3px rgba(239,68,68,.12)}
 .form-error{color:var(--destructive);font-size:11px;margin-top:4px;display:none;font-weight:500}.form-error.show{display:block}
-
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.chart-container{position:relative;height:270px;padding:4px 8px 12px}
 /* USER ROLE BADGE */
 .role-badge-adm{background:#dbeafe;color:#1d4ed8;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
 .role-badge-col{background:#d1fae5;color:#065f46;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
@@ -231,7 +233,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 .schedule-nav-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .log-row-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 /* PRINT */
-@media print{.sidebar,.app-header,.mobile-menu-btn,.main-content{padding:0}body{background:#fff}}
+@media print{.sidebar,.app-header,.mobile-menu-btn,.charts-grid,.notif-banner,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
 @media(max-width:768px){
   .schedule-header-row{flex-direction:column;align-items:flex-start}
   .week-grid{grid-template-columns:repeat(7,minmax(108px,1fr));min-width:756px}
@@ -239,7 +241,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 }
 @media(max-width:480px){
   .grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}
-  .stat-card .stat-value{font-size:20px}
+  .charts-grid{grid-template-columns:1fr}.stat-card .stat-value{font-size:20px}
   .main-content{padding:10px}.modal{padding:16px 14px}.login-card{padding:28px 18px}
   .week-grid{grid-template-columns:repeat(7,minmax(90px,1fr));min-width:630px}
   .day-col{padding:6px;min-width:90px}.schedule-nav-group{width:100%;justify-content:space-between}
@@ -258,14 +260,13 @@ textarea.form-control{resize:vertical;min-height:80px}
 }
 
 
-/* ═══ MOBILE RESPONSIVO APRIMORADO ═══ */
+/* ═══ MOBILE RESPONSIVO ═══ */
 @media (max-width: 768px) {
-  :root { --header-h: 56px; --sidebar-w: 260px; }
+  :root { --header-h: 56px; }
   .app-header { padding: 0 12px; }
   .header-logo h2 { font-size: 14px; }
   .header-logo span { display: none; }
   .user-info { display: none; }
-  .btn-logout-label { display: none; }
   .main-content { padding: 12px; }
   .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
   .page-header h2 { font-size: 18px; }
@@ -274,46 +275,30 @@ textarea.form-control{resize:vertical;min-height:80px}
   .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
   .stat-card .stat-value { font-size: 20px; }
-  .stat-card { padding: 12px 14px; }
   .card-header { flex-wrap: wrap; gap: 6px; padding: 12px 14px 8px; }
   .card-body { padding: 12px 14px; }
   .modal { padding: 20px 16px; }
-  .modal h2 { font-size: 16px; }
   .login-card { padding: 28px 18px; }
   .table th, .table td { padding: 8px 10px; font-size: 12px; }
   .log-row { flex-direction: column; gap: 6px; }
-  .log-row-inner { flex-direction: column; gap: 6px; }
-  .week-grid { grid-template-columns: repeat(4, minmax(108px, 1fr)); min-width: 756px; }
-  .schedule-header-row { flex-direction: column; align-items: flex-start; }
-  .schedule-nav-group { width: 100%; justify-content: space-between; }
   .btn { min-height: 40px; }
   .btn-sm { min-height: 34px; }
   .tabs-nav { overflow-x: auto; flex-wrap: nowrap; }
   .tab-btn { white-space: nowrap; flex: none; padding: 7px 14px; }
   .notif-banner { flex-direction: column; gap: 8px; }
-  .notif-banner > div:first-child { flex: 1; }
-  .summary-block { padding: 10px 12px; }
-  .cost-item { flex-wrap: wrap; gap: 6px; }
-  .freq-item { flex-wrap: wrap; gap: 6px; }
-  .referral-item { padding: 12px; }
 }
 @media (max-width: 480px) {
-  .grid-4 { grid-template-columns: 1fr 1fr; }
-  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
-  .stat-card .stat-value { font-size: 18px; }
   .main-content { padding: 10px; }
   .modal { padding: 16px 12px; }
   .login-card { padding: 22px 14px; border-radius: 14px; }
-  .week-grid { grid-template-columns: repeat(7, minmax(90px, 1fr)); min-width: 630px; }
-  .day-col { padding: 6px; min-width: 90px; }
-  .emp-tab-btn { padding: 10px 12px; font-size: 12px; }
-  .page-header h2 { font-size: 16px; }
   .toast-container { bottom: 12px; right: 12px; left: 12px; }
   .toast { min-width: unset; width: 100%; }
   .btn-full { font-size: 15px; padding: 12px; }
+  .page-header h2 { font-size: 16px; }
 }
-/* ═══════════════════════════════════════ */
+/* ══════════════════════════ */
 
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -418,7 +403,47 @@ textarea.form-control{resize:vertical;min-height:80px}
         </div>
         <div class="grid-4 mb-4" id="dash-stats"></div>
         <div class="grid-3 mb-4" id="dash-secondary"></div>
-        
+        <div class="charts-grid mb-4">
+          
+        <div class="card">
+          <div class="card-header"><h3>Ranking de Lucratividade por Cliente</h3><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" id="btn-export-csv">📥 CSV</button><button class="btn btn-outline btn-sm" id="btn-print-dash">🖨 Imprimir</button></div></div>
+          <div class="card-body table-responsive">
+            <table class="table"><thead><tr><th>#</th><th>Cliente</th><th>Frequência</th><th style="text-align:right">Valor Cobrado</th><th style="text-align:right">Custo M.O.</th><th style="text-align:right">Lucro</th></tr></thead><tbody id="ranking-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="tab-content" id="tab-schedule">
+        <div class="page-header">
+          <h2>📅 Agenda Semanal</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-outline btn-sm" id="prev-week">◀</button>
+            <span id="week-label" style="font-size:13px;font-weight:600"></span>
+            <button class="btn btn-outline btn-sm" id="next-week">▶</button>
+            <button class="btn btn-primary btn-sm" id="btn-add-schedule">+ Adicionar</button>
+          </div>
+        </div>
+        <div class="week-scroll-wrapper"><div class="week-grid" id="week-grid"></div></div>
+        <div class="card mt-4"><div class="card-header"><h3>Lista de Agendamentos</h3><span id="schedule-count-badge" class="badge badge-gray" style="font-size:11px"></span></div><div class="card-body" id="schedule-list"></div></div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="tab-content" id="tab-checklist">
+        <div class="page-header">
+          <h2>💵 Registros de Trabalho</h2>
+          <button class="btn btn-primary" id="btn-add-worklog">+ Novo Registro</button>
+        </div>
+        <div class="card mb-4">
+          <div class="card-header"><h3>Filtros</h3></div>
+          <div class="card-body">
+            <div class="grid-3">
+              <div class="form-group" style="margin:0"><label>Data Inicial</label><input type="date" class="form-control" id="cl-start" value="2026-02-01"/></div>
+              <div class="form-group" style="margin:0"><label>Data Final</label><input type="date" class="form-control" id="cl-end" value="2026-02-28"/></div>
+              <div class="form-group" style="margin:0"><label>Mês/Ano</label><input type="month" class="form-control" id="cl-month" value="2026-02"/></div>
+            </div>
+          </div>
+        </div>
         <div class="grid-2 mb-4">
           <div class="card"><div class="card-header"><h3>Resumo por Funcionária</h3></div><div class="card-body" id="emp-payments-summary"></div></div>
           <div class="card"><div class="card-header"><h3>Status do Período</h3></div><div class="card-body" id="cl-period-stats"></div></div>
@@ -966,7 +991,7 @@ function renderDashboard(){
     <div class="stat-card"><div class="stat-label">✅ Confirmados</div><div class="stat-value" style="color:var(--secondary)">${confirmed.length}</div></div>
     <div class="stat-card"><div class="stat-label">❌ Cancelados</div><div class="stat-value" style="color:var(--destructive)">${filtered.filter(l=>l.status==='Cancelado').length}</div></div>`;
   const ranking=db.clients.map(c=>{const lc=(c.client_employees||[]).reduce((s,ce)=>s+ce.payment_amount,0);return{...c,laborCost:lc,profit:c.price-lc}}).sort((a,b)=>b.profit-a.profit);
-  $('ranking-body').innerHTML=ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td><td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td><td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');;
+  $('ranking-body').innerHTML=ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td><td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td><td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');
 }
 
 // ════════════ SCHEDULE ════════════
@@ -1528,8 +1553,41 @@ function saveEditEmployee(){
 }
 
 // ════════════ CHARTS ════════════
+function{
+  });
+  const labels=Object.keys(cm);
+  if(ctx1){
+    if(_chartRC)_chartRC.destroy();
+    _chartRC=new Chart(ctx1,{type:'bar',
+      data:{labels,datasets:[
+        {label:'Receita',data:labels.map(k=>cm[k].rev),backgroundColor:'rgba(37,99,235,0.82)',borderRadius:5},
+        {label:'Custo M.O.',data:labels.map(k=>cm[k].pay),backgroundColor:'rgba(239,68,68,0.78)',borderRadius:5}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top'}},
+        scales:{y:{beginAtZero:true,ticks:{callback:v=>'R$'+v}}}}
+    });
+  }
+  const sorted=[...confirmed].sort((a,b)=>a.work_date.localeCompare(b.work_date));
+  const bd={};
+  sorted.forEach(l=>{const pay=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);bd[l.work_date]=(bd[l.work_date]||0)+(l.revenue-pay);});
+  if(ctx2){
+    if(_chartP)_chartP.destroy();
+    _chartP=new Chart(ctx2,{type:'line',
+      data:{labels:Object.keys(bd).map(d=>fmtDate(d)),
+        datasets:[{label:'Lucro',data:Object.values(bd),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.12)',fill:true,tension:0.4,pointRadius:5,pointHoverRadius:7}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top'}},
+        scales:{y:{beginAtZero:true,ticks:{callback:v=>'R$'+v}}}}
+    });
+  }
+}
 
-function{);
+// ════════════ EXPORT CSV ════════════
+function exportRankingCSV(){
+  const start=$('dash-start').value,end=$('dash-end').value;
+  const confirmed=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado');
+  });
   const rows=[['#','Cliente','Frequência','Receita','Custo M.O.','Lucro']];
   Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).forEach((c,i)=>{
     rows.push([i+1,c.name,c.freq,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)]);
