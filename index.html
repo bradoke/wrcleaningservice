@@ -260,7 +260,16 @@ textarea.form-control{resize:vertical;min-height:80px}
 }
 
 
+/* Loading overlay */
+#auth-loading{position:fixed;inset:0;background:var(--bg,#f8fafc);display:flex;align-items:center;
+  justify-content:center;z-index:9999;flex-direction:column;gap:14px;}
+#auth-loading .spin{width:40px;height:40px;border:3px solid var(--border,#e2e8f0);
+  border-top-color:var(--primary,#2563eb);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#auth-loading p{font-weight:600;color:var(--text-muted,#64748b);font-size:14px;margin:0;}
+/* Charts ocultos */
 .charts-grid{display:none!important}
+/* Mobile */
 @media(max-width:768px){
   .app-header{padding:0 12px}.header-logo h2{font-size:14px}
   .header-logo span{display:none}.user-info{display:none}
@@ -772,9 +781,8 @@ textarea.form-control{resize:vertical;min-height:80px}
 var SUPA_URL='https://uolstjzzytcelyoflwpw.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
 var sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
-// ════════════════════════════════
 
-// ── MAPPERS (snake_case → camelCase) ────────────────────────────────────────
+// ── MAPPERS ──────────────────────────────────────────────────────────────────
 function mapEmp(r){return{id:r.id,name:r.name,email:r.email,createdAt:r.created_at};}
 function mapClient(r){return{id:r.id,name:r.name,frequency:r.frequency,price:r.price,
   noTransportCost:r.no_transport_cost,
@@ -784,37 +792,50 @@ function mapWorkLog(r){return{id:r.id,clientId:r.client_id,workDate:r.work_date,
   workLogEmployees:(r.work_log_employees||[]).map(function(we){return{employeeId:we.employee_id,paymentAmount:we.payment_amount};})};}
 function mapCost(r){return{id:r.id,category:r.category,description:r.description,amount:r.amount,costType:r.cost_type,createdAt:r.created_at};}
 function mapSchedule(r){return{id:r.id,workDate:r.work_date,clientId:r.client_id,status:r.status,notes:r.notes,
-  employeeIds:(r.schedule_employees||[]).map(function(se){return se.employee_id;})
-};}
+  employeeIds:(r.schedule_employees||[]).map(function(se){return se.employee_id;})};}
 function mapNotif(r){return{id:r.id,clientId:r.client_id,employeeId:r.employee_id,note:r.note,status:r.status,createdAt:r.created_at};}
 function mapReferral(r){return{id:r.id,employeeId:r.employee_id,clientName:r.client_name,phone:r.phone,
   address:r.address,zipCode:r.zip_code,status:r.status,bonusAmount:r.bonus_amount,createdAt:r.created_at};}
 
-// ── ESTADO GLOBAL ────────────────────────────────────────────────────────────
-var db={employees:[],clients:[],workLogs:[],costs:[],scheduleEntries:[],notifications:[],referrals:[],frequencies:[],pendingUsers:[]};
+// ── ESTADO ───────────────────────────────────────────────────────────────────
+var db={employees:[],clients:[],workLogs:[],costs:[],scheduleEntries:[],notifications:[],referrals:[],frequencies:[]};
 var currentUser=null,currentTab='dashboard',costsFilter='all',weekOffset=0,empWeekOffset=0,currentEmpId=null,empPeriod={start:'',end:''};
 
 // ── UTILS ────────────────────────────────────────────────────────────────────
-var fmtV=function(v){return'R$'+Number(v||0).toFixed(2);};
-var fmtDate=function(s){var d=new Date(s+(s.length===10?'T00:00:00':'')); return d.toLocaleDateString('pt-BR');};
-var uid=function(){return Math.random().toString(36).substr(2,9);};
+var fmtV=function(v){return'R$ '+Number(v||0).toFixed(2);};
+var fmtDate=function(s){if(!s)return'';var d=new Date(s+(s.length===10?'T00:00:00':'')); return d.toLocaleDateString('pt-BR');};
 var getClient=function(id){return db.clients.find(function(c){return c.id===id;});};
 var getEmployee=function(id){return db.employees.find(function(e){return e.id===id;});};
 var $=function(id){return document.getElementById(id);};
 
 function toast(msg,type){
   type=type||'success';
-  var c=$('toast-container'),el=document.createElement('div');
-  el.className='toast '+type;el.innerHTML=(type==='success'?'✓ ':type==='error'?'✗ ':'ℹ ')+msg;
+  var c=$('toast-container');if(!c)return;
+  var el=document.createElement('div');
+  el.className='toast '+type;
+  el.innerHTML=(type==='success'?'✓ ':type==='error'?'✗ ':'ℹ ')+msg;
   c.appendChild(el);setTimeout(function(){el.remove();},3500);
 }
-function openModal(id){$(id).classList.remove('hidden');}
-function closeModal(id){$(id).classList.add('hidden');}
+function openModal(id){var m=$(id);if(m)m.classList.remove('hidden');}
+function closeModal(id){var m=$(id);if(m)m.classList.add('hidden');}
 document.querySelectorAll('.modal-overlay').forEach(function(o){
   o.addEventListener('click',function(e){if(e.target===o)o.classList.add('hidden');});
 });
 
-// ── CARREGAR DADOS DO SUPABASE ──────────────────────────────────────────────
+// ── LOADING OVERLAY ──────────────────────────────────────────────────────────
+function showLoading(){
+  if($('auth-loading'))return;
+  var ov=document.createElement('div');ov.id='auth-loading';
+  ov.innerHTML='<div class="spin"></div><p>Carregando...</p>';
+  document.body.appendChild(ov);
+  var lp=$('login-page');if(lp)lp.style.visibility='hidden';
+}
+function hideLoading(){
+  var ov=$('auth-loading');if(ov)ov.remove();
+  var lp=$('login-page');if(lp)lp.style.visibility='';
+}
+
+// ── CARREGAR DADOS ────────────────────────────────────────────────────────────
 function loadAllData(cb){
   Promise.all([
     sb.from('employees').select('*').order('name'),
@@ -835,13 +856,13 @@ function loadAllData(cb){
     db.referrals      =(r[6].data||[]).map(mapReferral);
     db.frequencies    =(r[7].data||[]).map(function(f){return{id:f.id,name:f.name};});
     if(cb)cb();
-  }).catch(function(err){toast('Erro ao carregar dados: '+err.message,'error');});
+  }).catch(function(err){toast('Erro ao carregar: '+err.message,'error');});
 }
 
-// ── AUTH ─────────────────────────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────────────
 function toggleView(v){
-  ['login-form','register-form','forgot-form'].forEach(function(id){$(id).classList.add('hidden');});
-  $(v).classList.remove('hidden');
+  ['login-form','register-form','forgot-form'].forEach(function(id){var el=$(id);if(el)el.classList.add('hidden');});
+  var t=$(v);if(t)t.classList.remove('hidden');
 }
 function doLogin(){
   var emailEl=$('login-email'),passEl=$('login-pass');
@@ -854,19 +875,20 @@ function doLogin(){
   if(!email||!/\S+@\S+\.\S+/.test(email)){if(emailEl)emailEl.classList.add('is-error');if(errEmail)errEmail.classList.add('show');ok=false;}
   if(!pass){if(passEl)passEl.classList.add('is-error');if(errPass)errPass.classList.add('show');ok=false;}
   if(!ok)return;
+  showLoading();
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
+    if(res.error){hideLoading();toast('Erro: '+res.error.message,'error');return;}
     _loginSuccess(res.data.user);
   });
 }
 function _loginSuccess(user){
   sb.from('profiles').select('role,username,employee_id').eq('id',user.id).single().then(function(r){
-    if(r.error||!r.data){toast('Perfil não encontrado. Rode o SQL de setup.','error');return;}
+    if(r.error||!r.data){hideLoading();toast('Perfil não encontrado. Contate o administrador.','error');return;}
     var nome=r.data.username||user.email;
     currentUser={role:r.data.role,email:user.email,username:nome,userId:user.id,empRecordId:r.data.employee_id};
-    $('login-page').classList.add('hidden');
+    var lp=$('login-page');if(lp)lp.classList.add('hidden');
     if(r.data.role==='adm'){
-      $('app-page').classList.remove('hidden');
+      var ap=$('app-page');if(ap)ap.classList.remove('hidden');
       if($('header-username'))$('header-username').textContent=nome;
       if($('header-email'))$('header-email').textContent=user.email;
       if($('profile-name'))$('profile-name').textContent=nome;
@@ -874,10 +896,10 @@ function _loginSuccess(user){
       if($('profile-avatar'))$('profile-avatar').textContent=nome.charAt(0).toUpperCase();
       initApp();
     }else{
-      // Colaborador: tenta achar employee_id pelo email se não estiver no perfil
       if(r.data.employee_id){
         _startEmpApp(user,nome,r.data.employee_id);
       }else{
+        // fallback: busca pelo email
         sb.from('employees').select('id').eq('email',user.email).single().then(function(er){
           _startEmpApp(user,nome,er.data?er.data.id:null);
         });
@@ -887,7 +909,7 @@ function _loginSuccess(user){
 }
 function _startEmpApp(user,nome,empRecordId){
   currentUser.empRecordId=empRecordId;
-  $('emp-app-page').classList.remove('hidden');
+  var ep=$('emp-app-page');if(ep)ep.classList.remove('hidden');
   if($('emp-header-username'))$('emp-header-username').textContent=nome;
   if($('emp-header-email'))$('emp-header-email').textContent=user.email;
   if($('emp-profile-name'))$('emp-profile-name').textContent=nome;
@@ -896,10 +918,10 @@ function _startEmpApp(user,nome,empRecordId){
 }
 function doLogout(){
   sb.auth.signOut().then(function(){
-    currentUser=null;
-    $('app-page').classList.add('hidden');
-    $('emp-app-page').classList.add('hidden');
-    $('login-page').classList.remove('hidden');
+    currentUser=null;currentEmpId=null;
+    var ap=$('app-page');if(ap)ap.classList.add('hidden');
+    var ep=$('emp-app-page');if(ep)ep.classList.add('hidden');
+    var lp=$('login-page');if(lp){lp.classList.remove('hidden');lp.style.visibility='';}
   });
 }
 
@@ -922,18 +944,19 @@ function renderTab(tab){
 // ── INIT ADM ──────────────────────────────────────────────────────────────────
 function initApp(){
   loadAllData(function(){
+    hideLoading();
     populateSelects();
     updateNotifBadge();
     renderDashboard();
   });
 }
 function populateSelects(){
-  var clientOpts='<option value="">Selecione...</option>'+db.clients.map(function(c){return'<option value="'+c.id+'">'+c.name+'</option>';}).join('');
-  if($('sch-client'))$('sch-client').innerHTML=clientOpts;
-  if($('cl-client'))$('cl-client').innerHTML=clientOpts;
-  var empOpts='<option value="">Selecione...</option>'+db.employees.map(function(e){return'<option value="'+e.id+'">'+e.name+'</option>';}).join('');
-  if($('sch-emp'))$('sch-emp').innerHTML=empOpts;
-  if($('client-freq'))$('client-freq').innerHTML='<option value="">Selecione...</option>'+db.frequencies.map(function(f){return'<option value="'+f.name+'">'+f.name+'</option>';}).join('');
+  var cOpts='<option value="">Selecione...</option>'+db.clients.map(function(c){return'<option value="'+c.id+'">'+c.name+'</option>';}).join('');
+  ['sch-client','cl-client'].forEach(function(id){if($(id))$(id).innerHTML=cOpts;});
+  var eOpts='<option value="">Selecione...</option>'+db.employees.map(function(e){return'<option value="'+e.id+'">'+e.name+'</option>';}).join('');
+  if($('sch-emp'))$('sch-emp').innerHTML=eOpts;
+  if($('client-freq'))$('client-freq').innerHTML='<option value="">Selecione...</option>'+
+    db.frequencies.map(function(f){return'<option value="'+f.name+'">'+f.name+'</option>';}).join('');
   var today=new Date().toISOString().split('T')[0];
   if($('sch-date')&&!$('sch-date').value)$('sch-date').value=today;
   if($('cl-date')&&!$('cl-date').value)$('cl-date').value=today;
@@ -957,17 +980,17 @@ function updateNotifBadge(){
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 function renderDashboard(){
   var start=$('dash-start')?$('dash-start').value:'',end=$('dash-end')?$('dash-end').value:'';
+  if(!start||!end)return;
   var filtered=db.workLogs.filter(function(l){return l.workDate>=start&&l.workDate<=end;});
   var confirmed=filtered.filter(function(l){return l.status==='Confirmado';});
   var totalRevenue=confirmed.reduce(function(s,l){return s+l.revenue;},0);
   var totalPayments=confirmed.reduce(function(s,l){return s+l.workLogEmployees.reduce(function(ps,e){return ps+e.paymentAmount;},0);},0);
   var startD=new Date(start+'T00:00:00'),endD=new Date(end+'T00:00:00');
-  var days=Math.ceil((endD-startD)/86400000)+1;
-  var recurrentTotal=db.costs.filter(function(c){return c.costType==='recorrente';}).reduce(function(s,c){return s+c.amount;},0);
-  var propRecurrent=recurrentTotal/30*days;
-  var uniqueTotal=db.costs.filter(function(c){return c.costType==='unico'&&c.createdAt>=start&&c.createdAt<=end;}).reduce(function(s,c){return s+c.amount;},0);
-  var totalCosts=propRecurrent+uniqueTotal;
-  var netProfit=totalRevenue-totalPayments-totalCosts;
+  var days=Math.max(1,Math.ceil((endD-startD)/86400000)+1);
+  var recTot=db.costs.filter(function(c){return c.costType==='recorrente';}).reduce(function(s,c){return s+c.amount;},0);
+  var propRec=recTot/30*days;
+  var uniqTot=db.costs.filter(function(c){return c.costType==='unico'&&c.createdAt>=start&&c.createdAt<=end;}).reduce(function(s,c){return s+c.amount;},0);
+  var totalCosts=propRec+uniqTot,netProfit=totalRevenue-totalPayments-totalCosts;
   if($('dash-stats'))$('dash-stats').innerHTML=
     '<div class="stat-card" style="border-left:4px solid var(--primary)"><div class="stat-label">Faturamento Real</div><div class="stat-value" style="color:var(--primary)">'+fmtV(totalRevenue)+'</div></div>'+
     '<div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">Pagamentos Equipe</div><div class="stat-value" style="color:var(--destructive)">'+fmtV(totalPayments)+'</div></div>'+
@@ -1000,11 +1023,9 @@ function renderSchedule(){
   if($('week-grid'))$('week-grid').innerHTML=days.map(function(d,i){
     var ds=d.toISOString().split('T')[0];
     var entries=db.scheduleEntries.filter(function(e){return e.workDate===ds;});
-    return'<div class="day-col'+(ds===todayStr?' today':'')+'">'+
-      '<div class="day-label">'+dn[i]+'</div><div class="day-num">'+d.getDate()+'</div>'+
-      entries.map(function(e){
-        var cl=getClient(e.clientId);
-        return'<div class="schedule-item '+e.status+'"><div style="font-weight:600">'+( cl?cl.name:'?')+'</div>'+
+    return'<div class="day-col'+(ds===todayStr?' today':'')+'"><div class="day-label">'+dn[i]+'</div><div class="day-num">'+d.getDate()+'</div>'+
+      entries.map(function(e){var cl=getClient(e.clientId);
+        return'<div class="schedule-item '+e.status+'"><div style="font-weight:600">'+(cl?cl.name:'?')+'</div>'+
           '<span class="badge '+(e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning')+'" style="font-size:10px">'+e.status+'</span></div>';
       }).join('')+'</div>';
   }).join('');
@@ -1015,8 +1036,7 @@ function renderSchedule(){
       var cl=getClient(e.clientId);
       var emps=e.employeeIds.map(function(id){var emp=getEmployee(id);return emp?emp.name:id;}).join(', ');
       return'<div class="log-row"><div class="log-info"><div class="log-date">'+fmtDate(e.workDate)+'</div>'+
-        '<div class="log-client">'+(cl?cl.name:'?')+'</div>'+
-        (emps?'<div class="log-employees">'+emps+'</div>':'')+
+        '<div class="log-client">'+(cl?cl.name:'?')+'</div>'+(emps?'<div class="log-employees">'+emps+'</div>':'')+
         (e.notes?'<div style="font-size:12px;color:var(--text-muted);font-style:italic">'+e.notes+'</div>':'')+
         '</div><div style="display:flex;align-items:center;gap:8px">'+
         '<span class="badge '+(e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning')+'">'+e.status+'</span>'+
@@ -1033,35 +1053,26 @@ function saveSchedule(){
   sb.from('schedule_entries').insert({client_id:clientId,work_date:date,status:status,notes:notes}).select().single().then(function(res){
     if(res.error){toast('Erro: '+res.error.message,'error');return;}
     var schedId=res.data.id;
-    var empInserts=empId?[{schedule_id:schedId,employee_id:empId}]:[];
-    var p=empInserts.length>0?sb.from('schedule_employees').insert(empInserts):Promise.resolve();
-    p.then(function(){
-      toast('Agendamento salvo!','success');
-      closeModal('schedule-modal');
-      loadAllData(function(){renderSchedule();});
-    });
+    var p=empId?sb.from('schedule_employees').insert({schedule_id:schedId,employee_id:empId}):Promise.resolve();
+    p.then(function(){toast('Agendamento salvo!','success');closeModal('schedule-modal');loadAllData(function(){renderSchedule();});});
   });
 }
 
 // ── CHECKLIST ─────────────────────────────────────────────────────────────────
 function renderChecklist(){
   var start=$('cl-start')?$('cl-start').value:'',end=$('cl-end')?$('cl-end').value:'';
+  if(!start||!end)return;
   var filtered=db.workLogs.filter(function(l){return l.workDate>=start&&l.workDate<=end;}).sort(function(a,b){return b.workDate.localeCompare(a.workDate);});
   var empSummary=db.employees.map(function(e){
     var total=filtered.filter(function(l){return l.status==='Confirmado';}).reduce(function(s,l){
-      var we=l.workLogEmployees.find(function(w){return w.employeeId===e.id;});
-      return s+(we?we.paymentAmount:0);
-    },0);
+      var we=l.workLogEmployees.find(function(w){return w.employeeId===e.id;});return s+(we?we.paymentAmount:0);},0);
     var count=filtered.filter(function(l){return l.status==='Confirmado'&&l.workLogEmployees.some(function(w){return w.employeeId===e.id;});}).length;
     return Object.assign({},e,{total:total,count:count});
   }).filter(function(e){return e.total>0;});
   if($('emp-payments-summary'))$('emp-payments-summary').innerHTML=empSummary.length===0?'<p style="color:var(--text-muted);font-size:13px">Nenhum pagamento no período</p>':
     empSummary.map(function(e){return'<div class="summary-block"><div><div class="emp-name">'+e.name+'</div><div class="emp-count">'+e.count+' trabalhos</div></div><div class="emp-total">'+fmtV(e.total)+'</div></div>';}).join('');
-  var confirmed=filtered.filter(function(l){return l.status==='Confirmado';});
-  var cancelled=filtered.filter(function(l){return l.status==='Cancelado';});
-  var pending=filtered.filter(function(l){return l.status==='Pendente';});
-  var totalRev=confirmed.reduce(function(s,l){return s+l.revenue;},0);
-  var totalPay=confirmed.reduce(function(s,l){return s+l.workLogEmployees.reduce(function(ps,e){return ps+e.paymentAmount;},0);},0);
+  var confirmed=filtered.filter(function(l){return l.status==='Confirmado';}),cancelled=filtered.filter(function(l){return l.status==='Cancelado';}),pending=filtered.filter(function(l){return l.status==='Pendente';});
+  var totalRev=confirmed.reduce(function(s,l){return s+l.revenue;},0),totalPay=confirmed.reduce(function(s,l){return s+l.workLogEmployees.reduce(function(ps,e){return ps+e.paymentAmount;},0);},0);
   if($('cl-period-stats'))$('cl-period-stats').innerHTML=
     '<div class="summary-block"><span>Pendentes</span><span class="badge badge-pending">'+pending.length+'</span></div>'+
     '<div class="summary-block"><span>Confirmados</span><span class="badge badge-secondary">'+confirmed.length+'</span></div>'+
@@ -1074,20 +1085,17 @@ function renderChecklist(){
       var emps=l.workLogEmployees.map(function(we){var emp=getEmployee(we.employeeId);return(emp?emp.name:'?')+' '+fmtV(we.paymentAmount);}).join(', ');
       var sb2=l.status==='Confirmado'?'badge-secondary':l.status==='Cancelado'?'badge-destructive':'badge-pending';
       return'<div class="log-row"><div class="log-info"><div class="log-date">'+fmtDate(l.workDate)+'</div>'+
-        '<div class="log-client">'+(cl?cl.name:'?')+'</div>'+
-        (emps?'<div class="log-employees">'+emps+'</div>':'')+
+        '<div class="log-client">'+(cl?cl.name:'?')+'</div>'+(emps?'<div class="log-employees">'+emps+'</div>':'')+
         (l.cancellationReason?'<div style="font-size:12px;color:var(--destructive);margin-top:2px">Cancelado: '+l.cancellationReason+'</div>':'')+
         '</div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px">'+
-        '<span class="badge '+sb2+'">'+l.status+'</span>'+
-        (l.status==='Confirmado'?'<div class="log-revenue">'+fmtV(l.revenue)+'</div>':'')+
-        '<div style="display:flex;gap:4px">'+
-        '<button class="btn btn-ghost btn-icon btn-sm" data-edit-log="'+l.id+'" title="Editar">✏️</button>'+
-        '<button class="btn btn-danger btn-icon btn-sm" data-del-log="'+l.id+'" title="Apagar">🗑</button></div></div></div>';
+        '<span class="badge '+sb2+'">'+l.status+'</span>'+(l.status==='Confirmado'?'<div class="log-revenue">'+fmtV(l.revenue)+'</div>':'')+
+        '<div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-log="'+l.id+'">✏️</button>'+
+        '<button class="btn btn-danger btn-icon btn-sm" data-del-log="'+l.id+'">🗑</button></div></div></div>';
     }).join('');
 }
 function openAddWorkLog(){
-  $('checklist-modal-title').textContent='Novo Registro de Trabalho';
-  $('cl-edit-id').value='';
+  if($('checklist-modal-title'))$('checklist-modal-title').textContent='Novo Registro de Trabalho';
+  if($('cl-edit-id'))$('cl-edit-id').value='';
   if($('cl-client'))$('cl-client').value='';
   if($('cl-date'))$('cl-date').value=new Date().toISOString().split('T')[0];
   if($('cl-status'))$('cl-status').value='Pendente';
@@ -1099,8 +1107,8 @@ function openAddWorkLog(){
 }
 function editWorkLog(id){
   var l=db.workLogs.find(function(w){return w.id===id;});if(!l)return;
-  $('checklist-modal-title').textContent='Editar Registro';
-  $('cl-edit-id').value=id;
+  if($('checklist-modal-title'))$('checklist-modal-title').textContent='Editar Registro';
+  if($('cl-edit-id'))$('cl-edit-id').value=id;
   if($('cl-client'))$('cl-client').value=l.clientId;
   if($('cl-date'))$('cl-date').value=l.workDate;
   if($('cl-status'))$('cl-status').value=l.status;
@@ -1134,28 +1142,18 @@ function saveWorkLog(){
     return{employee_id:div.querySelector('.emp-row-emp').value,payment_amount:parseFloat(div.querySelector('.emp-row-pay').value)||0};
   });
   var record={client_id:clientId,work_date:date,status:status,cancellation_reason:reason,revenue:status==='Confirmado'?revenue:0};
-  function afterSave(workLogId){
-    sb.from('work_log_employees').delete().eq('work_log_id',workLogId).then(function(){
-      var rows=emps.map(function(e){return Object.assign({work_log_id:workLogId},e);});
-      var p=rows.length>0?sb.from('work_log_employees').insert(rows):Promise.resolve();
-      p.then(function(){
+  function afterSave(wid){
+    sb.from('work_log_employees').delete().eq('work_log_id',wid).then(function(){
+      var rows=emps.map(function(e){return Object.assign({work_log_id:wid},e);});
+      (rows.length>0?sb.from('work_log_employees').insert(rows):Promise.resolve()).then(function(){
         toast(editId?'Registro atualizado!':'Registro adicionado!','success');
         closeModal('checklist-modal');
         loadAllData(function(){renderChecklist();renderDashboard();});
       });
     });
   }
-  if(editId){
-    sb.from('work_logs').update(record).eq('id',editId).then(function(res){
-      if(res.error){toast('Erro: '+res.error.message,'error');return;}
-      afterSave(editId);
-    });
-  }else{
-    sb.from('work_logs').insert(record).select().single().then(function(res){
-      if(res.error){toast('Erro: '+res.error.message,'error');return;}
-      afterSave(res.data.id);
-    });
-  }
+  if(editId){sb.from('work_logs').update(record).eq('id',editId).then(function(r){if(r.error){toast('Erro: '+r.error.message,'error');return;}afterSave(editId);});}
+  else{sb.from('work_logs').insert(record).select().single().then(function(r){if(r.error){toast('Erro: '+r.error.message,'error');return;}afterSave(r.data.id);});}
 }
 
 // ── CLIENTES ──────────────────────────────────────────────────────────────────
@@ -1180,8 +1178,8 @@ function addClientEmpRow(empId,pay){
   c.appendChild(div);
 }
 function openAddClient(){
-  $('client-modal-title').textContent='Adicionar Cliente';
-  $('client-edit-id').value='';
+  if($('client-modal-title'))$('client-modal-title').textContent='Adicionar Cliente';
+  if($('client-edit-id'))$('client-edit-id').value='';
   ['client-name','client-price'].forEach(function(id){if($(id))$(id).value='';});
   if($('client-freq'))$('client-freq').value='';
   if($('client-transport'))$('client-transport').checked=false;
@@ -1190,8 +1188,8 @@ function openAddClient(){
 }
 function editClient(id){
   var c=db.clients.find(function(cl){return cl.id===id;});if(!c)return;
-  $('client-modal-title').textContent='Editar Cliente';
-  $('client-edit-id').value=id;
+  if($('client-modal-title'))$('client-modal-title').textContent='Editar Cliente';
+  if($('client-edit-id'))$('client-edit-id').value=id;
   if($('client-name'))$('client-name').value=c.name;
   if($('client-freq'))$('client-freq').value=c.frequency;
   if($('client-price'))$('client-price').value=c.price;
@@ -1209,19 +1207,18 @@ function saveClient(){
     return{employee_id:div.querySelector('.cemp-row-emp').value,payment_amount:parseFloat(div.querySelector('.cemp-row-pay').value)||0};
   });
   var record={name:name,frequency:freq,price:price,no_transport_cost:noT};
-  function afterSave(clientId){
-    sb.from('client_employees').delete().eq('client_id',clientId).then(function(){
-      var rows=emps.map(function(e){return Object.assign({client_id:clientId},e);});
-      var p=rows.length>0?sb.from('client_employees').insert(rows):Promise.resolve();
-      p.then(function(){
+  function afterSave(cid){
+    sb.from('client_employees').delete().eq('client_id',cid).then(function(){
+      var rows=emps.map(function(e){return Object.assign({client_id:cid},e);});
+      (rows.length>0?sb.from('client_employees').insert(rows):Promise.resolve()).then(function(){
         toast(id?'Cliente atualizado!':'Cliente adicionado!','success');
         closeModal('client-modal');
         loadAllData(function(){renderClients();populateSelects();});
       });
     });
   }
-  if(id){sb.from('clients').update(record).eq('id',id).then(function(res){if(res.error){toast('Erro: '+res.error.message,'error');return;}afterSave(id);});}
-  else{sb.from('clients').insert(record).select().single().then(function(res){if(res.error){toast('Erro: '+res.error.message,'error');return;}afterSave(res.data.id);});}
+  if(id){sb.from('clients').update(record).eq('id',id).then(function(r){if(r.error){toast('Erro: '+r.error.message,'error');return;}afterSave(id);});}
+  else{sb.from('clients').insert(record).select().single().then(function(r){if(r.error){toast('Erro: '+r.error.message,'error');return;}afterSave(r.data.id);});}
 }
 
 // ── FUNCIONÁRIOS ──────────────────────────────────────────────────────────────
@@ -1229,11 +1226,10 @@ function renderEmployees(){
   if(!$('emp-table-body'))return;
   $('emp-table-body').innerHTML=db.employees.map(function(e){
     return'<tr><td><strong>'+e.name+'</strong></td><td style="font-size:12px">'+e.email+'</td>'+
-      '<td><span class="role-badge-col">Colaborador</span></td>'+
-      '<td>'+fmtDate(e.createdAt)+'</td>'+
+      '<td><span class="role-badge-col">Colaborador</span></td><td>'+fmtDate(e.createdAt)+'</td>'+
       '<td><div style="display:flex;gap:4px">'+
-      '<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'" title="Editar">✏️</button>'+
-      '<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'" title="Remover">🗑</button>'+
+      '<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">✏️</button>'+
+      '<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">🗑</button>'+
       '</div></td></tr>';
   }).join('');
   if($('pending-list'))$('pending-list').innerHTML='<div class="empty"><div class="icon">👥</div>Gerencie usuários no painel do Supabase</div>';
@@ -1242,15 +1238,13 @@ function saveEmployee(){
   var name=$('emp-name').value.trim(),email=$('emp-email').value.trim().toLowerCase();
   var pass=$('emp-pass').value,role=$('emp-role').value;
   if(!name||!email){toast('Preencha nome e email','error');return;}
-  if(!pass||pass.length<6){toast('Senha precisa ter pelo menos 6 caracteres','error');return;}
-  // Cria o auth user + employee record
+  if(!pass||pass.length<6){toast('Senha: mínimo 6 caracteres','error');return;}
   sb.auth.signUp({email:email,password:pass}).then(function(res){
     if(res.error){toast('Erro ao criar login: '+res.error.message,'error');return;}
     var userId=res.data.user.id;
     sb.from('employees').insert({name:name,email:email}).select().single().then(function(er){
-      if(er.error){toast('Erro ao salvar funcionário: '+er.error.message,'error');return;}
-      var empId=er.data.id;
-      sb.from('profiles').upsert({id:userId,role:role,username:name,employee_id:empId}).then(function(){
+      if(er.error){toast('Erro: '+er.error.message,'error');return;}
+      sb.from('profiles').upsert({id:userId,role:role,username:name,employee_id:er.data.id}).then(function(){
         toast('Funcionário '+name+' criado!','success');
         closeModal('emp-modal');
         loadAllData(function(){renderEmployees();populateSelects();});
@@ -1266,9 +1260,10 @@ function renderCosts(){
   if($('cost-recurrent'))$('cost-recurrent').textContent=fmtV(rec);
   if($('cost-unique'))$('cost-unique').textContent=fmtV(uniq);
   var list=costsFilter==='all'?db.costs:db.costs.filter(function(c){return c.costType===costsFilter;});
-  if($('costs-list'))$('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💰</div>Nenhum custo encontrado</div>':
+  if($('costs-list'))$('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💰</div>Nenhum custo</div>':
     list.map(function(c){
-      return'<div class="cost-item"><div><div class="cost-cat">'+c.category+' <span class="badge '+(c.costType==='recorrente'?'badge-primary':'badge-warning')+'">'+c.costType+'</span></div>'+
+      return'<div class="cost-item"><div><div class="cost-cat">'+c.category+
+        ' <span class="badge '+(c.costType==='recorrente'?'badge-primary':'badge-warning')+'">'+c.costType+'</span></div>'+
         '<div class="cost-desc">'+c.description+'</div></div>'+
         '<div style="display:flex;align-items:center;gap:10px"><div class="cost-amount" style="color:'+(c.costType==='recorrente'?'var(--primary)':'var(--warning)')+'">'+fmtV(c.amount)+'</div>'+
         '<button class="btn btn-danger btn-icon btn-sm" data-del-cost="'+c.id+'">🗑</button></div></div>';
@@ -1277,10 +1272,9 @@ function renderCosts(){
 function saveCost(){
   var cat=$('cost-cat').value,desc=$('cost-desc').value,amount=parseFloat($('cost-amount').value)||0,type=$('cost-type').value;
   if(!cat||!amount){toast('Preencha categoria e valor','error');return;}
-  sb.from('costs').insert({category:cat,description:desc,amount:amount,cost_type:type}).then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
-    toast('Custo adicionado!','success');
-    closeModal('cost-modal');
+  sb.from('costs').insert({category:cat,description:desc,amount:amount,cost_type:type}).then(function(r){
+    if(r.error){toast('Erro: '+r.error.message,'error');return;}
+    toast('Custo adicionado!','success');closeModal('cost-modal');
     loadAllData(function(){renderCosts();});
   });
 }
@@ -1294,7 +1288,7 @@ function renderNotifications(){
       return'<div class="notif-item '+n.status+'">'+
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'+
         '<div><div style="font-weight:600;font-size:13px">'+(cl?cl.name:'?')+'</div>'+
-        '<div style="font-size:12px;color:var(--text-muted)">'+(emp?emp.name:'?')+' • '+fmtDate(n.createdAt.split('T')[0])+'</div>'+
+        '<div style="font-size:12px;color:var(--text-muted)">'+(emp?emp.name:'?')+' • '+fmtDate((n.createdAt||'').split('T')[0])+'</div>'+
         '<div style="margin-top:6px;font-size:13px">'+n.note+'</div></div>'+
         '<div style="display:flex;gap:4px;flex-shrink:0">'+
         (n.status==='pending'?'<button class="btn btn-secondary btn-sm" data-read-notif="'+n.id+'">✓ Lido</button>':'')+
@@ -1317,11 +1311,9 @@ function saveFreq(){
   var name=$('freq-name')?$('freq-name').value.trim():'';
   if(!name){toast('Informe o nome','error');return;}
   var editId=$('freq-edit-id')?$('freq-edit-id').value:'';
-  var p=editId?sb.from('frequencies').update({name:name}).eq('id',editId):sb.from('frequencies').insert({name:name});
-  p.then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
-    toast(editId?'Frequência atualizada!':'Frequência adicionada!','success');
-    closeModal('freq-modal');
+  (editId?sb.from('frequencies').update({name:name}).eq('id',editId):sb.from('frequencies').insert({name:name})).then(function(r){
+    if(r.error){toast('Erro: '+r.error.message,'error');return;}
+    toast('Frequência salva!','success');closeModal('freq-modal');
     loadAllData(function(){renderFrequencies();populateSelects();});
   });
 }
@@ -1349,7 +1341,7 @@ function renderReferrals(){
         (r.status==='pending'?'<div style="display:flex;gap:6px;margin-top:10px">'+
         '<button class="btn btn-secondary btn-sm" data-approve-ref="'+r.id+'">✓ Aprovar</button>'+
         '<button class="btn btn-danger btn-sm" data-reject-ref="'+r.id+'">✗ Rejeitar</button></div>':
-        (r.status==='approved'?'<div style="font-size:12px;color:var(--secondary);margin-top:4px">Bônus: '+fmtV(r.bonusAmount)+'</div>':''))+
+        r.status==='approved'?'<div style="font-size:12px;color:var(--secondary);margin-top:4px">Bônus: '+fmtV(r.bonusAmount)+'</div>':'')+
         '</div>';
     }).join('');
 }
@@ -1358,40 +1350,55 @@ function renderReferrals(){
 function initEmpApp(empId){
   currentEmpId=empId;
   var today=new Date();
-  var monthStart=new Date(today.getFullYear(),today.getMonth(),1).toISOString().split('T')[0];
-  var monthEnd=new Date(today.getFullYear(),today.getMonth()+1,0).toISOString().split('T')[0];
-  empPeriod={start:monthStart,end:monthEnd};
-  loadAllData(function(){
-    renderEmpGanhos();
-    document.querySelectorAll('.emp-tab-btn').forEach(function(b){
-      b.addEventListener('click',function(){
-        document.querySelectorAll('.emp-tab-btn').forEach(function(x){x.classList.remove('active');});
-        b.classList.add('active');
-        document.querySelectorAll('#emp-app-page .tab-content').forEach(function(t){t.classList.remove('active');});
-        var tc=$('tab-'+b.dataset.etab);if(tc)tc.classList.add('active');
-        var m={
-          'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,
-          'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals,
-          'emp-perfil':function(){}
-        };
+  var ms=new Date(today.getFullYear(),today.getMonth(),1).toISOString().split('T')[0];
+  var me=new Date(today.getFullYear(),today.getMonth()+1,0).toISOString().split('T')[0];
+  empPeriod={start:ms,end:me};
+
+  // Registrar abas sem duplicar listeners
+  document.querySelectorAll('.emp-tab-btn').forEach(function(b){
+    var fresh=b.cloneNode(true);b.parentNode.replaceChild(fresh,b);
+  });
+  document.querySelectorAll('.emp-tab-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.emp-tab-btn').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      document.querySelectorAll('#emp-app-page .tab-content').forEach(function(t){t.classList.remove('active');});
+      var tc=$('tab-'+b.dataset.etab);if(tc)tc.classList.add('active');
+      // Recarregar dados ao trocar aba
+      loadAllData(function(){
+        var m={'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals,'emp-perfil':function(){}};
         if(m[b.dataset.etab])m[b.dataset.etab]();
       });
     });
   });
-}
-function empNavigate(tab){
-  document.querySelectorAll('.emp-tab-btn').forEach(function(b){b.classList.remove('active');});
-  var ab=document.querySelector('[data-etab="'+tab+'"]');if(ab)ab.classList.add('active');
-  document.querySelectorAll('#emp-app-page .tab-content').forEach(function(t){t.classList.remove('active');});
-  var tc=$('tab-'+tab);if(tc)tc.classList.add('active');
+
+  function _doLoad(){
+    loadAllData(function(){
+      hideLoading();
+      renderEmpGanhos();
+    });
+  }
+
+  // Se não tem empId, tentar achar pelo email
+  if(!currentEmpId&&currentUser&&currentUser.email){
+    sb.from('employees').select('id').eq('email',currentUser.email).single().then(function(er){
+      if(er.data){
+        currentEmpId=er.data.id;
+        // Salvar no perfil para próxima vez
+        if(currentUser.userId)sb.from('profiles').update({employee_id:er.data.id}).eq('id',currentUser.userId).then(function(){});
+      }
+      _doLoad();
+    });
+  }else{
+    _doLoad();
+  }
 }
 function setEmpPeriod(period,btn){
   document.querySelectorAll('[data-period]').forEach(function(b){b.className='btn btn-outline btn-sm';b.style.borderRadius='99px';});
   if(btn){btn.className='btn btn-primary btn-sm';btn.style.borderRadius='99px';}
   var today=new Date();
   if(period==='semana'){
-    var ws=getWeekStart(today);
-    var we=new Date(ws);we.setDate(ws.getDate()+6);
+    var ws=getWeekStart(today),we=new Date(ws);we.setDate(ws.getDate()+6);
     empPeriod={start:ws.toISOString().split('T')[0],end:we.toISOString().split('T')[0]};
   }else if(period==='mes'){
     empPeriod={start:new Date(today.getFullYear(),today.getMonth(),1).toISOString().split('T')[0],end:new Date(today.getFullYear(),today.getMonth()+1,0).toISOString().split('T')[0]};
@@ -1403,9 +1410,10 @@ function setEmpPeriod(period,btn){
 function renderEmpGanhos(){
   var myLogs=db.workLogs.filter(function(l){
     return l.workDate>=empPeriod.start&&l.workDate<=empPeriod.end&&
-      l.status==='Confirmado'&&l.workLogEmployees.some(function(we){return we.employeeId===currentEmpId;});
+      l.status==='Confirmado'&&(!currentEmpId||l.workLogEmployees.some(function(we){return we.employeeId===currentEmpId;}));
   });
   var total=myLogs.reduce(function(s,l){
+    if(!currentEmpId)return s+l.workLogEmployees.reduce(function(ps,e){return ps+e.paymentAmount;},0);
     var we=l.workLogEmployees.find(function(w){return w.employeeId===currentEmpId;});
     return s+(we?we.paymentAmount:0);
   },0);
@@ -1416,31 +1424,31 @@ function renderEmpGanhos(){
   if($('emp-work-list'))$('emp-work-list').innerHTML=myLogs.length===0?'<div class="empty"><div class="icon">💼</div>Nenhum trabalho no período</div>':
     myLogs.map(function(l){
       var cl=getClient(l.clientId);
-      var we=l.workLogEmployees.find(function(w){return w.employeeId===currentEmpId;});
+      var we=currentEmpId?l.workLogEmployees.find(function(w){return w.employeeId===currentEmpId;}):null;
+      var pay=we?we.paymentAmount:l.workLogEmployees.reduce(function(s,e){return s+e.paymentAmount;},0);
       return'<div class="log-row"><div class="log-info"><div class="log-date">'+fmtDate(l.workDate)+'</div>'+
         '<div class="log-client">'+(cl?cl.name:'?')+'</div></div>'+
-        '<div class="log-revenue">'+fmtV(we?we.paymentAmount:0)+'</div></div>';
+        '<div class="log-revenue">'+fmtV(pay)+'</div></div>';
     }).join('');
 }
 function renderEmpAgenda(){
   var base=getWeekStart(new Date());base.setDate(base.getDate()+empWeekOffset*7);
   var days=[];for(var i=0;i<7;i++){var d=new Date(base);d.setDate(base.getDate()+i);days.push(d);}
   var startStr=days[0].toISOString().split('T')[0],endStr=days[6].toISOString().split('T')[0];
+  var todayStr=new Date().toISOString().split('T')[0];
   if($('emp-week-label'))$('emp-week-label').textContent=days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' – '+days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
-  var mySchedule=db.scheduleEntries.filter(function(e){
+  var mySch=db.scheduleEntries.filter(function(e){
     return e.workDate>=startStr&&e.workDate<=endStr&&(!currentEmpId||e.employeeIds.includes(currentEmpId));
   });
   var dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   if($('emp-week-grid'))$('emp-week-grid').innerHTML=days.map(function(d,i){
     var ds=d.toISOString().split('T')[0];
-    var dayEntries=mySchedule.filter(function(e){return e.workDate===ds;});
-    var todayStr=new Date().toISOString().split('T')[0];
-    return'<div class="day-col'+(ds===todayStr?' today':'')+'">'+
-      '<div class="day-label">'+dn[i]+'</div><div class="day-num">'+d.getDate()+'</div>'+
-      dayEntries.map(function(e){var cl=getClient(e.clientId);return'<div class="schedule-item '+e.status+'">'+(cl?cl.name:'?')+'</div>';}).join('')+'</div>';
+    var de=mySch.filter(function(e){return e.workDate===ds;});
+    return'<div class="day-col'+(ds===todayStr?' today':'')+'"><div class="day-label">'+dn[i]+'</div><div class="day-num">'+d.getDate()+'</div>'+
+      de.map(function(e){var cl=getClient(e.clientId);return'<div class="schedule-item '+e.status+'">'+(cl?cl.name:'?')+'</div>';}).join('')+'</div>';
   }).join('');
-  if($('emp-schedule-list'))$('emp-schedule-list').innerHTML=mySchedule.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>':
-    mySchedule.map(function(e){
+  if($('emp-schedule-list'))$('emp-schedule-list').innerHTML=mySch.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>':
+    mySch.map(function(e){
       var cl=getClient(e.clientId);
       return'<div class="log-row"><div class="log-info"><div class="log-date">'+fmtDate(e.workDate)+'</div>'+
         '<div class="log-client">'+(cl?cl.name:'?')+'</div></div>'+
@@ -1448,33 +1456,33 @@ function renderEmpAgenda(){
     }).join('');
 }
 function renderEmpClients(){
-  var myClientIds=[...new Set(
-    db.workLogs.filter(function(l){return l.workLogEmployees.some(function(we){return we.employeeId===currentEmpId;});}).map(function(l){return l.clientId;})
-  )];
-  var myClients=db.clients.filter(function(c){return myClientIds.includes(c.id);});
-  if($('emp-clients-list'))$('emp-clients-list').innerHTML=myClients.length===0?'<div class="empty"><div class="icon">🏠</div>Nenhum cliente ainda</div>':
-    myClients.map(function(c){
-      return'<div class="freq-item"><div><div style="font-weight:600">'+c.name+'</div><div style="font-size:12px;color:var(--text-muted)">'+c.frequency+'</div></div>'+
-        '<strong style="color:var(--secondary)">'+fmtV(c.clientEmployees.find(function(ce){return ce.employeeId===currentEmpId;})?c.clientEmployees.find(function(ce){return ce.employeeId===currentEmpId;}).paymentAmount:0)+'</strong></div>';
+  var myIds=[...new Set(db.workLogs.filter(function(l){return!currentEmpId||l.workLogEmployees.some(function(we){return we.employeeId===currentEmpId;});}).map(function(l){return l.clientId;}) )];
+  var myC=db.clients.filter(function(c){return myIds.includes(c.id);});
+  if($('emp-clients-list'))$('emp-clients-list').innerHTML=myC.length===0?'<div class="empty"><div class="icon">🏠</div>Nenhum cliente ainda</div>':
+    myC.map(function(c){
+      var ce=currentEmpId?c.clientEmployees.find(function(x){return x.employeeId===currentEmpId;}):null;
+      return'<div class="freq-item"><div><div style="font-weight:600">'+c.name+'</div>'+
+        '<div style="font-size:12px;color:var(--text-muted)">'+c.frequency+'</div></div>'+
+        '<strong style="color:var(--secondary)">'+fmtV(ce?ce.paymentAmount:0)+'</strong></div>';
     }).join('');
-  var myNotifs=db.notifications.filter(function(n){return n.employeeId===currentEmpId;});
-  if($('emp-notes-list'))$('emp-notes-list').innerHTML=myNotifs.length===0?'<div class="empty"><div class="icon">📝</div>Nenhuma observação</div>':
-    myNotifs.map(function(n){
+  var myN=db.notifications.filter(function(n){return!currentEmpId||n.employeeId===currentEmpId;});
+  if($('emp-notes-list'))$('emp-notes-list').innerHTML=myN.length===0?'<div class="empty"><div class="icon">📝</div>Nenhuma observação</div>':
+    myN.map(function(n){
       var cl=getClient(n.clientId);
       return'<div class="notif-item '+n.status+'"><div style="font-weight:600;font-size:13px">'+(cl?cl.name:'?')+'</div>'+
-        '<div style="font-size:12px;color:var(--text-muted)">'+fmtDate(n.createdAt.split('T')[0])+'</div>'+
+        '<div style="font-size:12px;color:var(--text-muted)">'+fmtDate((n.createdAt||'').split('T')[0])+'</div>'+
         '<div style="margin-top:4px">'+n.note+'</div></div>';
     }).join('');
 }
 function renderEmpReferrals(){
-  var myRefs=db.referrals.filter(function(r){return r.employeeId===currentEmpId;});
-  var totalBonus=myRefs.filter(function(r){return r.status==='approved';}).reduce(function(s,r){return s+r.bonusAmount;},0);
+  var myR=db.referrals.filter(function(r){return!currentEmpId||r.employeeId===currentEmpId;});
+  var bonus=myR.filter(function(r){return r.status==='approved';}).reduce(function(s,r){return s+r.bonusAmount;},0);
   if($('emp-referrals-stats'))$('emp-referrals-stats').innerHTML=
-    '<div class="stat-card"><div class="stat-label">Minhas Indicações</div><div class="stat-value">'+myRefs.length+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">Aprovadas</div><div class="stat-value" style="color:var(--secondary)">'+myRefs.filter(function(r){return r.status==='approved';}).length+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">Bônus Total</div><div class="stat-value" style="color:var(--primary)">'+fmtV(totalBonus)+'</div></div>';
-  if($('emp-referrals-list'))$('emp-referrals-list').innerHTML=myRefs.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação ainda</div>':
-    myRefs.map(function(r){
+    '<div class="stat-card"><div class="stat-label">Minhas Indicações</div><div class="stat-value">'+myR.length+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Aprovadas</div><div class="stat-value" style="color:var(--secondary)">'+myR.filter(function(r){return r.status==='approved';}).length+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Bônus Total</div><div class="stat-value" style="color:var(--primary)">'+fmtV(bonus)+'</div></div>';
+  if($('emp-referrals-list'))$('emp-referrals-list').innerHTML=myR.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação ainda</div>':
+    myR.map(function(r){
       return'<div class="referral-item '+r.status+'"><div style="font-weight:600">'+r.clientName+'</div>'+
         '<div style="font-size:12px;color:var(--text-muted)">'+r.phone+'</div>'+
         '<span class="badge '+(r.status==='pending'?'badge-warning':r.status==='approved'?'badge-secondary':'badge-destructive')+'">'+r.status+'</span>'+
@@ -1486,10 +1494,9 @@ function saveEmpNote(){
   var clientId=$('note-client-sel')?$('note-client-sel').value:'';
   var note=$('note-text')?$('note-text').value.trim():'';
   if(!clientId||!note){toast('Preencha cliente e observação','error');return;}
-  sb.from('notifications').insert({client_id:clientId,employee_id:currentEmpId,note:note,status:'pending'}).then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
-    toast('Observação enviada!','success');
-    closeModal('emp-note-modal');
+  sb.from('notifications').insert({client_id:clientId,employee_id:currentEmpId,note:note,status:'pending'}).then(function(r){
+    if(r.error){toast('Erro: '+r.error.message,'error');return;}
+    toast('Observação enviada!','success');closeModal('emp-note-modal');
     loadAllData(function(){renderEmpClients();});
   });
 }
@@ -1499,10 +1506,9 @@ function saveEmpReferral(){
   var address=$('eref-address')?$('eref-address').value.trim():'';
   var zip=$('eref-zip')?$('eref-zip').value.trim():'';
   if(!name){toast('Informe o nome do cliente','error');return;}
-  sb.from('referrals').insert({employee_id:currentEmpId,client_name:name,phone:phone,address:address,zip_code:zip,status:'pending',bonus_amount:0}).then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
-    toast('Indicação enviada!','success');
-    closeModal('emp-ref-modal');
+  sb.from('referrals').insert({employee_id:currentEmpId,client_name:name,phone:phone,address:address,zip_code:zip,status:'pending',bonus_amount:0}).then(function(r){
+    if(r.error){toast('Erro: '+r.error.message,'error');return;}
+    toast('Indicação enviada!','success');closeModal('emp-ref-modal');
     loadAllData(function(){renderEmpReferrals();});
   });
 }
@@ -1515,21 +1521,18 @@ function toggleFieldPass(fieldId,btn){
 }
 function openEditEmpModal(empId){
   var e=db.employees.find(function(x){return x.id===empId;});if(!e)return;
-  $('edit-emp-id').value=empId;
+  if($('edit-emp-id'))$('edit-emp-id').value=empId;
   if($('edit-emp-name'))$('edit-emp-name').value=e.name;
   if($('edit-emp-email'))$('edit-emp-email').value=e.email;
   if($('edit-emp-pass'))$('edit-emp-pass').value='';
   openModal('edit-emp-modal');
 }
 function saveEditEmployee(){
-  var empId=$('edit-emp-id').value;
-  var name=$('edit-emp-name').value.trim();
+  var empId=$('edit-emp-id').value,name=$('edit-emp-name').value.trim();
   var email=$('edit-emp-email').value.trim().toLowerCase();
-  var newPass=$('edit-emp-pass').value;
-  var role=$('edit-emp-role')?$('edit-emp-role').value:'colaborador';
   if(!name||!email){toast('Preencha nome e email','error');return;}
-  sb.from('employees').update({name:name,email:email}).eq('id',empId).then(function(res){
-    if(res.error){toast('Erro: '+res.error.message,'error');return;}
+  sb.from('employees').update({name:name,email:email}).eq('id',empId).then(function(r){
+    if(r.error){toast('Erro: '+r.error.message,'error');return;}
     toast('Dados de "'+name+'" atualizados!','success');
     closeModal('edit-emp-modal');
     loadAllData(function(){renderEmployees();populateSelects();});
@@ -1559,14 +1562,20 @@ function exportRankingCSV(){
 
 // ── DOM CONTENT LOADED ────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',function(){
-  // Restaurar sessão
+  // ── Loading overlay ──
+  showLoading();
+
+  // ── Restaurar sessão (evita flicker no F5) ──
   sb.auth.getSession().then(function(res){
     var session=res.data&&res.data.session;
-    if(!session)return;
-    _loginSuccess(session.user);
+    if(!session){
+      hideLoading();
+      return; // mostra tela de login
+    }
+    _loginSuccess(session.user); // hideLoading é chamado dentro de initApp/initEmpApp
   });
 
-  // Toggle senha login
+  // Senha toggle
   var tp=$('toggle-pass');
   if(tp)tp.addEventListener('click',function(){
     var f=$('login-pass');if(!f)return;
@@ -1574,7 +1583,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var ic=$('eye-icon');if(ic)ic.setAttribute('opacity',show?'0.5':'1');
   });
 
-  // Navegação sidebar
+  // Sidebar
   document.querySelectorAll('.sidebar .nav-item').forEach(function(b){
     b.addEventListener('click',function(){navigate(b.dataset.tab);});
   });
@@ -1584,7 +1593,7 @@ document.addEventListener('DOMContentLoaded',function(){
   if(mt)mt.addEventListener('click',function(){if(sb2)sb2.classList.toggle('open');if(so)so.classList.toggle('open');});
   if(so)so.addEventListener('click',function(){if(sb2)sb2.classList.remove('open');so.classList.remove('open');});
 
-  // Botões login
+  // Login/Logout
   if($('btn-login'))$('btn-login').addEventListener('click',doLogin);
   if($('login-pass'))$('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
   if($('btn-logout-adm'))$('btn-logout-adm').addEventListener('click',doLogout);
@@ -1594,15 +1603,14 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-reg-back'))$('btn-reg-back').addEventListener('click',function(){toggleView('login-form');});
   if($('btn-forgot-back'))$('btn-forgot-back').addEventListener('click',function(){toggleView('login-form');});
 
-  // Dashboard filtros
+  // Dashboard
   if($('dash-start'))$('dash-start').addEventListener('change',renderDashboard);
   if($('dash-end'))$('dash-end').addEventListener('change',renderDashboard);
   if($('dash-month'))$('dash-month').addEventListener('change',function(){
     var v=$('dash-month').value;if(!v)return;
     var y=v.split('-')[0],m=v.split('-')[1];
     if($('dash-start'))$('dash-start').value=y+'-'+m+'-01';
-    var last=new Date(y,m,0).getDate();
-    if($('dash-end'))$('dash-end').value=y+'-'+m+'-'+String(last).padStart(2,'0');
+    if($('dash-end'))$('dash-end').value=y+'-'+m+'-'+String(new Date(y,m,0).getDate()).padStart(2,'0');
     renderDashboard();
   });
   if($('btn-export-csv'))$('btn-export-csv').addEventListener('click',exportRankingCSV);
@@ -1627,8 +1635,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var v=$('cl-month').value;if(!v)return;
     var y=v.split('-')[0],m=v.split('-')[1];
     if($('cl-start'))$('cl-start').value=y+'-'+m+'-01';
-    var last=new Date(y,m,0).getDate();
-    if($('cl-end'))$('cl-end').value=y+'-'+m+'-'+String(last).padStart(2,'0');
+    if($('cl-end'))$('cl-end').value=y+'-'+m+'-'+String(new Date(y,m,0).getDate()).padStart(2,'0');
     renderChecklist();
   });
   if($('cl-status'))$('cl-status').addEventListener('change',function(){
@@ -1649,8 +1656,8 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-cancel-edit-emp'))$('btn-cancel-edit-emp').addEventListener('click',function(){closeModal('edit-emp-modal');});
   var etabs=document.querySelectorAll('.tabs-nav .tab-btn');
   if(etabs.length>=2){
-    etabs[0].addEventListener('click',function(){etabs.forEach(function(b){b.classList.remove('active');});etabs[0].classList.add('active');$('active-emps').classList.remove('hidden');$('pending-users').classList.add('hidden');});
-    etabs[1].addEventListener('click',function(){etabs.forEach(function(b){b.classList.remove('active');});etabs[1].classList.add('active');$('active-emps').classList.add('hidden');$('pending-users').classList.remove('hidden');});
+    etabs[0].addEventListener('click',function(){etabs.forEach(function(b){b.classList.remove('active');});etabs[0].classList.add('active');if($('active-emps'))$('active-emps').classList.remove('hidden');if($('pending-users'))$('pending-users').classList.add('hidden');});
+    etabs[1].addEventListener('click',function(){etabs.forEach(function(b){b.classList.remove('active');});etabs[1].classList.add('active');if($('active-emps'))$('active-emps').classList.add('hidden');if($('pending-users'))$('pending-users').classList.remove('hidden');});
   }
 
   // Custos
@@ -1659,8 +1666,7 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-cancel-cost'))$('btn-cancel-cost').addEventListener('click',function(){closeModal('cost-modal');});
   ['filter-all','filter-recorrente','filter-unico'].forEach(function(id){
     if($(id))$(id).addEventListener('click',function(){
-      costsFilter=id==='filter-all'?'all':id==='filter-recorrente'?'recorrente':'unico';
-      renderCosts();
+      costsFilter=id==='filter-all'?'all':id.replace('filter-','');renderCosts();
     });
   });
 
@@ -1674,18 +1680,15 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-save-freq'))$('btn-save-freq').addEventListener('click',saveFreq);
   if($('btn-cancel-freq'))$('btn-cancel-freq').addEventListener('click',function(){closeModal('freq-modal');});
 
-  // Perfil ADM
-  if($('btn-save-profile'))$('btn-save-profile').addEventListener('click',function(){
-    toast('Para alterar a senha, use "Esqueci minha senha" na tela de login.','info');
-  });
+  // Perfil
+  if($('btn-save-profile'))$('btn-save-profile').addEventListener('click',function(){toast('Para alterar a senha use "Esqueci minha senha" na tela de login.','info');});
 
   // Employee app
   if($('emp-prev-week'))$('emp-prev-week').addEventListener('click',function(){empWeekOffset--;renderEmpAgenda();});
   if($('emp-next-week'))$('emp-next-week').addEventListener('click',function(){empWeekOffset++;renderEmpAgenda();});
   if($('btn-emp-note'))$('btn-emp-note').addEventListener('click',function(){
     if($('note-client-sel'))$('note-client-sel').innerHTML=db.clients.map(function(c){return'<option value="'+c.id+'">'+c.name+'</option>';}).join('');
-    if($('note-text'))$('note-text').value='';
-    openModal('emp-note-modal');
+    if($('note-text'))$('note-text').value='';openModal('emp-note-modal');
   });
   if($('btn-save-note'))$('btn-save-note').addEventListener('click',saveEmpNote);
   if($('btn-cancel-note'))$('btn-cancel-note').addEventListener('click',function(){closeModal('emp-note-modal');});
@@ -1695,83 +1698,55 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('[data-period]').forEach(function(b){
     b.addEventListener('click',function(){setEmpPeriod(b.dataset.period,b);});
   });
-  if($('btn-save-emp-profile'))$('btn-save-emp-profile').addEventListener('click',function(){
-    toast('Para alterar a senha, use "Esqueci minha senha" na tela de login.','info');
-  });
+  if($('btn-save-emp-profile'))$('btn-save-emp-profile').addEventListener('click',function(){toast('Para alterar a senha use "Esqueci minha senha" na tela de login.','info');});
 
-  // DELEGAÇÃO DE EVENTOS (delete/edit/approve)
+  // ── Delegação global de cliques (delete/edit/approve) ──
   document.addEventListener('click',function(e){
-    var t=e.target.closest('[data-del-schedule]');
-    if(t){var id=t.dataset.delSchedule;
+    var t;
+    if((t=e.target.closest('[data-del-schedule]'))){
+      var id=t.dataset.delSchedule;
       sb.from('schedule_employees').delete().eq('schedule_id',id).then(function(){
-        sb.from('schedule_entries').delete().eq('id',id).then(function(){
-          loadAllData(function(){renderSchedule();});
-        });
-      });return;}
-
-    t=e.target.closest('[data-del-log]');
-    if(t){var id=t.dataset.delLog;
+        sb.from('schedule_entries').delete().eq('id',id).then(function(){loadAllData(function(){renderSchedule();});});
+      });return;
+    }
+    if((t=e.target.closest('[data-del-log]'))){
+      var id=t.dataset.delLog;
       sb.from('work_log_employees').delete().eq('work_log_id',id).then(function(){
-        sb.from('work_logs').delete().eq('id',id).then(function(){
-          loadAllData(function(){renderChecklist();renderDashboard();});
-        });
-      });return;}
-
-    t=e.target.closest('[data-edit-log]');
-    if(t){editWorkLog(t.dataset.editLog);return;}
-
-    t=e.target.closest('[data-del-client]');
-    if(t){var id=t.dataset.delClient;
+        sb.from('work_logs').delete().eq('id',id).then(function(){loadAllData(function(){renderChecklist();renderDashboard();});});
+      });return;
+    }
+    if((t=e.target.closest('[data-edit-log]'))){editWorkLog(t.dataset.editLog);return;}
+    if((t=e.target.closest('[data-del-client]'))){
+      var id=t.dataset.delClient;
       sb.from('client_employees').delete().eq('client_id',id).then(function(){
-        sb.from('clients').delete().eq('id',id).then(function(){
-          loadAllData(function(){renderClients();populateSelects();});
-        });
-      });return;}
-
-    t=e.target.closest('[data-edit-client]');
-    if(t){editClient(t.dataset.editClient);return;}
-
-    t=e.target.closest('[data-del-emp]');
-    if(t){var id=t.dataset.delEmp;
-      sb.from('employees').delete().eq('id',id).then(function(res){
-        if(res.error){toast('Erro: '+res.error.message,'error');return;}
-        loadAllData(function(){renderEmployees();populateSelects();});
-      });return;}
-
-    t=e.target.closest('[data-edit-emp]');
-    if(t){openEditEmpModal(t.dataset.editEmp);return;}
-
-    t=e.target.closest('[data-del-cost]');
-    if(t){sb.from('costs').delete().eq('id',t.dataset.delCost).then(function(){
-      loadAllData(function(){renderCosts();});
-    });return;}
-
-    t=e.target.closest('[data-del-freq]');
-    if(t){sb.from('frequencies').delete().eq('id',t.dataset.delFreq).then(function(){
-      loadAllData(function(){renderFrequencies();populateSelects();});
-    });return;}
-
-    t=e.target.closest('[data-read-notif]');
-    if(t){sb.from('notifications').update({status:'read'}).eq('id',t.dataset.readNotif).then(function(){
-      loadAllData(function(){renderNotifications();updateNotifBadge();});
-    });return;}
-
-    t=e.target.closest('[data-del-notif]');
-    if(t){sb.from('notifications').delete().eq('id',t.dataset.delNotif).then(function(){
-      loadAllData(function(){renderNotifications();updateNotifBadge();});
-    });return;}
-
-    t=e.target.closest('[data-approve-ref]');
-    if(t){var id=t.dataset.approveRef;
+        sb.from('clients').delete().eq('id',id).then(function(){loadAllData(function(){renderClients();populateSelects();});});
+      });return;
+    }
+    if((t=e.target.closest('[data-edit-client]'))){editClient(t.dataset.editClient);return;}
+    if((t=e.target.closest('[data-del-emp]'))){
+      sb.from('employees').delete().eq('id',t.dataset.delEmp).then(function(){loadAllData(function(){renderEmployees();populateSelects();});});return;
+    }
+    if((t=e.target.closest('[data-edit-emp]'))){openEditEmpModal(t.dataset.editEmp);return;}
+    if((t=e.target.closest('[data-del-cost]'))){
+      sb.from('costs').delete().eq('id',t.dataset.delCost).then(function(){loadAllData(function(){renderCosts();});});return;
+    }
+    if((t=e.target.closest('[data-del-freq]'))){
+      sb.from('frequencies').delete().eq('id',t.dataset.delFreq).then(function(){loadAllData(function(){renderFrequencies();populateSelects();});});return;
+    }
+    if((t=e.target.closest('[data-read-notif]'))){
+      sb.from('notifications').update({status:'read'}).eq('id',t.dataset.readNotif).then(function(){loadAllData(function(){renderNotifications();updateNotifBadge();});});return;
+    }
+    if((t=e.target.closest('[data-del-notif]'))){
+      sb.from('notifications').delete().eq('id',t.dataset.delNotif).then(function(){loadAllData(function(){renderNotifications();updateNotifBadge();});});return;
+    }
+    if((t=e.target.closest('[data-approve-ref]'))){
+      var id=t.dataset.approveRef;
       var bonus=parseFloat(prompt('Valor do bônus (R$):','0'))||0;
-      sb.from('referrals').update({status:'approved',bonus_amount:bonus}).eq('id',id).then(function(){
-        loadAllData(function(){renderReferrals();});
-      });return;}
-
-    t=e.target.closest('[data-reject-ref]');
-    if(t){sb.from('referrals').update({status:'rejected'}).eq('id',t.dataset.rejectRef).then(function(){
-      loadAllData(function(){renderReferrals();});
-    });return;}
+      sb.from('referrals').update({status:'approved',bonus_amount:bonus}).eq('id',id).then(function(){loadAllData(function(){renderReferrals();});});return;
+    }
+    if((t=e.target.closest('[data-reject-ref]'))){
+      sb.from('referrals').update({status:'rejected'}).eq('id',t.dataset.rejectRef).then(function(){loadAllData(function(){renderReferrals();});});return;
+    }
   });
 });
 
