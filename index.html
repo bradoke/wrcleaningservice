@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="description" content="WR Cleaning Service">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>WR Cleaning Service</title>
@@ -211,40 +212,118 @@ textarea.form-control{resize:vertical;min-height:80px}
   .sidebar-overlay.open{display:block}
 }
 
-/* LOADING */
-#loading-overlay{position:fixed;inset:0;background:rgba(15,23,42,.87);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#f1f5f9}
+/* ── LOADING ── */
+#loading-overlay{position:fixed;inset:0;background:rgba(15,23,42,.88);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#f1f5f9}
 #loading-overlay.hidden{display:none}
 .spinner{width:46px;height:46px;border:4px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* PASS TOGGLE */
-.pass-wrapper{position:relative}.pass-wrapper .form-control{padding-right:42px}
-.pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center}.pass-toggle:hover{color:var(--primary)}
-/* VALIDATION */
+
+/* ── PASS TOGGLE ── */
+.pass-wrapper{position:relative;display:flex;align-items:center}
+.pass-wrapper .form-control{flex:1;padding-right:44px}
+.pass-toggle{position:absolute;right:10px;background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;-webkit-tap-highlight-color:transparent}
+.pass-toggle:hover{color:var(--primary)}
+
+/* ── VALIDATION ── */
 .form-control.is-error{border-color:var(--destructive)!important;box-shadow:0 0 0 3px rgba(239,68,68,.12)}
 .form-error{color:var(--destructive);font-size:11px;margin-top:3px;display:none;font-weight:500}.form-error.show{display:block}
-/* CHARTS */
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.chart-container{position:relative;height:260px;padding:4px 8px 12px}
-/* ROLE BADGES */
+
+/* ── ROLE BADGES ── */
 .role-badge-adm{background:#dbeafe;color:#1d4ed8;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
 .role-badge-col{background:#d1fae5;color:#065f46;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
 .no-login-badge{background:#f1f5f9;color:#94a3b8;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600}
-/* NOTIF */
+
+/* ── NOTIF ── */
 .notif-item{border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
 .notif-item.pending{background:#fef2f2;border-color:rgba(239,68,68,.2)}.notif-item.read{background:var(--card);opacity:.8}
-/* AGENDA */
+
+/* ── AGENDA ── */
 .week-scroll-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
 .week-scroll-wrapper::-webkit-scrollbar{height:4px}.week-scroll-wrapper::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .schedule-header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .schedule-nav-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .schedule-item{position:relative}
-.sch-edit-btn{display:none;position:absolute;top:2px;right:2px;background:rgba(255,255,255,.92);border:1px solid #e2e8f0;border-radius:4px;padding:1px 4px;cursor:pointer;font-size:10px;z-index:2}
+.sch-edit-btn{display:none;position:absolute;top:2px;right:2px;background:rgba(255,255,255,.92);border:1px solid #e2e8f0;border-radius:4px;padding:2px 5px;cursor:pointer;font-size:10px;z-index:2;-webkit-tap-highlight-color:transparent}
 .schedule-item:hover .sch-edit-btn{display:block}
-/* PRINT */
-@media print{.sidebar,.app-header,.mobile-menu-btn,.charts-grid,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
-/* 480 */
-@media(max-width:480px){.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr}.main-content{padding:10px}.modal{padding:16px 14px}.login-card{padding:28px 18px}}
-/* DARK */
+
+/* ── TABLE MOBILE (card view) ── */
+@media(max-width:600px){
+  .table{display:block}
+  .table thead{display:none}
+  .table tbody{display:block}
+  .table tr{display:flex;flex-wrap:wrap;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;padding:10px;background:var(--card);gap:4px}
+  .table td{display:inline-flex;align-items:center;font-size:13px;padding:2px 6px;border:none}
+  .table td:last-child{margin-left:auto}
+}
+
+/* ── MOBILE NAV (bottom bar no celular) ── */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:200;transform:translateX(-100%);transition:transform .25s ease;width:240px!important;box-shadow:4px 0 20px rgba(0,0,0,.18)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199}
+  .sidebar-overlay.show{display:block}
+  .app-header{padding:0 14px;height:52px}
+  .main-content{padding:12px 10px;padding-bottom:24px}
+  .mobile-menu-btn{display:flex!important}
+  .page-header{flex-direction:column;align-items:flex-start;gap:8px}
+  .page-header h2{font-size:18px}
+}
+@media(min-width:769px){
+  .mobile-menu-btn{display:none!important}
+  .sidebar-overlay{display:none!important}
+}
+
+/* ── GRIDS MOBILE ── */
+@media(max-width:600px){
+  .grid-4,.grid-3,.grid-2{grid-template-columns:1fr 1fr!important}
+  .stat-card{padding:12px 10px}
+  .stat-value{font-size:22px}
+}
+@media(max-width:380px){
+  .grid-4,.grid-3,.grid-2{grid-template-columns:1fr!important}
+}
+
+/* ── MODAL MOBILE ── */
+@media(max-width:600px){
+  .modal-overlay{align-items:flex-end;padding:0}
+  .modal{border-radius:18px 18px 0 0;max-height:92dvh;overflow-y:auto;padding:20px 16px 30px;width:100%!important;max-width:100%!important}
+  .modal-lg{width:100%!important;max-width:100%!important}
+}
+
+/* ── LOGIN MOBILE ── */
+@media(max-width:480px){
+  .login-card{padding:28px 16px;margin:10px}
+  .login-logo h1{font-size:22px}
+}
+
+/* ── PAGE HEADER FLEX ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap}
+.page-header h2{margin:0;font-size:20px;font-weight:800}
+
+/* ── BTN TOUCH ── */
+.btn{min-height:36px;-webkit-tap-highlight-color:transparent}
+.btn-icon{min-width:36px;min-height:36px}
+
+/* ── WEEK GRID MOBILE ── */
+@media(max-width:768px){
+  .week-scroll-wrapper .week-grid{min-width:560px}
+  .day-col{padding:5px}
+  .day-label{font-size:10px}
+  .day-num{font-size:16px}
+}
+
+/* ── LOG ROW ── */
+.log-row-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap}
+@media(max-width:480px){.log-row-actions .btn span{display:none}}
+
+/* ── EMP APP MOBILE ── */
+.emp-tabs{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;flex-wrap:nowrap}
+.emp-tab-btn{white-space:nowrap;flex-shrink:0}
+
+/* ── PRINT ── */
+@media print{.sidebar,.app-header,.mobile-menu-btn,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
+
+/* ── DARK ── */
 @media(prefers-color-scheme:dark){
   :root{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--border:#334155}
   .form-control{background:#0f172a;color:#f1f5f9;border-color:#334155}
@@ -254,14 +333,15 @@ textarea.form-control{resize:vertical;min-height:80px}
   .table tr:hover td{background:#1e3a5f}.day-col.today{background:#1e3a5f}
   .notif-item.read{background:#1e293b}.notif-item.pending{background:rgba(239,68,68,.08)}
   .sch-edit-btn{background:rgba(30,41,59,.95);color:#94a3b8;border-color:#334155}
+  .modal{background:var(--card)}
 }
 
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div id="loading-overlay" class="hidden"><div class="spinner"></div><div style="font-size:14px;font-weight:600">Carregando dados...</div></div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div id="toast-container"></div>
 
@@ -275,14 +355,12 @@ textarea.form-control{resize:vertical;min-height:80px}
     </div>
     <div id="login-form">
       <div class="form-group"><label for="login-email">Email</label>
-        <input type="email" class="form-control" id="login-email" placeholder="seu@email.com" autocomplete="email"/>
-        <span class="form-error" id="login-email-err">Insira um email válido</span>
-      </div>
+        <input type="email" class="form-control" id="login-email" placeholder="seu@email.com" autocomplete="email" inputmode="email"/>
+        <span class="form-error" id="login-email-err">Insira um email válido</span></div>
       <div class="form-group"><label for="login-pass">Senha</label>
         <div class="pass-wrapper"><input type="password" class="form-control" id="login-pass" placeholder="••••••"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('login-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-        <span class="form-error" id="login-pass-err">Senha não pode estar vazia</span>
-      </div>
-      <button class="btn btn-primary btn-full" id="btn-login">Entrar</button>
+        <span class="form-error" id="login-pass-err">Senha obrigatória</span></div>
+      <button class="btn btn-primary btn-full" id="btn-login" style="height:48px;font-size:16px">Entrar</button>
       <div class="login-switch"><button id="btn-to-forgot">Esqueci minha senha</button></div>
       <div class="login-switch">Não tem conta? <button id="btn-to-register">Criar conta</button></div>
     </div>
@@ -354,12 +432,8 @@ textarea.form-control{resize:vertical;min-height:80px}
         </div>
         <div class="grid-4 mb-4" id="dash-stats"></div>
         <div class="grid-3 mb-4" id="dash-secondary"></div>
-        <div class="charts-grid mb-4">
-          <div class="card"><div class="card-header"><h3>📊 Receita vs Custo M.O.</h3></div><div class="chart-container"><canvas id="chart-revenue-cost"></canvas></div></div>
-          <div class="card"><div class="card-header"><h3>📈 Lucro por Trabalho</h3></div><div class="chart-container"><canvas id="chart-profit"></canvas></div></div>
-        </div>
         <div class="card">
-          <div class="card-header"><h3>Ranking de Lucratividade por Cliente</h3><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" id="btn-export-csv">📥 CSV</button><button class="btn btn-outline btn-sm" id="btn-print-dash">🖨 Imprimir</button></div></div>
+          <div class="card-header" style="flex-wrap:wrap;gap:8px"><h3>Ranking de Lucratividade</h3><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" id="btn-export-csv">📥 CSV</button><button class="btn btn-outline btn-sm" id="btn-print-dash">🖨</button></div></div>
           <div class="card-body table-responsive">
             <table class="table"><thead><tr><th>#</th><th>Cliente</th><th>Frequência</th><th style="text-align:right">Valor Cobrado</th><th style="text-align:right">Custo M.O.</th><th style="text-align:right">Lucro</th></tr></thead><tbody id="ranking-body"></tbody></table>
           </div>
@@ -369,16 +443,16 @@ textarea.form-control{resize:vertical;min-height:80px}
       <!-- SCHEDULE -->
       <div class="tab-content" id="tab-schedule">
         <div class="schedule-header-row">
-          <h2 style="font-size:20px;font-weight:800">📅 Agenda Semanal</h2>
+          <h2 style="font-size:18px;font-weight:800">📅 Agenda</h2>
           <div class="schedule-nav-group">
             <button class="btn btn-outline btn-sm" id="prev-week">◀</button>
-            <span id="week-label" style="font-size:13px;font-weight:600;white-space:nowrap"></span>
+            <span id="week-label" style="font-size:12px;font-weight:600;white-space:nowrap"></span>
             <button class="btn btn-outline btn-sm" id="next-week">▶</button>
-            <button class="btn btn-primary btn-sm" id="btn-add-schedule">+ Adicionar</button>
+            <button class="btn btn-primary btn-sm" id="btn-add-schedule">+ Novo</button>
           </div>
         </div>
         <div class="week-scroll-wrapper"><div class="week-grid" id="week-grid"></div></div>
-        <div class="card mt-4"><div class="card-header"><h3>Lista de Agendamentos</h3><span id="schedule-count-badge" class="badge badge-gray" style="font-size:11px;margin-left:8px"></span></div><div class="card-body" id="schedule-list"></div></div>
+        <div class="card mt-4"><div class="card-header"><h3>Agendamentos</h3><span id="schedule-count-badge" class="badge badge-gray" style="font-size:11px;margin-left:6px"></span></div><div class="card-body" id="schedule-list"></div></div>
       </div>
 
       <!-- CHECKLIST -->
@@ -449,9 +523,9 @@ textarea.form-control{resize:vertical;min-height:80px}
       <div class="tab-content" id="tab-notifications">
         <div class="page-header">
           <h2>🔔 Notificações</h2>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
             <span class="badge badge-destructive" id="notif-count-badge"></span>
-            <button class="btn btn-outline btn-sm" id="btn-mark-all-read">✓ Todas lidas</button>
+            <button class="btn btn-outline btn-sm" id="btn-mark-all-read">✓ Lidas</button>
             <button class="btn btn-outline btn-sm" id="btn-del-read-notifs" style="color:var(--destructive)">🗑 Lidas</button>
             <button class="btn btn-danger btn-sm" id="btn-del-all-notifs">🗑 Tudo</button>
           </div>
@@ -624,20 +698,19 @@ textarea.form-control{resize:vertical;min-height:80px}
 
 <div class="modal-overlay hidden" id="emp-modal">
   <div class="modal"><h2>💼 Adicionar Funcionário</h2>
-    <div class="form-group"><label>Nome completo</label><input type="text" class="form-control" id="emp-name" placeholder="Nome completo"/></div>
-    <div class="form-group"><label>Email (login)</label><input type="email" class="form-control" id="emp-email" placeholder="email@exemplo.com"/></div>
-    <div class="form-group"><label>Senha</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="Mínimo 6 caracteres"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="emp-name" placeholder="Nome completo"/></div>
+    <div class="form-group"><label>Email</label><input type="email" class="form-control" id="emp-email" placeholder="email@exemplo.com" inputmode="email"/></div>
+    <div class="form-group"><label>Senha (mín. 6)</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="Mínimo 6 caracteres"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-emp">✅ Criar</button><button class="btn btn-outline" id="btn-cancel-emp">Cancelar</button></div>
   </div>
 </div>
-<!-- Edit Emp Modal -->
 <div class="modal-overlay hidden" id="edit-emp-modal">
   <div class="modal"><h2>✏️ Editar Funcionário</h2>
     <input type="hidden" id="edit-emp-id"/>
-    <div class="form-group"><label>Nome completo</label><input type="text" class="form-control" id="edit-emp-name"/></div>
-    <div class="form-group"><label>Email (login)</label><input type="email" class="form-control" id="edit-emp-email"/></div>
-    <div class="form-group"><label>Nova Senha <span style="font-size:11px;color:var(--text-muted)">(em branco = manter atual)</span></label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="edit-emp-name"/></div>
+    <div class="form-group"><label>Email</label><input type="email" class="form-control" id="edit-emp-email" inputmode="email"/></div>
+    <div class="form-group"><label>Nova Senha <span style="font-size:11px;color:var(--text-muted)">(em branco = manter)</span></label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="edit-emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-edit-emp">💾 Salvar</button><button class="btn btn-outline" id="btn-cancel-edit-emp">Cancelar</button></div>
   </div>
@@ -666,7 +739,7 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal"><h2>✅ Aprovar Usuário</h2>
     <input type="hidden" id="approve-user-id"/>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="approve-name" placeholder="Nome completo"/></div>
-    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Mínimo 6 caracteres" value="123456"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Senha inicial" value="123456"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)" aria-label="Mostrar senha"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="approve-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-secondary" id="btn-approve-user">✅ Aprovar</button><button class="btn btn-outline" id="btn-cancel-approve">Cancelar</button></div>
   </div>
@@ -699,29 +772,23 @@ textarea.form-control{resize:vertical;min-height:80px}
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // SUPABASE
-// ═══════════════════════════════════════════════════
-const SUPA_URL = 'https://ekmdsxumterpqjypzuza.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrbWRzeHVtdGVycHFqeXB6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzMxNDQsImV4cCI6MjA4NzU0OTE0NH0.LNwzl4OKzhK2WEcSgvnnwWMS-kE_IYmpih_8ONs0-MU';
-const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-
-function sbUpsert(table,data){supa.from(table).upsert(data).then(({error})=>{if(error)console.error(`[${table}]`,error.message);});}
-function sbDelete(table,id){supa.from(table).delete().eq('id',id).then(({error})=>{if(error)console.error(`[${table}] del`,error.message);});}
-function sbUpdate(table,id,fields){supa.from(table).update(fields).eq('id',id).then(({error})=>{if(error)console.error(`[${table}] upd`,error.message);});}
-
+// ═══════════════════════════════════════
+const SUPA_URL='https://ekmdsxumterpqjypzuza.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrbWRzeHVtdGVycHFqeXB6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzMxNDQsImV4cCI6MjA4NzU0OTE0NH0.LNwzl4OKzhK2WEcSgvnnwWMS-kE_IYmpih_8ONs0-MU';
+const supa=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+function sbUpsert(t,d){supa.from(t).upsert(d).then(({error})=>{if(error)console.error(`[${t}]`,error.message);});}
+function sbDelete(t,id){supa.from(t).delete().eq('id',id).then(({error})=>{if(error)console.error(`[${t}] del`,error.message);});}
+function sbUpdate(t,id,f){supa.from(t).update(f).eq('id',id).then(({error})=>{if(error)console.error(`[${t}] upd`,error.message);});}
 async function loadAllFromSupabase(){
-  const [r1,r2,r3,r4,r5,r6,r7,r8,r9,r10]=await Promise.all([
-    supa.from('employees').select('*'),
-    supa.from('clients').select('*'),
-    supa.from('schedule_entries').select('*'),
-    supa.from('work_logs').select('*'),
+  const[r1,r2,r3,r4,r5,r6,r7,r8,r9,r10]=await Promise.all([
+    supa.from('employees').select('*'),supa.from('clients').select('*'),
+    supa.from('schedule_entries').select('*'),supa.from('work_logs').select('*'),
     supa.from('costs').select('*'),
     supa.from('notifications').select('*').order('created_at',{ascending:false}),
-    supa.from('pending_users').select('*'),
-    supa.from('frequencies').select('*'),
-    supa.from('referrals').select('*'),
-    supa.from('users_login').select('*'),
+    supa.from('pending_users').select('*'),supa.from('frequencies').select('*'),
+    supa.from('referrals').select('*'),supa.from('users_login').select('*'),
   ]);
   db.employees=r1.data||[];db.clients=r2.data||[];db.scheduleEntries=r3.data||[];
   db.workLogs=r4.data||[];db.costs=r5.data||[];db.notifications=r6.data||[];
@@ -730,17 +797,16 @@ async function loadAllFromSupabase(){
   (r10.data||[]).forEach(u=>{USERS[u.email]={role:u.role,email:u.email,username:u.username,password:u.password,employeeId:u.employee_id};});
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // ESTADO
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 const USERS={};
 const db={employees:[],clients:[],scheduleEntries:[],workLogs:[],costs:[],notifications:[],pendingUsers:[],frequencies:[],referrals:[]};
 let currentUser=null,currentEmpId=null,weekOffset=0,costsFilter='all';
-let _chartRC=null,_chartP=null;
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // UTILS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 const $=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6);}
 function fmt(v){return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);}
@@ -748,7 +814,6 @@ function fmtDate(d){if(!d)return'';const[y,m,dd]=(d+'').split('-');return`${dd}/
 function getClient(id){return db.clients.find(c=>c.id===id);}
 function getEmployee(id){return db.employees.find(e=>e.id===id);}
 function getWeekStart(d){const day=d.getDay(),diff=d.getDate()-day;return new Date(d.setDate(diff));}
-
 function toast(msg,type='success'){
   const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);
@@ -756,7 +821,6 @@ function toast(msg,type='success'){
 }
 function openModal(id){$(id)?.classList.remove('hidden');}
 function closeModal(id){$(id)?.classList.add('hidden');}
-
 function toggleFieldPass(fieldId,btn){
   const inp=document.getElementById(fieldId);if(!inp)return;
   const show=inp.type==='password';inp.type=show?'text':'password';
@@ -766,9 +830,9 @@ function toggleFieldPass(fieldId,btn){
     :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // AUTH
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 async function doLogin(){
   const emailEl=$('login-email'),passEl=$('login-pass');
   const email=(emailEl.value||'').trim().toLowerCase(),pass=passEl.value;
@@ -798,7 +862,6 @@ async function doLogin(){
     $('loading-overlay').classList.add('hidden');console.error(err);toast('Erro de conexão','error');
   }finally{btn.disabled=false;btn.textContent='Entrar';}
 }
-
 function doLogout(){
   currentUser=null;currentEmpId=null;
   $('app-page').classList.add('hidden');$('emp-app-page').classList.add('hidden');
@@ -806,19 +869,21 @@ function doLogout(){
   $('login-email').value='';$('login-pass').value='';
 }
 
-// ═══════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// NAVEGAÇÃO
+// ═══════════════════════════════════════
 function navigate(tab){
   document.querySelectorAll('#sidebar .nav-item').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
   const nb=document.querySelector(`#sidebar [data-tab="${tab}"]`);
   if(nb){nb.classList.add('active');nb.setAttribute('aria-current','page');}
   document.querySelectorAll('#admin-tabs .tab-content').forEach(t=>t.classList.remove('active'));
   $('tab-'+tab)?.classList.add('active');
+  // fecha sidebar no mobile
+  $('sidebar')?.classList.remove('open');
+  $('sidebar-overlay')?.classList.remove('show');
   const renders={dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals};
   if(renders[tab])renders[tab]();
 }
-
 function empNavigate(tab){
   document.querySelectorAll('.emp-tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.emp-tab-btn[data-etab="${tab}"]`)?.classList.add('active');
@@ -827,10 +892,8 @@ function empNavigate(tab){
   const renders={'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals};
   if(renders[tab])renders[tab]();
 }
-
 function renderTab(tab){navigate(tab);}
 function initApp(){populateSelects();updateNotifBadge();renderDashboard();}
-
 function initEmpApp(empId){
   currentEmpId=empId;
   const myClients=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===empId));
@@ -840,26 +903,24 @@ function initEmpApp(empId){
   const empObj=db.employees.find(e=>e.id===empId);
   if(empObj&&$('emp-header-sub'))$('emp-header-sub').textContent=empObj.name;
 }
-
 function populateSelects(){
-  const clientOpts='<option value="">Selecione...</option>'+db.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  ['sch-client','cl-client'].forEach(id=>{if($(id))$(id).innerHTML=clientOpts;});
-  const empOpts='<option value="">Selecione...</option>'+db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
-  if($('sch-emp'))$('sch-emp').innerHTML=empOpts;
-  const freqOpts='<option value="">Selecione...</option>'+db.frequencies.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');
-  if($('client-freq'))$('client-freq').innerHTML=freqOpts;
+  const cO='<option value="">Selecione...</option>'+db.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  ['sch-client','cl-client'].forEach(id=>{if($(id))$(id).innerHTML=cO;});
+  const eO='<option value="">Selecione...</option>'+db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  if($('sch-emp'))$('sch-emp').innerHTML=eO;
+  const fO='<option value="">Selecione...</option>'+db.frequencies.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');
+  if($('client-freq'))$('client-freq').innerHTML=fO;
 }
-
 function updateNotifBadge(){
   const cnt=db.notifications.filter(n=>n.status==='pending').length;
-  const badge=$('notif-badge');const countBadge=$('notif-count-badge');
+  const badge=$('notif-badge'),cb=$('notif-count-badge');
   if(badge){badge.textContent=cnt;cnt>0?badge.classList.remove('hidden'):badge.classList.add('hidden');}
-  if(countBadge)countBadge.textContent=cnt>0?`${cnt} pendente${cnt>1?'s':''}`:'';
+  if(cb)cb.textContent=cnt>0?`${cnt} pendente${cnt>1?'s':''}`:'';
 }
 
-// ═══════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// DASHBOARD (sem gráficos)
+// ═══════════════════════════════════════
 function renderDashboard(){
   const today=new Date().toISOString().split('T')[0];
   const ym=today.substr(0,7);
@@ -883,34 +944,11 @@ function renderDashboard(){
   const cm={};
   confirmed.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.id])cm[c.id]={name:c.name,frequency:c.frequency,price:c.price,laborCost:0};cm[c.id].laborCost+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
   const ranking=Object.values(cm).map(c=>({...c,profit:c.price-c.laborCost})).sort((a,b)=>b.profit-a.profit);
-  if($('ranking-body'))$('ranking-body').innerHTML=ranking.map((c,i)=>
-    `<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td>
+  if($('ranking-body'))$('ranking-body').innerHTML=ranking.length===0?'<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">Nenhum dado no período</td></tr>'
+    :ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td>
     <td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td>
     <td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');
-  renderCharts(confirmed);
 }
-
-function renderCharts(confirmed){
-  if(typeof Chart==='undefined')return;
-  const cm={};
-  confirmed.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.name])cm[c.name]={rev:0,pay:0};cm[c.name].rev+=l.revenue;cm[c.name].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
-  const labels=Object.keys(cm);
-  const ctx1=document.getElementById('chart-revenue-cost');
-  if(ctx1){if(_chartRC)_chartRC.destroy();
-    _chartRC=new Chart(ctx1,{type:'bar',data:{labels,datasets:[
-      {label:'Receita',data:labels.map(k=>cm[k].rev),backgroundColor:'rgba(37,99,235,.82)',borderRadius:5},
-      {label:'Custo M.O.',data:labels.map(k=>cm[k].pay),backgroundColor:'rgba(239,68,68,.78)',borderRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{ticks:{callback:v=>'R$'+v}}}}});}
-  const bd={};
-  [...confirmed].sort((a,b)=>a.work_date.localeCompare(b.work_date)).forEach(l=>{
-    const pay=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);bd[l.work_date]=(bd[l.work_date]||0)+(l.revenue-pay);});
-  const ctx2=document.getElementById('chart-profit');
-  if(ctx2){if(_chartP)_chartP.destroy();
-    _chartP=new Chart(ctx2,{type:'line',data:{labels:Object.keys(bd).map(d=>fmtDate(d)),datasets:[
-      {label:'Lucro',data:Object.values(bd),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.12)',fill:true,tension:.4,pointRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{ticks:{callback:v=>'R$'+v}}}}});}
-}
-
 function exportRankingCSV(){
   const start=$('dash-start')?.value||'',end=$('dash-end')?.value||'';
   const confirmed=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado');
@@ -921,9 +959,9 @@ function exportRankingCSV(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv'}));a.download=`ranking-${start}-${end}.csv`;a.click();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // AGENDA
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderSchedule(){
   const base=getWeekStart(new Date());base.setDate(base.getDate()+weekOffset*7);
   const days=[];for(let i=0;i<7;i++){const d=new Date(base);d.setDate(base.getDate()+i);days.push(d);}
@@ -936,82 +974,75 @@ function renderSchedule(){
     return`<div class="day-col ${ds===today?'today':''}">
       <div class="day-label">${dn[i]}</div><div class="day-num">${d.getDate()}</div>
       ${entries.map(e=>{const cl=getClient(e.client_id);return`<div class="schedule-item ${e.status}">
-        <div style="font-weight:600;font-size:11px">${cl?cl.name:'?'}</div>
+        <div style="font-weight:600;font-size:11px;word-break:break-word">${cl?cl.name:'?'}</div>
         <span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}" style="font-size:9px">${e.status}</span>
         <button class="sch-edit-btn" data-edit-schedule="${e.id}">✏️</button>
       </div>`;}).join('')}
     </div>`;}).join('');
   const we=db.scheduleEntries.filter(e=>e.work_date>=s0&&e.work_date<=s6).sort((a,b)=>a.work_date.localeCompare(b.work_date));
   const badge=document.getElementById('schedule-count-badge');
-  if(badge)badge.textContent=we.length?`${we.length} agendamento${we.length>1?'s':''}` :'';
+  if(badge)badge.textContent=we.length?`${we.length} agendamento${we.length>1?'s':''}`:'';
   $('schedule-list').innerHTML=we.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento esta semana</div>'
     :we.map(e=>{const cl=getClient(e.client_id);const emps=(e.employee_ids||[]).map(id=>getEmployee(id)?.name||id).join(', ');
-      return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <div style="flex:1;min-width:180px"><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div>
-          <div class="log-employees">👤 ${emps||'Nenhuma'}</div>
+      return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px"><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div>
+          <div class="log-employees">👤 ${emps||'—'}</div>
           ${e.notes?`<div style="font-size:12px;color:var(--text-muted);font-style:italic">"${e.notes}"</div>`:''}
         </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
           <span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}">${e.status}</span>
-          <button class="btn btn-ghost btn-icon btn-sm" data-edit-schedule="${e.id}" title="Editar">✏️</button>
-          <button class="btn btn-danger btn-icon btn-sm" data-del-schedule="${e.id}" title="Excluir">🗑</button>
+          <button class="btn btn-ghost btn-icon btn-sm" data-edit-schedule="${e.id}">✏️</button>
+          <button class="btn btn-danger btn-icon btn-sm" data-del-schedule="${e.id}">🗑</button>
         </div>
       </div></div>`;}).join('');
 }
-
 function editSchedule(id){
   const e=db.scheduleEntries.find(x=>x.id===id);if(!e)return;
   if($('sch-modal-title'))$('sch-modal-title').textContent='✏️ Editar Agendamento';
   if($('sch-edit-id'))$('sch-edit-id').value=e.id;
   $('sch-date').value=e.work_date;$('sch-status').value=e.status;$('sch-notes').value=e.notes||'';
-  populateSelects();
-  setTimeout(()=>{$('sch-client').value=e.client_id;$('sch-emp').value=(e.employee_ids||[])[0]||'';},0);
+  populateSelects();setTimeout(()=>{$('sch-client').value=e.client_id;$('sch-emp').value=(e.employee_ids||[])[0]||'';},0);
   openModal('schedule-modal');
 }
-
 function saveSchedule(){
   const editId=$('sch-edit-id')?.value||'';
   const date=$('sch-date').value,clientId=$('sch-client').value,empId=$('sch-emp').value,status=$('sch-status').value,notes=($('sch-notes').value||'').trim();
   if(!date||!clientId){toast('Preencha data e cliente','error');return;}
   let entryId=editId;
-  if(editId){
-    const entry=db.scheduleEntries.find(x=>x.id===editId);
-    if(entry){entry.work_date=date;entry.client_id=clientId;if(empId)entry.employee_ids=[empId];entry.status=status;entry.notes=notes;}
-    toast('Agendamento atualizado!','success');
-  }else{entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});toast('Agendamento criado!','success');}
+  if(editId){const e=db.scheduleEntries.find(x=>x.id===editId);if(e){e.work_date=date;e.client_id=clientId;if(empId)e.employee_ids=[empId];e.status=status;e.notes=notes;}toast('Atualizado!','success');}
+  else{entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});toast('Criado!','success');}
   const entry=db.scheduleEntries.find(x=>x.id===entryId);if(entry)sbUpsert('schedule_entries',entry);
   if($('sch-edit-id'))$('sch-edit-id').value='';
   if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
   closeModal('schedule-modal');renderSchedule();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CHECKLIST / PAGAMENTOS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderChecklist(){
   const list=db.workLogs.sort((a,b)=>b.work_date.localeCompare(a.work_date));
   $('checklist-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💵</div>Nenhum registro</div>'
-    :list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const emp=getEmployee(e.employee_id);return`${emp?emp.name:e.employee_id}: ${fmt(e.payment_amount)}`;}).join(' | ');
-      return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <div style="flex:1;min-width:180px"><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div>
-          <div class="log-employees" style="font-size:12px;color:var(--text-muted)">${emps}</div>
-          ${l.cancellation_reason?`<div style="font-size:11px;color:var(--destructive)">Motivo: ${l.cancellation_reason}</div>`:''}
+    :list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const emp=getEmployee(e.employee_id);return`${emp?emp.name:e.employee_id}: ${fmt(e.payment_amount)}`;}).join(' · ');
+      return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px"><div class="log-date">${fmtDate(l.work_date)}</div>
+          <div class="log-client">${cl?cl.name:'?'}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${emps}</div>
+          ${l.cancellation_reason?`<div style="font-size:11px;color:var(--destructive)">⚠️ ${l.cancellation_reason}</div>`:''}
         </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;flex-wrap:wrap">
           <span class="badge ${l.status==='Confirmado'?'badge-secondary':l.status==='Cancelado'?'badge-destructive':'badge-warning'}">${l.status}</span>
-          <span style="font-weight:700;color:var(--secondary)">${fmt(l.revenue)}</span>
-          <button class="btn btn-ghost btn-icon btn-sm" data-edit-log="${l.id}" title="Editar">✏️</button>
-          <button class="btn btn-danger btn-icon btn-sm" data-del-log="${l.id}" title="Apagar">🗑</button>
+          <strong style="color:var(--secondary);white-space:nowrap">${fmt(l.revenue)}</strong>
+          <button class="btn btn-ghost btn-icon btn-sm" data-edit-log="${l.id}">✏️</button>
+          <button class="btn btn-danger btn-icon btn-sm" data-del-log="${l.id}">🗑</button>
         </div>
       </div></div>`;}).join('');
 }
-
 function openAddWorkLog(){
-  $('cl-edit-id').value='';$('checklist-modal-title').textContent='💵 Novo Registro de Trabalho';
+  $('cl-edit-id').value='';$('checklist-modal-title').textContent='💵 Novo Registro';
   $('cl-date').value='';$('cl-status').value='Confirmado';$('cl-reason').value='';$('cl-revenue').value='';
   populateSelects();$('cl-emp-rows').innerHTML='';addEmpRow();openModal('checklist-modal');
 }
-
 function editWorkLog(id){
   const l=db.workLogs.find(x=>x.id===id);if(!l)return;
   $('cl-edit-id').value=l.id;$('checklist-modal-title').textContent='✏️ Editar Registro';
@@ -1022,15 +1053,13 @@ function editWorkLog(id){
   if(!(l.work_log_employees||[]).length)addEmpRow();
   openModal('checklist-modal');
 }
-
 function addEmpRow(empId='',pay=''){
-  const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px';
-  div.innerHTML=`<select class="form-control emp-row-emp" style="flex:1">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select>
-    <input type="number" class="form-control emp-row-pay" placeholder="R$" value="${pay}" style="width:100px"/>
+  const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';
+  div.innerHTML=`<select class="form-control emp-row-emp" style="flex:1;min-width:0">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select>
+    <input type="number" class="form-control emp-row-pay" placeholder="R$" value="${pay}" style="width:90px;min-width:0" inputmode="decimal"/>
     <button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;
   $('cl-emp-rows').appendChild(div);
 }
-
 function saveWorkLog(){
   const editId=$('cl-edit-id').value,clientId=$('cl-client').value,date=$('cl-date').value,status=$('cl-status').value,reason=$('cl-reason').value,revenue=parseFloat($('cl-revenue').value)||0;
   if(!clientId||!date){toast('Preencha cliente e data','error');return;}
@@ -1042,41 +1071,35 @@ function saveWorkLog(){
   closeModal('checklist-modal');toast('Registro salvo!','success');renderChecklist();renderDashboard();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CLIENTES
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderClients(){
   $('clients-table-body').innerHTML=db.clients.map(c=>{
     const emps=(c.client_employees||[]).map(ce=>{const e=getEmployee(ce.employee_id);return e?e.name:'?';}).join(', ');
     return`<tr><td><strong>${c.name}</strong></td><td>${c.frequency||'—'}</td><td style="text-align:right">${fmt(c.price)}</td><td style="font-size:12px">${emps}</td>
-    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-client="${c.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-client="${c.id}">🗑</button></div></td></tr>`;
-  }).join('');
+    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-client="${c.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-client="${c.id}">🗑</button></div></td></tr>`;}).join('');
 }
-
 function addClientEmpRow(empId='',pay=''){
-  const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px';
-  div.innerHTML=`<select class="form-control cemp-row-emp" style="flex:1">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select>
-    <input type="number" class="form-control cemp-row-pay" placeholder="Pagamento" value="${pay}" style="width:110px"/>
+  const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';
+  div.innerHTML=`<select class="form-control cemp-row-emp" style="flex:1;min-width:0">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select>
+    <input type="number" class="form-control cemp-row-pay" placeholder="Pag." value="${pay}" style="width:90px;min-width:0" inputmode="decimal"/>
     <button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;
   $('client-emp-rows').appendChild(div);
 }
-
 function openAddClient(){
   $('client-edit-id').value='';$('client-name').value='';$('client-price').value='';$('client-transport').checked=false;$('client-notes').value='';
   populateSelects();setTimeout(()=>$('client-freq').value='',0);
   $('client-emp-rows').innerHTML='';addClientEmpRow();openModal('client-modal');
 }
-
 function editClient(id){
   const c=db.clients.find(x=>x.id===id);if(!c)return;
   $('client-edit-id').value=c.id;$('client-name').value=c.name;$('client-price').value=c.price;$('client-transport').checked=!!c.no_transport_cost;$('client-notes').value=c.notes||'';
   populateSelects();setTimeout(()=>$('client-freq').value=c.frequency,0);
   $('client-emp-rows').innerHTML='';
   (c.client_employees||[]).forEach(e=>addClientEmpRow(e.employee_id,e.payment_amount));
-  if(!(c.client_employees||[]).length)addClientEmpRow();
-  openModal('client-modal');
+  if(!(c.client_employees||[]).length)addClientEmpRow();openModal('client-modal');
 }
-
 function saveClient(){
   const id=$('client-edit-id').value,name=$('client-name').value.trim(),freq=$('client-freq').value,price=parseFloat($('client-price').value)||0,noT=$('client-transport').checked,notes=$('client-notes').value.trim();
   if(!name||!freq){toast('Preencha nome e frequência','error');return;}
@@ -1088,27 +1111,21 @@ function saveClient(){
   closeModal('client-modal');toast('Cliente salvo!','success');renderClients();populateSelects();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // FUNCIONÁRIOS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderEmployees(){
   $('emp-table-body').innerHTML=db.employees.map(e=>{
     const u=Object.values(USERS).find(u=>u.email===e.email);
     const badge=u?(u.role==='adm'?'<span class="role-badge-adm">Admin</span>':'<span class="role-badge-col">Colaborador</span>'):'<span class="no-login-badge">Sem login</span>';
     return`<tr><td><strong>${e.name}</strong></td><td style="font-size:12px">${e.email||''}</td><td>${badge}</td><td>${fmtDate(e.created_at)}</td>
-    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}" title="Editar">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}" title="Remover">🗑</button></div></td></tr>`;
-  }).join('');
-  const pending=db.pendingUsers;
-  $('pending-list').innerHTML=pending.length===0?'<div class="empty"><div class="icon">📩</div>Nenhum cadastro pendente</div>'
-    :pending.map(u=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px">
-      <span>📧 ${u.email}</span>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-secondary btn-sm" data-approve-user="${u.id}" data-email="${u.email}">✅ Aprovar</button>
-        <button class="btn btn-danger btn-sm" data-reject-user="${u.id}">❌ Rejeitar</button>
-      </div>
+    <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}">🗑</button></div></td></tr>`;}).join('');
+  $('pending-list').innerHTML=db.pendingUsers.length===0?'<div class="empty"><div class="icon">📩</div>Nenhum cadastro pendente</div>'
+    :db.pendingUsers.map(u=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px">
+      <span style="font-size:13px">📧 ${u.email}</span>
+      <div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" data-approve-user="${u.id}">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-user="${u.id}">❌</button></div>
     </div>`).join('');
 }
-
 function saveEmployee(){
   const name=$('emp-name').value.trim(),email=$('emp-email').value.trim().toLowerCase(),pass=$('emp-pass').value,role=$('emp-role').value;
   if(!name||!email){toast('Preencha nome e email','error');return;}
@@ -1118,25 +1135,22 @@ function saveEmployee(){
   const rec={id:newId,name,email,created_at:today};
   db.employees.push(rec);USERS[email]={role,email,username:name,password:pass,employeeId:newId};
   closeModal('emp-modal');$('emp-name').value='';$('emp-email').value='';$('emp-pass').value='';$('emp-role').value='colaborador';
-  toast(`"${name}" criado com acesso!`,'success');renderEmployees();populateSelects();
+  toast(`"${name}" criado!`,'success');renderEmployees();populateSelects();
   sbUpsert('employees',rec);sbUpsert('users_login',{id:'ul_'+newId,email,role,username:name,password:pass,employee_id:newId});
 }
-
 function openEditEmpModal(empId){
   const emp=db.employees.find(e=>e.id===empId);if(!emp)return;
   const u=Object.values(USERS).find(u=>u.email===emp.email);
   $('edit-emp-id').value=emp.id;$('edit-emp-name').value=emp.name;$('edit-emp-email').value=emp.email;$('edit-emp-pass').value='';
   $('edit-emp-role').value=u?u.role:'colaborador';openModal('edit-emp-modal');
 }
-
 function saveEditEmployee(){
   const empId=$('edit-emp-id').value;
   const name=$('edit-emp-name').value.trim(),newEmail=$('edit-emp-email').value.trim().toLowerCase(),newPass=$('edit-emp-pass').value,newRole=$('edit-emp-role').value;
   if(!name||!newEmail){toast('Nome e email obrigatórios','error');return;}
   if(newPass&&newPass.length<6){toast('Senha mínimo 6 caracteres','error');return;}
   const emp=db.employees.find(e=>e.id===empId);if(!emp)return;
-  const conflict=Object.values(USERS).find(u=>u.email===newEmail&&u.email!==emp.email);
-  if(conflict){toast('Email já em uso','error');return;}
+  if(Object.values(USERS).find(u=>u.email===newEmail&&u.email!==emp.email)){toast('Email já em uso','error');return;}
   const oldKey=Object.keys(USERS).find(k=>USERS[k].email===emp.email);
   const oldPass=oldKey?USERS[oldKey].password:'123456';
   if(oldKey)delete USERS[oldKey];
@@ -1146,7 +1160,6 @@ function saveEditEmployee(){
   sbUpsert('users_login',{id:'ul_'+empId,email:newEmail,role:newRole,username:name,password:newPass||oldPass,employee_id:empId});
   closeModal('edit-emp-modal');toast(`"${name}" atualizado!`,'success');renderEmployees();populateSelects();
 }
-
 function approveUser(){
   const id=$('approve-user-id').value,name=$('approve-name').value.trim(),pass=$('approve-pass').value||'123456',role=$('approve-role').value||'colaborador';
   if(!name){toast('Informe o nome','error');return;}
@@ -1162,9 +1175,9 @@ function approveUser(){
   closeModal('approve-modal');renderEmployees();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CUSTOS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderCosts(){
   const rec=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0);
   const uniq=db.costs.filter(c=>c.cost_type==='unico').reduce((s,c)=>s+c.amount,0);
@@ -1173,17 +1186,17 @@ function renderCosts(){
   const list=costsFilter==='all'?db.costs:db.costs.filter(c=>c.cost_type===costsFilter);
   $('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">🧾</div>Nenhum custo</div>'
     :list.map(c=>`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
-      <div><div class="log-date">${fmtDate(c.created_at||c.date)}</div><div style="font-weight:600">${c.description}</div>
+      <div><div class="log-date">${fmtDate(c.created_at||c.date)}</div>
+        <div style="font-weight:600">${c.description}</div>
         <span class="badge badge-gray">${c.category||'—'}</span>
         <span class="badge ${c.cost_type==='recorrente'?'badge-warning':'badge-secondary'}" style="margin-left:4px">${c.cost_type==='recorrente'?'Recorrente':'Único'}</span>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-weight:700;color:var(--destructive)">${fmt(c.amount)}</span>
+        <strong style="color:var(--destructive)">${fmt(c.amount)}</strong>
         <button class="btn btn-danger btn-icon btn-sm" data-del-cost="${c.id}">🗑</button>
       </div>
     </div></div>`).join('');
 }
-
 function saveCost(){
   const cat=$('cost-cat').value,desc=$('cost-desc').value.trim(),amount=parseFloat($('cost-amount').value)||0,type=$('cost-type').value;
   if(!desc||amount<=0){toast('Preencha todos os campos','error');return;}
@@ -1192,59 +1205,53 @@ function saveCost(){
   sbUpsert('costs',rec);
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // NOTIFICAÇÕES
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderNotifications(){
   updateNotifBadge();
   $('notifications-list').innerHTML=db.notifications.length===0?'<div class="empty"><div class="icon">🔔</div>Nenhuma notificação</div>'
     :db.notifications.map(n=>{const cl=getClient(n.client_id);const emp=getEmployee(n.employee_id);
-      return`<div class="notif-item ${n.status}"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+      return`<div class="notif-item ${n.status}"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
         <div><div style="font-weight:600;margin-bottom:4px">${n.note}</div>
           <div style="font-size:12px;color:var(--text-muted)">${cl?`📍 ${cl.name}`:''} ${emp?`👤 ${emp.name}`:''} • ${new Date(n.created_at).toLocaleDateString('pt-BR')}</div>
         </div>
-        <div style="display:flex;gap:6px;flex-shrink:0">
+        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap">
           ${n.status==='pending'?`<button class="btn btn-outline btn-sm" data-notif-read="${n.id}">✓ Lida</button>`:''}
           <button class="btn btn-danger btn-sm" data-notif-del="${n.id}">🗑</button>
         </div>
       </div></div>`;}).join('');
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // FREQUÊNCIAS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderFrequencies(){
   $('freq-list').innerHTML=db.frequencies.length===0?'<div class="empty"><div class="icon">📆</div>Nenhuma frequência</div>'
-    :db.frequencies.map(f=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px">
+    :db.frequencies.map(f=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px">
       <span style="font-weight:600">${f.name}</span>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-ghost btn-sm" data-edit-freq="${f.id}">✏️ Editar</button>
-        <button class="btn btn-danger btn-icon btn-sm" data-del-freq="${f.id}">🗑</button>
-      </div>
+      <div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" data-edit-freq="${f.id}">✏️ Editar</button><button class="btn btn-danger btn-icon btn-sm" data-del-freq="${f.id}">🗑</button></div>
     </div>`).join('');
 }
-
 function saveFreq(){
   const id=$('freq-edit-id').value,name=$('freq-name').value.trim();
   if(!name){toast('Digite o nome','error');return;}
   let freqId=id;
-  if(id){const f=db.frequencies.find(f=>f.id===id);if(f)f.name=name;toast('Frequência atualizada!','success');}
-  else{freqId=uid();db.frequencies.push({id:freqId,name});toast('Frequência adicionada!','success');}
+  if(id){const f=db.frequencies.find(f=>f.id===id);if(f)f.name=name;toast('Atualizada!','success');}
+  else{freqId=uid();db.frequencies.push({id:freqId,name});toast('Adicionada!','success');}
   sbUpsert('frequencies',{id:freqId,name});
   closeModal('freq-modal');$('freq-edit-id').value='';$('freq-name').value='';renderFrequencies();populateSelects();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // INDICAÇÕES
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderReferrals(){
-  const pending=db.referrals.filter(r=>r.status==='pending');
-  const approved=db.referrals.filter(r=>r.status==='approved');
-  const rejected=db.referrals.filter(r=>r.status==='rejected');
+  const p=db.referrals.filter(r=>r.status==='pending');const ap=db.referrals.filter(r=>r.status==='approved');const rej=db.referrals.filter(r=>r.status==='rejected');
   if($('referral-stats'))$('referral-stats').innerHTML=`
-    <div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">${pending.length}</div></div>
-    <div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value">${approved.length}</div></div>
-    <div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">❌ Rejeitadas</div><div class="stat-value">${rejected.length}</div></div>`;
+    <div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">${p.length}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value">${ap.length}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">❌ Rejeitadas</div><div class="stat-value">${rej.length}</div></div>`;
   $('referrals-list').innerHTML=db.referrals.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>'
     :db.referrals.map(r=>{const emp=getEmployee(r.referrer_employee_id);
       return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
@@ -1252,19 +1259,18 @@ function renderReferrals(){
           <div style="font-size:12px;color:var(--text-muted)">👤 ${emp?emp.name:'?'} • ${fmtDate(r.created_at)}</div>
           ${r.bonus>0?`<div style="font-size:12px;color:var(--secondary);font-weight:600">Bônus: ${fmt(r.bonus)}</div>`:''}
         </div>
-        <div style="display:flex;align-items:center;gap:6px">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
           <span class="badge ${r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning'}">${r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente'}</span>
-          ${r.status==='pending'?`<button class="btn btn-outline btn-sm" data-approve-ref="${r.id}">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-ref="${r.id}">❌</button>`:''}
+          ${r.status==='pending'?`<button class="btn btn-outline btn-sm" data-approve-ref="${r.id}">✅</button><button class="btn btn-danger btn-sm" data-reject-ref="${r.id}">❌</button>`:''}
           <button class="btn btn-danger btn-icon btn-sm" data-del-ref="${r.id}">🗑</button>
         </div>
       </div></div>`;}).join('');
 }
 
-// ═══════════════════════════════════════════════════
-// VISÃO DO FUNCIONÁRIO
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// VISÃO FUNCIONÁRIO
+// ═══════════════════════════════════════
 let empPeriodStart='',empPeriodEnd='';
-
 function setEmpPeriod(period,custom){
   const today=new Date().toISOString().split('T')[0];const ym=today.substr(0,7);
   if(period==='mes'){empPeriodStart=ym+'-01';empPeriodEnd=today;}
@@ -1272,7 +1278,6 @@ function setEmpPeriod(period,custom){
   else if(custom){empPeriodStart=custom.start;empPeriodEnd=custom.end;}
   renderEmpGanhos();
 }
-
 function renderEmpGanhos(){
   if(!currentEmpId)return;
   const myLogs=db.workLogs.filter(l=>l.work_date>=empPeriodStart&&l.work_date<=empPeriodEnd&&l.status==='Confirmado'&&(l.work_log_employees||[]).some(e=>e.employee_id===currentEmpId));
@@ -1282,10 +1287,9 @@ function renderEmpGanhos(){
     :myLogs.map(l=>{const cl=getClient(l.client_id);const emp=(l.work_log_employees||[]).find(e=>e.employee_id===currentEmpId);
       return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between">
         <div><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div></div>
-        <span style="font-weight:700;color:var(--secondary)">${fmt(emp?emp.payment_amount:0)}</span>
+        <strong style="color:var(--secondary)">${fmt(emp?emp.payment_amount:0)}</strong>
       </div></div>`;}).join('');
 }
-
 function renderEmpAgenda(){
   if(!currentEmpId)return;
   const today=new Date().toISOString().split('T')[0];
@@ -1297,7 +1301,6 @@ function renderEmpAgenda(){
         <span class="badge ${e.status==='confirmado'?'badge-secondary':'badge-warning'}">${e.status}</span>
       </div></div>`;}).join('');
 }
-
 function renderEmpClients(){
   if(!currentEmpId)return;
   const myClients=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===currentEmpId));
@@ -1305,10 +1308,9 @@ function renderEmpClients(){
     :myClients.map(c=>{const ce=(c.client_employees||[]).find(e=>e.employee_id===currentEmpId);
       return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between">
         <div><div style="font-weight:600">${c.name}</div><div style="font-size:12px;color:var(--text-muted)">${c.frequency||'—'}</div></div>
-        <span style="font-weight:700;color:var(--secondary)">${fmt(ce?ce.payment_amount:0)}/vez</span>
+        <strong style="color:var(--secondary)">${fmt(ce?ce.payment_amount:0)}/vez</strong>
       </div></div>`;}).join('');
 }
-
 function renderEmpReferrals(){
   if(!currentEmpId)return;
   const mine=db.referrals.filter(r=>r.referrer_employee_id===currentEmpId);
@@ -1316,22 +1318,23 @@ function renderEmpReferrals(){
     :mine.map(r=>`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between">
       <div><div style="font-weight:600">${r.client_name}</div><div style="font-size:12px;color:var(--text-muted)">${fmtDate(r.created_at)}</div></div>
       <div><span class="badge ${r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning'}">${r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente'}</span>
-        ${r.bonus>0?`<span style="font-size:12px;color:var(--secondary);margin-left:6px">${fmt(r.bonus)}</span>`:''}
+        ${r.bonus>0?`<strong style="font-size:12px;color:var(--secondary);margin-left:6px">${fmt(r.bonus)}</strong>`:''}
       </div>
     </div></div>`).join('');
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // EVENT LISTENERS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   // Login
   $('btn-login').addEventListener('click',()=>doLogin());
   $('login-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
   // Sidebar
   document.querySelectorAll('#sidebar .nav-item').forEach(btn=>{btn.addEventListener('click',()=>navigate(btn.dataset.tab));});
-  // Mobile
-  $('mobile-menu-btn')?.addEventListener('click',()=>$('sidebar')?.classList.toggle('open'));
+  // Mobile menu
+  $('mobile-menu-btn')?.addEventListener('click',()=>{$('sidebar')?.classList.toggle('open');$('sidebar-overlay')?.classList.toggle('show');});
+  $('sidebar-overlay')?.addEventListener('click',()=>{$('sidebar')?.classList.remove('open');$('sidebar-overlay')?.classList.remove('show');});
   // Emp tabs
   document.querySelectorAll('.emp-tab-btn').forEach(btn=>{btn.addEventListener('click',()=>empNavigate(btn.dataset.etab));});
   // Logout
@@ -1344,10 +1347,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('prev-week')?.addEventListener('click',()=>{weekOffset--;renderSchedule();});
   $('next-week')?.addEventListener('click',()=>{weekOffset++;renderSchedule();});
   $('btn-add-schedule')?.addEventListener('click',()=>{
-    if($('sch-edit-id'))$('sch-edit-id').value='';
-    if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
-    $('sch-date').value='';$('sch-notes').value='';$('sch-status').value='pendente';
-    populateSelects();openModal('schedule-modal');
+    if($('sch-edit-id'))$('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
+    $('sch-date').value='';$('sch-notes').value='';$('sch-status').value='pendente';populateSelects();openModal('schedule-modal');
   });
   $('btn-save-schedule')?.addEventListener('click',saveSchedule);
   $('btn-cancel-schedule')?.addEventListener('click',()=>closeModal('schedule-modal'));
@@ -1379,7 +1380,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('btn-save-freq')?.addEventListener('click',saveFreq);
   $('btn-cancel-freq')?.addEventListener('click',()=>closeModal('freq-modal'));
   // Notifications bulk
-  $('btn-mark-all-read')?.addEventListener('click',()=>{db.notifications.forEach(n=>{n.status='read';sbUpdate('notifications',n.id,{status:'read'});});toast('Todas marcadas como lidas','success');updateNotifBadge();renderNotifications();});
+  $('btn-mark-all-read')?.addEventListener('click',()=>{db.notifications.forEach(n=>{n.status='read';sbUpdate('notifications',n.id,{status:'read'});});toast('Todas lidas','success');updateNotifBadge();renderNotifications();});
   $('btn-del-read-notifs')?.addEventListener('click',()=>{const ids=db.notifications.filter(n=>n.status==='read').map(n=>n.id);if(!ids.length){toast('Nenhuma lida','error');return;}if(!confirm(`Excluir ${ids.length} lida(s)?`))return;ids.forEach(id=>sbDelete('notifications',id));db.notifications=db.notifications.filter(n=>n.status!=='read');toast(`${ids.length} excluída(s)`,'success');updateNotifBadge();renderNotifications();});
   $('btn-del-all-notifs')?.addEventListener('click',()=>{if(!db.notifications.length){toast('Nenhuma notificação','error');return;}if(!confirm('Excluir todas?'))return;db.notifications.forEach(n=>sbDelete('notifications',n.id));db.notifications=[];toast('Todas excluídas','success');updateNotifBadge();renderNotifications();});
   // Referrals
@@ -1405,18 +1406,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     const editEmpEl=t.closest('[data-edit-emp]');if(editEmpEl){openEditEmpModal(editEmpEl.dataset.editEmp);return;}
     const editFreqId=t.dataset.editFreq;if(editFreqId){$('freq-edit-id').value=editFreqId;const f=db.frequencies.find(f=>f.id===editFreqId);if(f)$('freq-name').value=f.name;openModal('freq-modal');return;}
     const approveRefId=t.dataset.approveRef;if(approveRefId){$('ref-edit-id').value=approveRefId;$('ref-bonus').value='';openModal('ref-modal');return;}
-    const rejectRefId=t.dataset.rejectRef;if(rejectRefId){if(!confirm('Rejeitar indicação?'))return;const r=db.referrals.find(r=>r.id===rejectRefId);if(r){r.status='rejected';sbUpsert('referrals',r);}toast('Rejeitada','success');renderReferrals();return;}
+    const rejectRefId=t.dataset.rejectRef;if(rejectRefId){if(!confirm('Rejeitar?'))return;const r=db.referrals.find(r=>r.id===rejectRefId);if(r){r.status='rejected';sbUpsert('referrals',r);}toast('Rejeitada','success');renderReferrals();return;}
     const approveUserId=t.dataset.approveUser;if(approveUserId){$('approve-user-id').value=approveUserId;$('approve-name').value='';$('approve-pass').value='123456';openModal('approve-modal');return;}
     const notifReadId=t.dataset.notifRead;if(notifReadId){const n=db.notifications.find(n=>n.id===notifReadId);if(n){n.status='read';sbUpdate('notifications',n.id,{status:'read'});}updateNotifBadge();renderNotifications();return;}
-    const delEmpId=t.dataset.delEmp;if(delEmpId){const em=db.employees.find(x=>x.id===delEmpId);if(!confirm(`Remover "${em?.name||'funcionário'}"?`))return;if(em){const uk=Object.keys(USERS).find(k=>USERS[k].email===em.email);if(uk)delete USERS[uk];sbDelete('users_login','ul_'+delEmpId);}sbDelete('employees',delEmpId);db.employees=db.employees.filter(x=>x.id!==delEmpId);toast('Funcionário removido','success');renderEmployees();return;}
-    const delClientId=t.dataset.delClient;if(delClientId){if(!confirm('Remover cliente?'))return;sbDelete('clients',delClientId);db.clients=db.clients.filter(c=>c.id!==delClientId);toast('Cliente removido','success');renderClients();return;}
-    const delSchId=t.dataset.delSchedule;if(delSchId){if(!confirm('Remover agendamento?'))return;sbDelete('schedule_entries',delSchId);db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==delSchId);toast('Removido','success');renderSchedule();return;}
-    const delLogId=t.dataset.delLog;if(delLogId){if(!confirm('Remover registro?'))return;sbDelete('work_logs',delLogId);db.workLogs=db.workLogs.filter(l=>l.id!==delLogId);toast('Removido','success');renderChecklist();renderDashboard();return;}
-    const delCostId=t.dataset.delCost;if(delCostId){if(!confirm('Remover custo?'))return;sbDelete('costs',delCostId);db.costs=db.costs.filter(c=>c.id!==delCostId);toast('Removido','success');renderCosts();return;}
-    const delFreqId=t.dataset.delFreq;if(delFreqId){if(!confirm('Remover frequência?'))return;sbDelete('frequencies',delFreqId);db.frequencies=db.frequencies.filter(f=>f.id!==delFreqId);toast('Removida','success');renderFrequencies();return;}
-    const delRefId=t.dataset.delRef;if(delRefId){if(!confirm('Remover indicação?'))return;sbDelete('referrals',delRefId);db.referrals=db.referrals.filter(r=>r.id!==delRefId);toast('Removida','success');renderReferrals();return;}
-    const delNotifId=t.dataset.notifDel;if(delNotifId){if(!confirm('Excluir notificação?'))return;sbDelete('notifications',delNotifId);db.notifications=db.notifications.filter(n=>n.id!==delNotifId);updateNotifBadge();renderNotifications();return;}
-    const rejectUserId=t.dataset.rejectUser;if(rejectUserId){if(!confirm('Rejeitar usuário?'))return;sbDelete('pending_users',rejectUserId);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==rejectUserId);toast('Rejeitado','success');renderEmployees();return;}
+    const delEmpId=t.dataset.delEmp;if(delEmpId){const em=db.employees.find(x=>x.id===delEmpId);if(!confirm(`Remover "${em?.name||'funcionário'}"?`))return;if(em){const uk=Object.keys(USERS).find(k=>USERS[k].email===em.email);if(uk)delete USERS[uk];sbDelete('users_login','ul_'+delEmpId);}sbDelete('employees',delEmpId);db.employees=db.employees.filter(x=>x.id!==delEmpId);toast('Removido','success');renderEmployees();return;}
+    const delClientId=t.dataset.delClient;if(delClientId){if(!confirm('Remover cliente?'))return;sbDelete('clients',delClientId);db.clients=db.clients.filter(c=>c.id!==delClientId);toast('Removido','success');renderClients();return;}
+    const delSchId=t.dataset.delSchedule;if(delSchId){if(!confirm('Remover?'))return;sbDelete('schedule_entries',delSchId);db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==delSchId);toast('Removido','success');renderSchedule();return;}
+    const delLogId=t.dataset.delLog;if(delLogId){if(!confirm('Remover?'))return;sbDelete('work_logs',delLogId);db.workLogs=db.workLogs.filter(l=>l.id!==delLogId);toast('Removido','success');renderChecklist();renderDashboard();return;}
+    const delCostId=t.dataset.delCost;if(delCostId){if(!confirm('Remover?'))return;sbDelete('costs',delCostId);db.costs=db.costs.filter(c=>c.id!==delCostId);toast('Removido','success');renderCosts();return;}
+    const delFreqId=t.dataset.delFreq;if(delFreqId){if(!confirm('Remover?'))return;sbDelete('frequencies',delFreqId);db.frequencies=db.frequencies.filter(f=>f.id!==delFreqId);toast('Removida','success');renderFrequencies();return;}
+    const delRefId=t.dataset.delRef;if(delRefId){if(!confirm('Remover?'))return;sbDelete('referrals',delRefId);db.referrals=db.referrals.filter(r=>r.id!==delRefId);toast('Removida','success');renderReferrals();return;}
+    const delNotifId=t.dataset.notifDel;if(delNotifId){if(!confirm('Excluir?'))return;sbDelete('notifications',delNotifId);db.notifications=db.notifications.filter(n=>n.id!==delNotifId);updateNotifBadge();renderNotifications();return;}
+    const rejectUserId=t.dataset.rejectUser;if(rejectUserId){if(!confirm('Rejeitar?'))return;sbDelete('pending_users',rejectUserId);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==rejectUserId);toast('Rejeitado','success');renderEmployees();return;}
   });
 });
 </script>
