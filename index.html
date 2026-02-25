@@ -239,11 +239,9 @@ textarea.form-control{resize:vertical;min-height:80px}
 @media(max-width:768px){
   .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:200;transform:translateX(-100%);transition:transform .25s ease;width:240px!important;box-shadow:4px 0 24px rgba(0,0,0,.18)}
   .sidebar.open{transform:translateX(0)}
-  .app-header{padding:0 12px;height:52px}
-  .main-content{padding:12px 10px 28px}
+  .app-header{padding:0 12px;height:52px}.main-content{padding:12px 10px 28px}
   .mobile-menu-btn{display:flex!important}
-  .page-header{flex-direction:column;align-items:flex-start;gap:8px}
-  .page-header h2{font-size:18px}
+  .page-header{flex-direction:column;align-items:flex-start;gap:8px}.page-header h2{font-size:18px}
 }
 @media(min-width:769px){.mobile-menu-btn{display:none!important}.sidebar-overlay{display:none!important}}
 @media(max-width:600px){
@@ -273,7 +271,6 @@ textarea.form-control{resize:vertical;min-height:80px}
 @media print{.sidebar,.app-header,.mobile-menu-btn,.btn{display:none!important}.main-content{padding:0}body{background:#fff}}
 
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div id="loading-overlay" class="hidden"><div class="spinner"></div><div style="font-size:14px;font-weight:600">Carregando...</div></div>
@@ -378,12 +375,7 @@ textarea.form-control{resize:vertical;min-height:80px}
       <div class="tab-content" id="tab-schedule">
         <div class="schedule-header-row">
           <h2 style="font-size:18px;font-weight:800">📅 Agenda</h2>
-          <div class="schedule-nav-group">
-            <button class="btn btn-outline btn-sm" id="prev-week">◀</button>
-            <span id="week-label" style="font-size:12px;font-weight:600;white-space:nowrap"></span>
-            <button class="btn btn-outline btn-sm" id="next-week">▶</button>
-            <button class="btn btn-primary btn-sm" id="btn-add-schedule">+ Novo</button>
-          </div>
+          <div class="schedule-nav-group"><button class="btn btn-outline btn-sm" id="prev-week">◀</button><span id="week-label" style="font-size:12px;font-weight:600;white-space:nowrap"></span><button class="btn btn-outline btn-sm" id="next-week">▶</button><button class="btn btn-primary btn-sm" id="btn-add-schedule">+ Novo</button></div>
         </div>
         <div class="week-scroll-wrapper"><div class="week-grid" id="week-grid"></div></div>
         <div class="card mt-4"><div class="card-header"><h3>Agendamentos</h3></div><div class="card-body" id="schedule-list"></div></div>
@@ -457,11 +449,7 @@ textarea.form-control{resize:vertical;min-height:80px}
       <div class="tab-content" id="tab-notifications">
         <div class="page-header">
           <h2>🔔 Notificações</h2>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <span class="badge badge-destructive" id="notif-count-badge"></span>
-            <button class="btn btn-outline btn-sm" id="btn-mark-all-read">✓ Lidas</button>
-            <button class="btn btn-danger btn-sm" id="btn-del-all-notifs">🗑 Tudo</button>
-          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="badge badge-destructive" id="notif-count-badge"></span><button class="btn btn-outline btn-sm" id="btn-mark-all-read">✓ Lidas</button><button class="btn btn-danger btn-sm" id="btn-del-all-notifs">🗑 Tudo</button></div>
         </div>
         <div id="notifications-list"></div>
       </div>
@@ -633,7 +621,7 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal"><h2>💼 Adicionar Funcionário</h2>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="emp-name" placeholder="Nome completo"/></div>
     <div class="form-group"><label>Email</label><input type="email" class="form-control" id="emp-email" placeholder="email@exemplo.com"/></div>
-    <div class="form-group"><label>Senha (mín. 6)</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="Mínimo 6 caracteres"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Senha (mín. 6)</label><div class="pass-wrapper"><input type="password" class="form-control" id="emp-pass" placeholder="••••••"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-emp">Criar</button><button class="btn btn-outline" id="btn-cancel-emp">Cancelar</button></div>
   </div>
@@ -643,7 +631,7 @@ textarea.form-control{resize:vertical;min-height:80px}
     <input type="hidden" id="edit-emp-id"/>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="edit-emp-name"/></div>
     <div class="form-group"><label>Email</label><input type="email" class="form-control" id="edit-emp-email"/></div>
-    <div class="form-group"><label>Nova Senha <span style="font-size:11px;opacity:.7">(em branco = manter)</span></label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Nova Senha</label><div class="pass-wrapper"><input type="password" class="form-control" id="edit-emp-pass" placeholder="Nova senha (opcional)"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('edit-emp-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="edit-emp-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-edit-emp">💾 Salvar</button><button class="btn btn-outline" id="btn-cancel-edit-emp">Cancelar</button></div>
   </div>
@@ -672,7 +660,7 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal"><h2>✅ Aprovar Usuário</h2>
     <input type="hidden" id="approve-user-id"/>
     <div class="form-group"><label>Nome</label><input type="text" class="form-control" id="approve-name" placeholder="Nome completo"/></div>
-    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Senha inicial" value="123456"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <div class="form-group"><label>Senha inicial</label><div class="pass-wrapper"><input type="password" class="form-control" id="approve-pass" placeholder="Senha" value="123456"/><button class="pass-toggle" type="button" onclick="toggleFieldPass('approve-pass',this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <div class="form-group"><label>Papel</label><select class="form-control" id="approve-role"><option value="colaborador">Colaborador</option><option value="adm">Administrador</option></select></div>
     <div style="display:flex;gap:8px"><button class="btn btn-secondary" id="btn-approve-user">✅ Aprovar</button><button class="btn btn-outline" id="btn-cancel-approve">Cancelar</button></div>
   </div>
@@ -705,56 +693,57 @@ textarea.form-control{resize:vertical;min-height:80px}
 </div>
 
 <script>
-const SUPA_URL = 'https://ekmdsxumterpqjypzuza.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrbWRzeHVtdGVycHFqeXB6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzMxNDQsImV4cCI6MjA4NzU0OTE0NH0.LNwzl4OKzhK2WEcSgvnnwWMS-kE_IYmpih_8ONs0-MU';
+/* ═══ SUPABASE REST — sem CDN, usa fetch() nativo do browser ═══ */
+const _URL = 'https://ekmdsxumterpqjypzuza.supabase.co/rest/v1';
+const _KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrbWRzeHVtdGVycHFqeXB6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NzMxNDQsImV4cCI6MjA4NzU0OTE0NH0.LNwzl4OKzhK2WEcSgvnnwWMS-kE_IYmpih_8ONs0-MU';
+const _H = {'apikey':_KEY,'Authorization':'Bearer '+_KEY,'Content-Type':'application/json','Accept':'application/json'};
 
-let supa = null;
-function getSupa(){
-  if(!supa){
-    if(!window.supabase){console.error('ERRO: CDN do Supabase não carregou!');return null;}
-    supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-  }
-  return supa;
+async function _get(table, qs=''){
+  const r = await fetch(`${_URL}/${table}?${qs}`, {headers:_H});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||r.statusText||'Erro '+r.status);}
+  return r.json();
+}
+async function sbUpsert(table, data){
+  const body = Array.isArray(data)?data:[data];
+  const r = await fetch(`${_URL}/${table}`,{method:'POST',headers:{..._H,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(body)});
+  if(!r.ok){const e=await r.json().catch(()=>({}));console.error(table,'upsert:',e.message||r.status);}
+}
+async function sbDelete(table, id){
+  const r = await fetch(`${_URL}/${table}?id=eq.${encodeURIComponent(id)}`,{method:'DELETE',headers:_H});
+  if(!r.ok){const e=await r.json().catch(()=>({}));console.error(table,'delete:',e.message||r.status);}
+}
+async function sbUpdate(table, id, fields){
+  const r = await fetch(`${_URL}/${table}?id=eq.${encodeURIComponent(id)}`,{method:'PATCH',headers:{..._H,'Prefer':'return=minimal'},body:JSON.stringify(fields)});
+  if(!r.ok){const e=await r.json().catch(()=>({}));console.error(table,'update:',e.message||r.status);}
 }
 
-async function sbUpsert(t,d){const sb=getSupa();if(!sb)return;const{error}=await sb.from(t).upsert(d);if(error)console.error(t,'upsert:',error.message);}
-async function sbDelete(t,id){const sb=getSupa();if(!sb)return;const{error}=await sb.from(t).delete().eq('id',id);if(error)console.error(t,'delete:',error.message);}
-async function sbUpdate(t,id,f){const sb=getSupa();if(!sb)return;const{error}=await sb.from(t).update(f).eq('id',id);if(error)console.error(t,'update:',error.message);}
-
-/* Roda em background sem bloquear nada */
+/* Admin em background */
 function ensureAdminExists(){
-  const sb=getSupa();if(!sb)return;
-  sb.from('users_login').select('id').eq('email','renatawaldehm@gmail.com').maybeSingle()
-    .then(({data,error})=>{
-      if(error){console.warn('[Admin] Tabela não existe ainda:',error.message);return;}
-      if(!data){
+  _get('users_login','email=eq.renatawaldehm%40gmail.com&select=id&limit=1')
+    .then(rows=>{
+      if(!rows||rows.length===0){
         const today=new Date().toISOString().split('T')[0];
-        sb.from('employees').upsert({id:'emp_admin_renata',name:'Renata Waldehm',email:'renatawaldehm@gmail.com',created_at:today})
-          .then(()=>sb.from('users_login').upsert({id:'ul_admin_renata',email:'renatawaldehm@gmail.com',password:'angelina123@',role:'adm',username:'Renata Waldehm',employee_id:'emp_admin_renata'}))
-          .then(()=>console.log('[Admin] Criada ✅'))
-          .catch(e=>console.warn('[Admin] Erro:',e));
+        sbUpsert('employees',{id:'emp_admin_renata',name:'Renata Waldehm',email:'renatawaldehm@gmail.com',created_at:today})
+          .then(()=>sbUpsert('users_login',{id:'ul_admin_renata',email:'renatawaldehm@gmail.com',password:'angelina123@',role:'adm',username:'Renata Waldehm',employee_id:'emp_admin_renata'}))
+          .then(()=>console.log('[Admin] Renata criada ✅')).catch(e=>console.warn('[Admin]',e));
       }
-    }).catch(e=>console.warn('[Admin]',e));
+    }).catch(e=>console.warn('[Admin] tabela inexistente:',e.message));
 }
 
 async function loadAllFromSupabase(){
-  const sb=getSupa();if(!sb)return;
-  const[r1,r2,r3,r4,r5,r6,r7,r8,r9,r10]=await Promise.all([
-    sb.from('employees').select('*'),sb.from('clients').select('*'),
-    sb.from('schedule_entries').select('*'),sb.from('work_logs').select('*'),
-    sb.from('costs').select('*'),sb.from('notifications').select('*').order('created_at',{ascending:false}),
-    sb.from('pending_users').select('*'),sb.from('frequencies').select('*'),
-    sb.from('referrals').select('*'),sb.from('users_login').select('*'),
+  const [r1,r2,r3,r4,r5,r6,r7,r8,r9,r10] = await Promise.all([
+    _get('employees'),_get('clients'),_get('schedule_entries'),
+    _get('work_logs'),_get('costs'),_get('notifications','order=created_at.desc'),
+    _get('pending_users'),_get('frequencies'),_get('referrals'),_get('users_login'),
   ]);
-  db.employees=r1.data||[];db.clients=r2.data||[];db.scheduleEntries=r3.data||[];
-  db.workLogs=r4.data||[];db.costs=r5.data||[];db.notifications=r6.data||[];
-  db.pendingUsers=r7.data||[];db.frequencies=r8.data||[];db.referrals=r9.data||[];
+  db.employees=r1;db.clients=r2;db.scheduleEntries=r3;db.workLogs=r4;
+  db.costs=r5;db.notifications=r6;db.pendingUsers=r7;db.frequencies=r8;db.referrals=r9;
   Object.keys(USERS).forEach(k=>delete USERS[k]);
-  (r10.data||[]).forEach(u=>{USERS[u.email]={role:u.role,email:u.email,username:u.username,password:u.password,employeeId:u.employee_id,ulId:u.id};});
+  r10.forEach(u=>{USERS[u.email]={role:u.role,email:u.email,username:u.username,password:u.password,employeeId:u.employee_id,ulId:u.id};});
 }
 
-const USERS={};
-const db={employees:[],clients:[],scheduleEntries:[],workLogs:[],costs:[],notifications:[],pendingUsers:[],frequencies:[],referrals:[]};
+/* ═══ ESTADO ═══ */
+const USERS={}, db={employees:[],clients:[],scheduleEntries:[],workLogs:[],costs:[],notifications:[],pendingUsers:[],frequencies:[],referrals:[]};
 let currentUser=null,currentEmpId=null,weekOffset=0,costsFilter='all';
 const $=id=>document.getElementById(id);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6);}
@@ -764,81 +753,69 @@ function getClient(id){return db.clients.find(c=>c.id===id);}
 function getEmployee(id){return db.employees.find(e=>e.id===id);}
 function getWeekStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()-d.getDay());}
 function toast(msg,type='success'){
-  const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;
+  let t=document.createElement('div');t.className='toast toast-'+type;t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);
   setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},4000);
 }
-function openModal(id){$(id)?.classList.remove('hidden');}
-function closeModal(id){$(id)?.classList.add('hidden');}
+function openModal(id){$(id)&&$(id).classList.remove('hidden');}
+function closeModal(id){$(id)&&$(id).classList.add('hidden');}
 function toggleFieldPass(fid,btn){
   const inp=document.getElementById(fid);if(!inp)return;
   const show=inp.type==='password';inp.type=show?'text':'password';
-  const svg=btn.querySelector('svg');if(!svg)return;
-  svg.innerHTML=show?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+  const s=btn.querySelector('svg');if(!s)return;
+  s.innerHTML=show?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
     :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
-/* ─ LOGIN com diagnóstico completo ─ */
+/* ═══ LOGIN ═══ */
 async function doLogin(){
-  const sb=getSupa();
-  if(!sb){toast('Erro: CDN Supabase não carregou. Verifique internet.','error');return;}
   const email=($('login-email').value||'').trim().toLowerCase(),pass=$('login-pass').value||'';
   if(!email||!pass){toast('Preencha email e senha','error');return;}
   const btn=$('btn-login');btn.disabled=true;btn.textContent='Entrando...';
   try{
-    /* Passo 1: verifica se a tabela existe e se o usuário existe */
-    const{data:allUsers,error:e1}=await sb.from('users_login').select('id,email,role').limit(1);
-    if(e1){
-      console.error('Erro na tabela users_login:',e1);
-      if(e1.code==='42P01'||e1.message.includes('does not exist')){
-        toast('⚠️ Banco não configurado. Execute o schema_fix.sql no Supabase.','error');
-      }else if(e1.code==='PGRST301'||e1.message.includes('RLS')||e1.message.includes('policy')){
-        toast('⚠️ RLS ativo! Execute: ALTER TABLE users_login DISABLE ROW LEVEL SECURITY','error');
+    let rows;
+    try{
+      rows = await _get('users_login','email=eq.'+encodeURIComponent(email)+'&select=*');
+    }catch(err){
+      if(err.message&&(err.message.includes('does not exist')||err.message.includes('42P01'))){
+        toast('Banco não configurado. Execute o schema_fix.sql no Supabase.','error');
+      }else if(err.message&&err.message.includes('0 rows')){
+        toast('Sem resultados','error');
       }else{
-        toast('Erro de banco: '+e1.message,'error');
+        toast('Erro de conexão: '+err.message,'error');
       }
       return;
     }
-    /* Passo 2: tenta login */
-    const{data,error:e2}=await sb.from('users_login').select('*').eq('email',email).maybeSingle();
-    if(e2){toast('Erro ao buscar usuário: '+e2.message,'error');return;}
-    if(!data){
-      /* Verifica se tem algum user no banco */
-      const{data:anyUser}=await sb.from('users_login').select('email').limit(1);
-      if(!anyUser||anyUser.length===0){
-        toast('Nenhum usuário no banco! Execute o schema_fix.sql','error');
-      }else{
-        toast('Email não encontrado','error');
-      }
-      return;
-    }
-    if(data.password!==pass){toast('Senha incorreta','error');return;}
-    /* Login OK */
+    if(!rows||rows.length===0){toast('Email não cadastrado','error');return;}
+    const user=rows[0];
+    if(user.password!==pass){toast('Senha incorreta','error');return;}
     $('loading-overlay').classList.remove('hidden');
-    await loadAllFromSupabase();
+    try{await loadAllFromSupabase();}catch(err){
+      $('loading-overlay').classList.add('hidden');
+      toast('Erro ao carregar dados: '+err.message,'error');return;
+    }
     $('loading-overlay').classList.add('hidden');
-    currentUser={role:data.role,email:data.email,username:data.username,employeeId:data.employee_id};
+    currentUser={role:user.role,email:user.email,username:user.username,employeeId:user.employee_id};
     $('login-page').classList.add('hidden');
-    if(data.role==='adm'){
+    if(user.role==='adm'){
       $('app-page').classList.remove('hidden');
-      $('header-username').textContent=data.username||data.email;
-      $('header-email').textContent=data.email;
-      $('profile-name').textContent=data.username||data.email;
-      $('profile-email-disp').textContent=data.email;
-      $('profile-avatar').textContent=(data.username||data.email).charAt(0).toUpperCase();
+      $('header-username').textContent=user.username||user.email;
+      $('header-email').textContent=user.email;
+      $('profile-name').textContent=user.username||user.email;
+      $('profile-email-disp').textContent=user.email;
+      $('profile-avatar').textContent=(user.username||user.email).charAt(0).toUpperCase();
       initApp();
     }else{
       $('emp-app-page').classList.remove('hidden');
-      $('emp-header-username').textContent=data.username||data.email;
-      $('emp-header-email').textContent=data.email;
-      $('emp-profile-name').textContent=data.username||data.email;
-      $('emp-profile-email').textContent=data.email;
-      initEmpApp(data.employee_id);
+      $('emp-header-username').textContent=user.username||user.email;
+      $('emp-header-email').textContent=user.email;
+      $('emp-profile-name').textContent=user.username||user.email;
+      $('emp-profile-email').textContent=user.email;
+      initEmpApp(user.employee_id);
     }
-  }catch(err){
+  }catch(e){
     $('loading-overlay').classList.add('hidden');
-    console.error('Login error:',err);
-    toast('Erro inesperado: '+err.message,'error');
+    console.error(e);toast('Erro: '+e.message,'error');
   }finally{btn.disabled=false;btn.textContent='Entrar';}
 }
 function doLogout(){
@@ -849,188 +826,227 @@ function doLogout(){
 }
 function navigate(tab){
   document.querySelectorAll('#sidebar .nav-item').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`#sidebar [data-tab="${tab}"]`)?.classList.add('active');
+  document.querySelector('#sidebar [data-tab="'+tab+'"]')&&document.querySelector('#sidebar [data-tab="'+tab+'"]').classList.add('active');
   document.querySelectorAll('#admin-tabs .tab-content').forEach(t=>t.classList.remove('active'));
-  $('tab-'+tab)?.classList.add('active');
-  $('sidebar')?.classList.remove('open');$('sidebar-overlay')?.classList.remove('show');
-  ({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals})[tab]?.();
+  $('tab-'+tab)&&$('tab-'+tab).classList.add('active');
+  $('sidebar')&&$('sidebar').classList.remove('open');$('sidebar-overlay')&&$('sidebar-overlay').classList.remove('show');
+  ({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals})[tab]&&({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals})[tab]();
 }
 function empNavigate(tab){
   document.querySelectorAll('.emp-tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.emp-tab-btn[data-etab="${tab}"]`)?.classList.add('active');
+  const eb=document.querySelector('.emp-tab-btn[data-etab="'+tab+'"]');if(eb)eb.classList.add('active');
   document.querySelectorAll('#emp-app-page .tab-content').forEach(t=>t.classList.remove('active'));
-  $('tab-'+tab)?.classList.add('active');
-  ({'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals})[tab]?.();
+  $('tab-'+tab)&&$('tab-'+tab).classList.add('active');
+  ({'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals})[tab]&&({'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals})[tab]();
 }
 function renderTab(t){navigate(t);}
 function initApp(){populateSelects();updateNotifBadge();renderDashboard();}
 function initEmpApp(empId){
   currentEmpId=empId;
   const mc=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===empId));
-  const el=$('note-client-sel');if(el)el.innerHTML=mc.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')||'<option>Nenhum cliente</option>';
+  const el=$('note-client-sel');if(el)el.innerHTML=mc.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('')||'<option>Nenhum cliente</option>';
   setEmpPeriod('mes',null);renderEmpAgenda();renderEmpClients();renderEmpReferrals();
 }
 function populateSelects(){
-  const cO='<option value="">Selecione...</option>'+db.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  const cO='<option value="">Selecione...</option>'+db.clients.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('');
   ['sch-client','cl-client'].forEach(id=>{if($(id))$(id).innerHTML=cO;});
-  if($('sch-emp'))$('sch-emp').innerHTML='<option value="">Selecione...</option>'+db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
-  if($('client-freq'))$('client-freq').innerHTML='<option value="">Selecione...</option>'+db.frequencies.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');
+  if($('sch-emp'))$('sch-emp').innerHTML='<option value="">Selecione...</option>'+db.employees.map(e=>'<option value="'+e.id+'">'+e.name+'</option>').join('');
+  if($('client-freq'))$('client-freq').innerHTML='<option value="">Selecione...</option>'+db.frequencies.map(f=>'<option value="'+f.name+'">'+f.name+'</option>').join('');
 }
 function updateNotifBadge(){
   const cnt=db.notifications.filter(n=>n.status==='pending').length;
   const b=$('notif-badge'),cb=$('notif-count-badge');
   if(b){b.textContent=cnt;cnt>0?b.classList.remove('hidden'):b.classList.add('hidden');}
-  if(cb)cb.textContent=cnt>0?`${cnt} pendente${cnt>1?'s':''}`:'';
+  if(cb)cb.textContent=cnt>0?cnt+' pendente'+(cnt>1?'s':''):'';
 }
 function renderDashboard(){
   const today=new Date().toISOString().split('T')[0],ym=today.substr(0,7);
-  const start=$('dash-start')?.value||ym+'-01',end=$('dash-end')?.value||today;
+  const start=($('dash-start')&&$('dash-start').value)||ym+'-01',end=($('dash-end')&&$('dash-end').value)||today;
   const conf=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado');
-  const totalRev=conf.reduce((s,l)=>s+l.revenue,0);
-  const totalPay=conf.reduce((s,l)=>s+(l.work_log_employees||[]).reduce((a,e)=>a+e.payment_amount,0),0);
-  const totalCosts=db.costs.reduce((s,c)=>s+c.amount,0);
-  if($('dash-revenue'))$('dash-revenue').textContent=fmt(totalRev);
-  if($('dash-labor'))$('dash-labor').textContent=fmt(totalPay);
-  if($('dash-costs'))$('dash-costs').textContent=fmt(totalCosts);
-  if($('dash-profit'))$('dash-profit').textContent=fmt(totalRev-totalPay-totalCosts);
+  const rev=conf.reduce((s,l)=>s+l.revenue,0);
+  const pay=conf.reduce((s,l)=>s+(l.work_log_employees||[]).reduce((a,e)=>a+e.payment_amount,0),0);
+  const costs=db.costs.reduce((s,c)=>s+c.amount,0);
+  if($('dash-revenue'))$('dash-revenue').textContent=fmt(rev);
+  if($('dash-labor'))$('dash-labor').textContent=fmt(pay);
+  if($('dash-costs'))$('dash-costs').textContent=fmt(costs);
+  if($('dash-profit'))$('dash-profit').textContent=fmt(rev-pay-costs);
   const sec=$('dash-secondary');
-  if(sec)sec.innerHTML=`<div class="stat-card"><div class="stat-label">📅 Pendentes</div><div class="stat-value">${db.scheduleEntries.filter(s=>s.status==='pendente').length}</div></div>
-    <div class="stat-card"><div class="stat-label">👥 Clientes</div><div class="stat-value">${db.clients.length}</div></div>
-    <div class="stat-card"><div class="stat-label">💼 Funcionários</div><div class="stat-value">${db.employees.length}</div></div>`;
-  const cm={};conf.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.id])cm[c.id]={name:c.name,frequency:c.frequency,price:c.price,laborCost:0};cm[c.id].laborCost+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
-  const ranking=Object.values(cm).map(c=>({...c,profit:c.price-c.laborCost})).sort((a,b)=>b.profit-a.profit);
-  if($('ranking-body'))$('ranking-body').innerHTML=ranking.length===0?'<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">Nenhum dado no período</td></tr>'
-    :ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td>${c.frequency}</td><td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td><td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');
+  if(sec)sec.innerHTML='<div class="stat-card"><div class="stat-label">📅 Pendentes</div><div class="stat-value">'+db.scheduleEntries.filter(s=>s.status==='pendente').length+'</div></div><div class="stat-card"><div class="stat-label">👥 Clientes</div><div class="stat-value">'+db.clients.length+'</div></div><div class="stat-card"><div class="stat-label">💼 Funcionários</div><div class="stat-value">'+db.employees.length+'</div></div>';
+  const cm={};conf.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.id])cm[c.id]={name:c.name,frequency:c.frequency,price:c.price,lc:0};cm[c.id].lc+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
+  const rk=Object.values(cm).map(c=>({...c,profit:c.price-c.lc})).sort((a,b)=>b.profit-a.profit);
+  if($('ranking-body'))$('ranking-body').innerHTML=rk.length===0?'<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">Nenhum dado</td></tr>':rk.map((c,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+c.name+'</strong></td><td>'+c.frequency+'</td><td style="text-align:right">'+fmt(c.price)+'</td><td style="text-align:right">'+fmt(c.lc)+'</td><td style="text-align:right;font-weight:700;color:var(--secondary)">'+fmt(c.profit)+'</td></tr>').join('');
 }
 function exportRankingCSV(){
-  const start=$('dash-start')?.value||'',end=$('dash-end')?.value||'';
+  const start=($('dash-start')&&$('dash-start').value)||'',end=($('dash-end')&&$('dash-end').value)||'';
   const conf=db.workLogs.filter(l=>(!start||l.work_date>=start)&&(!end||l.work_date<=end)&&l.status==='Confirmado');
   const cm={};conf.forEach(l=>{const c=getClient(l.client_id);if(!c)return;if(!cm[c.id])cm[c.id]={name:c.name,rev:0,pay:0};cm[c.id].rev+=l.revenue;cm[c.id].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);});
-  const rows=[['#','Cliente','Receita','Custo','Lucro'],...Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).map((c,i)=>[i+1,c.name,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)])];
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'}));a.download='ranking.csv';a.click();
+  const rows=[['#','Cliente','Receita','Custo','Lucro'],...Object.values(cm).map((c,i)=>[i+1,c.name,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n')],{type:'text/csv'}));a.download='ranking.csv';a.click();
 }
 function renderSchedule(){
   const base=getWeekStart(new Date());base.setDate(base.getDate()+weekOffset*7);
   const days=[];for(let i=0;i<7;i++)days.push(new Date(base.getFullYear(),base.getMonth(),base.getDate()+i));
   const s0=days[0].toISOString().split('T')[0],s6=days[6].toISOString().split('T')[0],today=new Date().toISOString().split('T')[0];
-  $('week-label').textContent=`${days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} – ${days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}`;
+  if($('week-label'))$('week-label').textContent=days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' – '+days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
   const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  $('week-grid').innerHTML=days.map((d,i)=>{const ds=d.toISOString().split('T')[0];return`<div class="day-col ${ds===today?'today':''}"><div class="day-label">${dn[i]}</div><div class="day-num">${d.getDate()}</div>${db.scheduleEntries.filter(e=>e.work_date===ds).map(e=>{const cl=getClient(e.client_id);return`<div class="schedule-item ${e.status}"><div style="font-weight:600;font-size:11px;word-break:break-word">${cl?cl.name:'?'}</div><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}" style="font-size:9px">${e.status}</span><button class="sch-edit-btn" data-edit-schedule="${e.id}">✏️</button></div>`;}).join('')}</div>`;}).join('');
+  if($('week-grid'))$('week-grid').innerHTML=days.map((d,i)=>{const ds=d.toISOString().split('T')[0];return'<div class="day-col '+(ds===today?'today':'')+'"><div class="day-label">'+dn[i]+'</div><div class="day-num">'+d.getDate()+'</div>'+db.scheduleEntries.filter(e=>e.work_date===ds).map(e=>{const cl=getClient(e.client_id);return'<div class="schedule-item '+e.status+'"><div style="font-weight:600;font-size:11px;word-break:break-word">'+(cl?cl.name:'?')+'</div><span class="badge '+(e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning')+'" style="font-size:9px">'+e.status+'</span><button class="sch-edit-btn" data-edit-schedule="'+e.id+'">✏️</button></div>';}).join('')+'</div>';}).join('');
   const we=db.scheduleEntries.filter(e=>e.work_date>=s0&&e.work_date<=s6).sort((a,b)=>a.work_date.localeCompare(b.work_date));
-  $('schedule-list').innerHTML=we.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>'
-    :we.map(e=>{const cl=getClient(e.client_id);const emps=(e.employee_ids||[]).map(id=>getEmployee(id)?.name||id).join(', ');return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1"><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div><div class="log-employees">👤 ${emps||'—'}</div></div><div style="display:flex;align-items:center;gap:4px"><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}">${e.status}</span><button class="btn btn-ghost btn-icon btn-sm" data-edit-schedule="${e.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-schedule="${e.id}">🗑</button></div></div></div>`;}).join('');
+  if($('schedule-list'))$('schedule-list').innerHTML=we.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>':we.map(e=>{const cl=getClient(e.client_id);const emps=(e.employee_ids||[]).map(id=>{const em=getEmployee(id);return em?em.name:id;}).join(', ');return'<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1"><div class="log-date">'+fmtDate(e.work_date)+'</div><div class="log-client">'+(cl?cl.name:'?')+'</div><div class="log-employees">👤 '+(emps||'—')+'</div></div><div style="display:flex;align-items:center;gap:4px"><span class="badge '+(e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning')+'">'+e.status+'</span><button class="btn btn-ghost btn-icon btn-sm" data-edit-schedule="'+e.id+'">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-schedule="'+e.id+'">🗑</button></div></div></div>';}).join('');
 }
 function editSchedule(id){
   const e=db.scheduleEntries.find(x=>x.id===id);if(!e)return;
   if($('sch-modal-title'))$('sch-modal-title').textContent='✏️ Editar Agendamento';
-  $('sch-edit-id').value=e.id;$('sch-date').value=e.work_date;$('sch-status').value=e.status;$('sch-notes').value=e.notes||'';
-  populateSelects();setTimeout(()=>{$('sch-client').value=e.client_id;$('sch-emp').value=(e.employee_ids||[])[0]||'';},50);
+  if($('sch-edit-id'))$('sch-edit-id').value=e.id;
+  if($('sch-date'))$('sch-date').value=e.work_date;if($('sch-status'))$('sch-status').value=e.status;if($('sch-notes'))$('sch-notes').value=e.notes||'';
+  populateSelects();setTimeout(function(){if($('sch-client'))$('sch-client').value=e.client_id;if($('sch-emp'))$('sch-emp').value=(e.employee_ids||[])[0]||'';},50);
   openModal('schedule-modal');
 }
 async function saveSchedule(){
-  const editId=$('sch-edit-id')?.value||'',date=$('sch-date').value,clientId=$('sch-client').value,empId=$('sch-emp').value,status=$('sch-status').value,notes=($('sch-notes').value||'').trim();
-  if(!date||!clientId){toast('Preencha data e cliente','error');return;}
+  const editId=($('sch-edit-id')&&$('sch-edit-id').value)||'';
+  const date=$('sch-date').value,cid=$('sch-client').value,eid=$('sch-emp').value,status=$('sch-status').value,notes=($('sch-notes').value||'').trim();
+  if(!date||!cid){toast('Preencha data e cliente','error');return;}
   let entryId=editId;
-  if(editId){const e=db.scheduleEntries.find(x=>x.id===editId);if(e){e.work_date=date;e.client_id=clientId;if(empId)e.employee_ids=[empId];e.status=status;e.notes=notes;}}
-  else{entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});}
+  if(editId){const e=db.scheduleEntries.find(x=>x.id===editId);if(e){e.work_date=date;e.client_id=cid;if(eid)e.employee_ids=[eid];e.status=status;e.notes=notes;}}
+  else{entryId=uid();db.scheduleEntries.push({id:entryId,work_date:date,client_id:cid,employee_ids:eid?[eid]:[],status,notes});}
   const entry=db.scheduleEntries.find(x=>x.id===entryId);
   if(entry)await sbUpsert('schedule_entries',{id:entry.id,work_date:entry.work_date,client_id:entry.client_id,employee_ids:entry.employee_ids,status:entry.status,notes:entry.notes});
-  $('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
+  if($('sch-edit-id'))$('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
   closeModal('schedule-modal');toast(editId?'Atualizado!':'Criado!','success');renderSchedule();
 }
 function renderChecklist(){
   const list=[...db.workLogs].sort((a,b)=>b.work_date.localeCompare(a.work_date));
-  $('checklist-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💵</div>Nenhum registro</div>'
-    :list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const em=getEmployee(e.employee_id);return`${em?em.name:'?'}: ${fmt(e.payment_amount)}`;}).join(' · ');return`<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1"><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div><div style="font-size:12px;color:var(--text-muted)">${emps}</div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="badge ${l.status==='Confirmado'?'badge-secondary':l.status==='Cancelado'?'badge-destructive':'badge-warning'}">${l.status}</span><strong style="color:var(--secondary)">${fmt(l.revenue)}</strong><button class="btn btn-ghost btn-icon btn-sm" data-edit-log="${l.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-log="${l.id}">🗑</button></div></div></div>`;}).join('');
+  if($('checklist-list'))$('checklist-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">💵</div>Nenhum registro</div>':list.map(l=>{const cl=getClient(l.client_id);const emps=(l.work_log_employees||[]).map(e=>{const em=getEmployee(e.employee_id);return(em?em.name:'?')+': '+fmt(e.payment_amount);}).join(' · ');return'<div class="log-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="flex:1"><div class="log-date">'+fmtDate(l.work_date)+'</div><div class="log-client">'+(cl?cl.name:'?')+'</div><div style="font-size:12px;color:var(--text-muted)">'+emps+'</div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="badge '+(l.status==='Confirmado'?'badge-secondary':l.status==='Cancelado'?'badge-destructive':'badge-warning')+'">'+l.status+'</span><strong style="color:var(--secondary)">'+fmt(l.revenue)+'</strong><button class="btn btn-ghost btn-icon btn-sm" data-edit-log="'+l.id+'">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-log="'+l.id+'">🗑</button></div></div></div>';}).join('');
 }
-function openAddWorkLog(){$('cl-edit-id').value='';if($('checklist-modal-title'))$('checklist-modal-title').textContent='💵 Novo Registro';$('cl-date').value='';$('cl-status').value='Confirmado';$('cl-reason').value='';$('cl-revenue').value='';populateSelects();$('cl-emp-rows').innerHTML='';addEmpRow();openModal('checklist-modal');}
-function editWorkLog(id){const l=db.workLogs.find(x=>x.id===id);if(!l)return;$('cl-edit-id').value=l.id;if($('checklist-modal-title'))$('checklist-modal-title').textContent='✏️ Editar Registro';$('cl-date').value=l.work_date;$('cl-status').value=l.status;$('cl-reason').value=l.cancellation_reason||'';$('cl-revenue').value=l.revenue;populateSelects();setTimeout(()=>$('cl-client').value=l.client_id,50);$('cl-emp-rows').innerHTML='';(l.work_log_employees||[]).forEach(e=>addEmpRow(e.employee_id,e.payment_amount));if(!(l.work_log_employees||[]).length)addEmpRow();openModal('checklist-modal');}
-function addEmpRow(empId='',pay=''){const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';div.innerHTML=`<select class="form-control emp-row-emp" style="flex:1;min-width:0">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select><input type="number" class="form-control emp-row-pay" placeholder="R$" value="${pay}" style="width:90px;min-width:0"/><button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;$('cl-emp-rows').appendChild(div);}
-async function saveWorkLog(){const editId=$('cl-edit-id').value,clientId=$('cl-client').value,date=$('cl-date').value,status=$('cl-status').value,reason=$('cl-reason').value,revenue=parseFloat($('cl-revenue').value)||0;if(!clientId||!date){toast('Preencha cliente e data','error');return;}const emps=[...document.querySelectorAll('#cl-emp-rows > div')].map(div=>({employee_id:div.querySelector('.emp-row-emp').value,payment_amount:parseFloat(div.querySelector('.emp-row-pay').value)||0}));let logId=editId;if(editId){const l=db.workLogs.find(w=>w.id===editId);if(l){l.client_id=clientId;l.work_date=date;l.status=status;l.cancellation_reason=reason;l.revenue=status==='Confirmado'?revenue:0;l.work_log_employees=emps;}}else{logId=uid();db.workLogs.push({id:logId,work_date:date,client_id:clientId,revenue:status==='Confirmado'?revenue:0,status,cancellation_reason:reason,work_log_employees:emps,notes:''});}const wl=db.workLogs.find(l=>l.id===logId);if(wl)await sbUpsert('work_logs',{id:wl.id,work_date:wl.work_date,client_id:wl.client_id,revenue:wl.revenue,status:wl.status,cancellation_reason:wl.cancellation_reason,work_log_employees:wl.work_log_employees,notes:wl.notes||''});closeModal('checklist-modal');toast('Salvo!','success');renderChecklist();renderDashboard();}
-function renderClients(){$('clients-table-body').innerHTML=db.clients.map(c=>{const emps=(c.client_employees||[]).map(ce=>{const e=getEmployee(ce.employee_id);return e?e.name:'?';}).join(', ');return`<tr><td><strong>${c.name}</strong></td><td>${c.frequency||'—'}</td><td style="text-align:right">${fmt(c.price)}</td><td style="font-size:12px">${emps}</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-client="${c.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-client="${c.id}">🗑</button></div></td></tr>`;}).join('');}
-function addClientEmpRow(empId='',pay=''){const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';div.innerHTML=`<select class="form-control cemp-row-emp" style="flex:1;min-width:0">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select><input type="number" class="form-control cemp-row-pay" placeholder="Pag." value="${pay}" style="width:90px;min-width:0"/><button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;$('client-emp-rows').appendChild(div);}
-function openAddClient(){$('client-edit-id').value='';$('client-name').value='';$('client-price').value='';$('client-transport').checked=false;$('client-notes').value='';populateSelects();setTimeout(()=>$('client-freq').value='',0);$('client-emp-rows').innerHTML='';addClientEmpRow();openModal('client-modal');}
-function editClient(id){const c=db.clients.find(x=>x.id===id);if(!c)return;$('client-edit-id').value=c.id;$('client-name').value=c.name;$('client-price').value=c.price;$('client-transport').checked=!!c.no_transport_cost;$('client-notes').value=c.notes||'';populateSelects();setTimeout(()=>$('client-freq').value=c.frequency,50);$('client-emp-rows').innerHTML='';(c.client_employees||[]).forEach(e=>addClientEmpRow(e.employee_id,e.payment_amount));if(!(c.client_employees||[]).length)addClientEmpRow();openModal('client-modal');}
-async function saveClient(){const id=$('client-edit-id').value,name=$('client-name').value.trim(),freq=$('client-freq').value,price=parseFloat($('client-price').value)||0,noT=$('client-transport').checked,notes=$('client-notes').value.trim();if(!name||!freq){toast('Preencha nome e frequência','error');return;}const emps=[...document.querySelectorAll('#client-emp-rows > div')].map(div=>({employee_id:div.querySelector('.cemp-row-emp').value,payment_amount:parseFloat(div.querySelector('.cemp-row-pay').value)||0}));let clientId=id;if(id){const c=db.clients.find(x=>x.id===id);if(c){c.name=name;c.frequency=freq;c.price=price;c.no_transport_cost=noT;c.client_employees=emps;c.notes=notes;clientId=c.id;}}else{clientId=uid();db.clients.push({id:clientId,name,frequency:freq,price,no_transport_cost:noT,client_employees:emps,notes});}await sbUpsert('clients',{id:clientId,name,frequency:freq,price,no_transport_cost:noT,client_employees:emps,notes});closeModal('client-modal');toast('Cliente salvo!','success');renderClients();populateSelects();}
-function renderEmployees(){$('emp-table-body').innerHTML=db.employees.map(e=>{const u=Object.values(USERS).find(u=>u.email===e.email);const badge=u?(u.role==='adm'?'<span class="role-badge-adm">Admin</span>':'<span class="role-badge-col">Colaborador</span>'):'<span class="no-login-badge">Sem login</span>';return`<tr><td><strong>${e.name}</strong></td><td style="font-size:12px">${e.email||''}</td><td>${badge}</td><td>${fmtDate(e.created_at)}</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}">🗑</button></div></td></tr>`;}).join('');$('pending-list').innerHTML=db.pendingUsers.length===0?'<div class="empty"><div class="icon">📩</div>Nenhum pendente</div>':db.pendingUsers.map(u=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px"><span>📧 ${u.email}</span><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" data-approve-user="${u.id}">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-user="${u.id}">❌</button></div></div>`).join('');}
-async function saveEmployee(){const name=$('emp-name').value.trim(),email=$('emp-email').value.trim().toLowerCase(),pass=$('emp-pass').value,role=$('emp-role').value;if(!name||!email){toast('Preencha nome e email','error');return;}if(!pass||pass.length<6){toast('Senha mínimo 6 caracteres','error');return;}if(Object.values(USERS).find(u=>u.email===email)){toast('Email já cadastrado','error');return;}const newId=uid(),today=new Date().toISOString().split('T')[0];const empRec={id:newId,name,email,created_at:today};const ulRec={id:'ul_'+newId,email,role,username:name,password:pass,employee_id:newId};db.employees.push(empRec);USERS[email]={role,email,username:name,password:pass,employeeId:newId,ulId:'ul_'+newId};await Promise.all([sbUpsert('employees',empRec),sbUpsert('users_login',ulRec)]);closeModal('emp-modal');$('emp-name').value='';$('emp-email').value='';$('emp-pass').value='';toast(`"${name}" criado!`,'success');renderEmployees();populateSelects();}
-function openEditEmpModal(empId){const emp=db.employees.find(e=>e.id===empId);if(!emp)return;const u=Object.values(USERS).find(u=>u.email===emp.email);$('edit-emp-id').value=emp.id;$('edit-emp-name').value=emp.name;$('edit-emp-email').value=emp.email;$('edit-emp-pass').value='';$('edit-emp-role').value=u?u.role:'colaborador';openModal('edit-emp-modal');}
-async function saveEditEmployee(){const empId=$('edit-emp-id').value,name=$('edit-emp-name').value.trim(),newEmail=$('edit-emp-email').value.trim().toLowerCase(),newPass=$('edit-emp-pass').value,newRole=$('edit-emp-role').value;if(!name||!newEmail){toast('Nome e email obrigatórios','error');return;}if(newPass&&newPass.length<6){toast('Senha mínimo 6 caracteres','error');return;}const emp=db.employees.find(e=>e.id===empId);if(!emp)return;const oldKey=Object.keys(USERS).find(k=>USERS[k].email===emp.email);const oldPass=oldKey?USERS[oldKey].password:'123456';const oldUlId=oldKey?USERS[oldKey].ulId:'ul_'+empId;if(oldKey)delete USERS[oldKey];emp.name=name;emp.email=newEmail;USERS[newEmail]={role:newRole,email:newEmail,username:name,password:newPass||oldPass,employeeId:empId,ulId:oldUlId};await Promise.all([sbUpsert('employees',{id:empId,name,email:newEmail,created_at:emp.created_at}),sbUpsert('users_login',{id:oldUlId,email:newEmail,role:newRole,username:name,password:newPass||oldPass,employee_id:empId})]);closeModal('edit-emp-modal');toast(`"${name}" atualizado!`,'success');renderEmployees();populateSelects();}
-async function approveUser(){const id=$('approve-user-id').value,name=$('approve-name').value.trim(),pass=$('approve-pass').value||'123456',role=$('approve-role').value||'colaborador';if(!name){toast('Informe o nome','error');return;}const u=db.pendingUsers.find(p=>p.id===id);if(!u)return;const newId=uid(),today=new Date().toISOString().split('T')[0];const empRec={id:newId,name,email:u.email,created_at:today};const ulRec={id:'ul_'+newId,email:u.email,role,username:name,password:pass,employee_id:newId};db.employees.push(empRec);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==id);USERS[u.email]={role,email:u.email,username:name,password:pass,employeeId:newId,ulId:'ul_'+newId};await Promise.all([sbUpsert('employees',empRec),sbUpsert('users_login',ulRec),sbDelete('pending_users',id)]);closeModal('approve-modal');toast(`"${name}" aprovado!`,'success');renderEmployees();}
-function renderCosts(){const rec=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0);const uniq=db.costs.filter(c=>c.cost_type==='unico').reduce((s,c)=>s+c.amount,0);if($('cost-recurrent'))$('cost-recurrent').textContent=fmt(rec);if($('cost-unique'))$('cost-unique').textContent=fmt(uniq);const list=costsFilter==='all'?db.costs:db.costs.filter(c=>c.cost_type===costsFilter);$('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">🧾</div>Nenhum custo</div>':list.map(c=>`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px"><div><div class="log-date">${fmtDate(c.created_at||c.date)}</div><div style="font-weight:600">${c.description}</div><span class="badge badge-gray">${c.category||'—'}</span></div><div style="display:flex;align-items:center;gap:8px"><strong style="color:var(--destructive)">${fmt(c.amount)}</strong><button class="btn btn-danger btn-icon btn-sm" data-del-cost="${c.id}">🗑</button></div></div></div>`).join('');}
-async function saveCost(){const cat=$('cost-cat').value,desc=$('cost-desc').value.trim(),amount=parseFloat($('cost-amount').value)||0,type=$('cost-type').value;if(!desc||amount<=0){toast('Preencha todos os campos','error');return;}const rec={id:uid(),category:cat,description:desc,amount,cost_type:type,created_at:new Date().toISOString().split('T')[0]};db.costs.push(rec);await sbUpsert('costs',rec);closeModal('cost-modal');toast('Custo adicionado!','success');renderCosts();}
-function renderNotifications(){updateNotifBadge();$('notifications-list').innerHTML=db.notifications.length===0?'<div class="empty"><div class="icon">🔔</div>Nenhuma notificação</div>':db.notifications.map(n=>{const cl=getClient(n.client_id);const emp=getEmployee(n.employee_id);return`<div class="notif-item ${n.status}"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><div style="font-weight:600;margin-bottom:4px">${n.note}</div><div style="font-size:12px;color:var(--text-muted)">${cl?`📍 ${cl.name}`:''} ${emp?`👤 ${emp.name}`:''} • ${new Date(n.created_at).toLocaleDateString('pt-BR')}</div></div><div style="display:flex;gap:6px;flex-wrap:wrap">${n.status==='pending'?`<button class="btn btn-outline btn-sm" data-notif-read="${n.id}">✓</button>`:''}<button class="btn btn-danger btn-sm" data-notif-del="${n.id}">🗑</button></div></div></div>`;}).join('');}
-function renderFrequencies(){$('freq-list').innerHTML=db.frequencies.length===0?'<div class="empty"><div class="icon">📆</div>Nenhuma frequência</div>':db.frequencies.map(f=>`<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px"><span style="font-weight:600">${f.name}</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" data-edit-freq="${f.id}">✏️ Editar</button><button class="btn btn-danger btn-icon btn-sm" data-del-freq="${f.id}">🗑</button></div></div>`).join('');}
-async function saveFreq(){const id=$('freq-edit-id').value,name=$('freq-name').value.trim();if(!name){toast('Digite o nome','error');return;}let freqId=id;if(id){const f=db.frequencies.find(f=>f.id===id);if(f)f.name=name;freqId=id;}else{freqId=uid();db.frequencies.push({id:freqId,name});}await sbUpsert('frequencies',{id:freqId,name});closeModal('freq-modal');$('freq-edit-id').value='';$('freq-name').value='';toast(id?'Atualizada!':'Adicionada!','success');renderFrequencies();populateSelects();}
-function renderReferrals(){const p=db.referrals.filter(r=>r.status==='pending'),ap=db.referrals.filter(r=>r.status==='approved'),rej=db.referrals.filter(r=>r.status==='rejected');if($('referral-stats'))$('referral-stats').innerHTML=`<div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">${p.length}</div></div><div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value">${ap.length}</div></div><div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">❌ Rejeitadas</div><div class="stat-value">${rej.length}</div></div>`;$('referrals-list').innerHTML=db.referrals.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>':db.referrals.map(r=>{const emp=getEmployee(r.referrer_employee_id);return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div style="font-weight:600">${r.client_name}</div><div style="font-size:12px;color:var(--text-muted)">👤 ${emp?emp.name:'?'} • ${fmtDate(r.created_at)}</div>${r.bonus>0?`<div style="font-size:12px;color:var(--secondary);font-weight:600">Bônus: ${fmt(r.bonus)}</div>`:''}</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="badge ${r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning'}">${r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente'}</span>${r.status==='pending'?`<button class="btn btn-outline btn-sm" data-approve-ref="${r.id}">✅</button><button class="btn btn-danger btn-sm" data-reject-ref="${r.id}">❌</button>`:''}<button class="btn btn-danger btn-icon btn-sm" data-del-ref="${r.id}">🗑</button></div></div></div>`;}).join('');}
+function openAddWorkLog(){if($('cl-edit-id'))$('cl-edit-id').value='';if($('checklist-modal-title'))$('checklist-modal-title').textContent='💵 Novo Registro';if($('cl-date'))$('cl-date').value='';if($('cl-status'))$('cl-status').value='Confirmado';if($('cl-reason'))$('cl-reason').value='';if($('cl-revenue'))$('cl-revenue').value='';populateSelects();if($('cl-emp-rows'))$('cl-emp-rows').innerHTML='';addEmpRow();openModal('checklist-modal');}
+function editWorkLog(id){const l=db.workLogs.find(x=>x.id===id);if(!l)return;if($('cl-edit-id'))$('cl-edit-id').value=l.id;if($('checklist-modal-title'))$('checklist-modal-title').textContent='✏️ Editar Registro';if($('cl-date'))$('cl-date').value=l.work_date;if($('cl-status'))$('cl-status').value=l.status;if($('cl-reason'))$('cl-reason').value=l.cancellation_reason||'';if($('cl-revenue'))$('cl-revenue').value=l.revenue;populateSelects();setTimeout(function(){if($('cl-client'))$('cl-client').value=l.client_id;},50);if($('cl-emp-rows'))$('cl-emp-rows').innerHTML='';(l.work_log_employees||[]).forEach(e=>addEmpRow(e.employee_id,e.payment_amount));if(!(l.work_log_employees||[]).length)addEmpRow();openModal('checklist-modal');}
+function addEmpRow(empId,pay){empId=empId||'';pay=pay||'';const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';div.innerHTML='<select class="form-control emp-row-emp" style="flex:1;min-width:0">'+db.employees.map(e=>'<option value="'+e.id+'"'+(e.id===empId?' selected':'')+'>'+e.name+'</option>').join('')+'</select><input type="number" class="form-control emp-row-pay" placeholder="R$" value="'+pay+'" style="width:90px;min-width:0"/><button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>';if($('cl-emp-rows'))$('cl-emp-rows').appendChild(div);}
+async function saveWorkLog(){const editId=($('cl-edit-id')&&$('cl-edit-id').value)||'',cid=($('cl-client')&&$('cl-client').value)||'',date=($('cl-date')&&$('cl-date').value)||'',status=($('cl-status')&&$('cl-status').value)||'Confirmado',reason=($('cl-reason')&&$('cl-reason').value)||'',rev=parseFloat(($('cl-revenue')&&$('cl-revenue').value)||0)||0;if(!cid||!date){toast('Preencha cliente e data','error');return;}const emps=[...document.querySelectorAll('#cl-emp-rows > div')].map(d=>({employee_id:d.querySelector('.emp-row-emp').value,payment_amount:parseFloat(d.querySelector('.emp-row-pay').value)||0}));let lid=editId;if(editId){const l=db.workLogs.find(w=>w.id===editId);if(l){l.client_id=cid;l.work_date=date;l.status=status;l.cancellation_reason=reason;l.revenue=status==='Confirmado'?rev:0;l.work_log_employees=emps;}}else{lid=uid();db.workLogs.push({id:lid,work_date:date,client_id:cid,revenue:status==='Confirmado'?rev:0,status,cancellation_reason:reason,work_log_employees:emps,notes:''});}const wl=db.workLogs.find(l=>l.id===lid);if(wl)await sbUpsert('work_logs',{id:wl.id,work_date:wl.work_date,client_id:wl.client_id,revenue:wl.revenue,status:wl.status,cancellation_reason:wl.cancellation_reason,work_log_employees:wl.work_log_employees,notes:wl.notes||''});closeModal('checklist-modal');toast('Salvo!','success');renderChecklist();renderDashboard();}
+function renderClients(){if(!$('clients-table-body'))return;$('clients-table-body').innerHTML=db.clients.map(c=>{const emps=(c.client_employees||[]).map(ce=>{const e=getEmployee(ce.employee_id);return e?e.name:'?';}).join(', ');return'<tr><td><strong>'+c.name+'</strong></td><td>'+(c.frequency||'—')+'</td><td style="text-align:right">'+fmt(c.price)+'</td><td style="font-size:12px">'+emps+'</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-client="'+c.id+'">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-client="'+c.id+'">🗑</button></div></td></tr>';}).join('');}
+function addClientEmpRow(empId,pay){empId=empId||'';pay=pay||'';const div=document.createElement('div');div.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center';div.innerHTML='<select class="form-control cemp-row-emp" style="flex:1;min-width:0">'+db.employees.map(e=>'<option value="'+e.id+'"'+(e.id===empId?' selected':'')+'>'+e.name+'</option>').join('')+'</select><input type="number" class="form-control cemp-row-pay" placeholder="Pag." value="'+pay+'" style="width:90px;min-width:0"/><button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>';if($('client-emp-rows'))$('client-emp-rows').appendChild(div);}
+function openAddClient(){if($('client-edit-id'))$('client-edit-id').value='';if($('client-name'))$('client-name').value='';if($('client-price'))$('client-price').value='';if($('client-transport'))$('client-transport').checked=false;if($('client-notes'))$('client-notes').value='';populateSelects();setTimeout(function(){if($('client-freq'))$('client-freq').value='';},0);if($('client-emp-rows'))$('client-emp-rows').innerHTML='';addClientEmpRow();openModal('client-modal');}
+function editClient(id){const c=db.clients.find(x=>x.id===id);if(!c)return;if($('client-edit-id'))$('client-edit-id').value=c.id;if($('client-name'))$('client-name').value=c.name;if($('client-price'))$('client-price').value=c.price;if($('client-transport'))$('client-transport').checked=!!c.no_transport_cost;if($('client-notes'))$('client-notes').value=c.notes||'';populateSelects();setTimeout(function(){if($('client-freq'))$('client-freq').value=c.frequency;},50);if($('client-emp-rows'))$('client-emp-rows').innerHTML='';(c.client_employees||[]).forEach(e=>addClientEmpRow(e.employee_id,e.payment_amount));if(!(c.client_employees||[]).length)addClientEmpRow();openModal('client-modal');}
+async function saveClient(){const id=($('client-edit-id')&&$('client-edit-id').value)||'',name=($('client-name')&&$('client-name').value||'').trim(),freq=($('client-freq')&&$('client-freq').value)||'',price=parseFloat(($('client-price')&&$('client-price').value)||0)||0,noT=!!($('client-transport')&&$('client-transport').checked),notes=($('client-notes')&&$('client-notes').value||'').trim();if(!name||!freq){toast('Preencha nome e frequência','error');return;}const emps=[...document.querySelectorAll('#client-emp-rows > div')].map(d=>({employee_id:d.querySelector('.cemp-row-emp').value,payment_amount:parseFloat(d.querySelector('.cemp-row-pay').value)||0}));let cid=id;if(id){const c=db.clients.find(x=>x.id===id);if(c){c.name=name;c.frequency=freq;c.price=price;c.no_transport_cost=noT;c.client_employees=emps;c.notes=notes;cid=c.id;}}else{cid=uid();db.clients.push({id:cid,name,frequency:freq,price,no_transport_cost:noT,client_employees:emps,notes});}await sbUpsert('clients',{id:cid,name,frequency:freq,price,no_transport_cost:noT,client_employees:emps,notes});closeModal('client-modal');toast('Cliente salvo!','success');renderClients();populateSelects();}
+function renderEmployees(){if(!$('emp-table-body'))return;$('emp-table-body').innerHTML=db.employees.map(e=>{const u=Object.values(USERS).find(u=>u.email===e.email);const badge=u?(u.role==='adm'?'<span class="role-badge-adm">Admin</span>':'<span class="role-badge-col">Colaborador</span>'):'<span class="no-login-badge">Sem login</span>';return'<tr><td><strong>'+e.name+'</strong></td><td style="font-size:12px">'+(e.email||'')+'</td><td>'+badge+'</td><td>'+fmtDate(e.created_at)+'</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">✏️</button><button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">🗑</button></div></td></tr>';}).join('');if($('pending-list'))$('pending-list').innerHTML=db.pendingUsers.length===0?'<div class="empty"><div class="icon">📩</div>Nenhum pendente</div>':db.pendingUsers.map(u=>'<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px"><span>📧 '+u.email+'</span><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" data-approve-user="'+u.id+'">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-user="'+u.id+'">❌</button></div></div>').join('');}
+async function saveEmployee(){const name=($('emp-name')&&$('emp-name').value||'').trim(),email=($('emp-email')&&$('emp-email').value||'').trim().toLowerCase(),pass=($('emp-pass')&&$('emp-pass').value)||'',role=($('emp-role')&&$('emp-role').value)||'colaborador';if(!name||!email){toast('Preencha nome e email','error');return;}if(!pass||pass.length<6){toast('Senha mínimo 6 caracteres','error');return;}if(Object.values(USERS).find(u=>u.email===email)){toast('Email já cadastrado','error');return;}const newId=uid(),today=new Date().toISOString().split('T')[0];const eR={id:newId,name,email,created_at:today},uR={id:'ul_'+newId,email,role,username:name,password:pass,employee_id:newId};db.employees.push(eR);USERS[email]={role,email,username:name,password:pass,employeeId:newId,ulId:'ul_'+newId};await Promise.all([sbUpsert('employees',eR),sbUpsert('users_login',uR)]);closeModal('emp-modal');if($('emp-name'))$('emp-name').value='';if($('emp-email'))$('emp-email').value='';if($('emp-pass'))$('emp-pass').value='';toast('"'+name+'" criado!','success');renderEmployees();populateSelects();}
+function openEditEmpModal(empId){const emp=db.employees.find(e=>e.id===empId);if(!emp)return;const u=Object.values(USERS).find(u=>u.email===emp.email);if($('edit-emp-id'))$('edit-emp-id').value=emp.id;if($('edit-emp-name'))$('edit-emp-name').value=emp.name;if($('edit-emp-email'))$('edit-emp-email').value=emp.email;if($('edit-emp-pass'))$('edit-emp-pass').value='';if($('edit-emp-role'))$('edit-emp-role').value=u?u.role:'colaborador';openModal('edit-emp-modal');}
+async function saveEditEmployee(){const empId=($('edit-emp-id')&&$('edit-emp-id').value)||'',name=($('edit-emp-name')&&$('edit-emp-name').value||'').trim(),newEmail=($('edit-emp-email')&&$('edit-emp-email').value||'').trim().toLowerCase(),newPass=($('edit-emp-pass')&&$('edit-emp-pass').value)||'',newRole=($('edit-emp-role')&&$('edit-emp-role').value)||'colaborador';if(!name||!newEmail){toast('Nome e email obrigatórios','error');return;}if(newPass&&newPass.length<6){toast('Senha mínimo 6 chars','error');return;}const emp=db.employees.find(e=>e.id===empId);if(!emp)return;const ok=Object.keys(USERS).find(k=>USERS[k].email===emp.email),op=ok?USERS[ok].password:'123456',oi=ok?USERS[ok].ulId:'ul_'+empId;if(ok)delete USERS[ok];emp.name=name;emp.email=newEmail;USERS[newEmail]={role:newRole,email:newEmail,username:name,password:newPass||op,employeeId:empId,ulId:oi};await Promise.all([sbUpsert('employees',{id:empId,name,email:newEmail,created_at:emp.created_at}),sbUpsert('users_login',{id:oi,email:newEmail,role:newRole,username:name,password:newPass||op,employee_id:empId})]);closeModal('edit-emp-modal');toast('"'+name+'" atualizado!','success');renderEmployees();populateSelects();}
+async function approveUser(){const id=($('approve-user-id')&&$('approve-user-id').value)||'',name=($('approve-name')&&$('approve-name').value||'').trim(),pass=($('approve-pass')&&$('approve-pass').value)||'123456',role=($('approve-role')&&$('approve-role').value)||'colaborador';if(!name){toast('Informe o nome','error');return;}const u=db.pendingUsers.find(p=>p.id===id);if(!u)return;const nid=uid(),today=new Date().toISOString().split('T')[0];const eR={id:nid,name,email:u.email,created_at:today},uR={id:'ul_'+nid,email:u.email,role,username:name,password:pass,employee_id:nid};db.employees.push(eR);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==id);USERS[u.email]={role,email:u.email,username:name,password:pass,employeeId:nid,ulId:'ul_'+nid};await Promise.all([sbUpsert('employees',eR),sbUpsert('users_login',uR),sbDelete('pending_users',id)]);closeModal('approve-modal');toast('"'+name+'" aprovado!','success');renderEmployees();}
+function renderCosts(){const rc=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0),uc=db.costs.filter(c=>c.cost_type==='unico').reduce((s,c)=>s+c.amount,0);if($('cost-recurrent'))$('cost-recurrent').textContent=fmt(rc);if($('cost-unique'))$('cost-unique').textContent=fmt(uc);const list=costsFilter==='all'?db.costs:db.costs.filter(c=>c.cost_type===costsFilter);if($('costs-list'))$('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">🧾</div>Nenhum custo</div>':list.map(c=>'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px"><div><div class="log-date">'+fmtDate(c.created_at||c.date)+'</div><div style="font-weight:600">'+c.description+'</div><span class="badge badge-gray">'+(c.category||'—')+'</span></div><div style="display:flex;align-items:center;gap:8px"><strong style="color:var(--destructive)">'+fmt(c.amount)+'</strong><button class="btn btn-danger btn-icon btn-sm" data-del-cost="'+c.id+'">🗑</button></div></div></div>').join('');}
+async function saveCost(){const cat=($('cost-cat')&&$('cost-cat').value)||'',desc=($('cost-desc')&&$('cost-desc').value||'').trim(),amount=parseFloat(($('cost-amount')&&$('cost-amount').value)||0)||0,type=($('cost-type')&&$('cost-type').value)||'unico';if(!desc||amount<=0){toast('Preencha todos os campos','error');return;}const rec={id:uid(),category:cat,description:desc,amount,cost_type:type,created_at:new Date().toISOString().split('T')[0]};db.costs.push(rec);await sbUpsert('costs',rec);closeModal('cost-modal');toast('Custo adicionado!','success');renderCosts();}
+function renderNotifications(){updateNotifBadge();if(!$('notifications-list'))return;$('notifications-list').innerHTML=db.notifications.length===0?'<div class="empty"><div class="icon">🔔</div>Nenhuma notificação</div>':db.notifications.map(n=>{const cl=getClient(n.client_id),emp=getEmployee(n.employee_id);return'<div class="notif-item '+n.status+'"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><div style="font-weight:600;margin-bottom:4px">'+n.note+'</div><div style="font-size:12px;color:var(--text-muted)">'+(cl?'📍 '+cl.name:'')+' '+(emp?'👤 '+emp.name:'')+' • '+new Date(n.created_at).toLocaleDateString('pt-BR')+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(n.status==='pending'?'<button class="btn btn-outline btn-sm" data-notif-read="'+n.id+'">✓</button>':'')+'<button class="btn btn-danger btn-sm" data-notif-del="'+n.id+'">🗑</button></div></div></div>';}).join('');}
+function renderFrequencies(){if(!$('freq-list'))return;$('freq-list').innerHTML=db.frequencies.length===0?'<div class="empty"><div class="icon">📆</div>Nenhuma frequência</div>':db.frequencies.map(f=>'<div class="log-row" style="display:flex;align-items:center;justify-content:space-between;padding:10px;flex-wrap:wrap;gap:8px"><span style="font-weight:600">'+f.name+'</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" data-edit-freq="'+f.id+'">✏️ Editar</button><button class="btn btn-danger btn-icon btn-sm" data-del-freq="'+f.id+'">🗑</button></div></div>').join('');}
+async function saveFreq(){const id=($('freq-edit-id')&&$('freq-edit-id').value)||'',name=($('freq-name')&&$('freq-name').value||'').trim();if(!name){toast('Digite o nome','error');return;}let fid=id;if(id){const f=db.frequencies.find(f=>f.id===id);if(f)f.name=name;fid=id;}else{fid=uid();db.frequencies.push({id:fid,name});}await sbUpsert('frequencies',{id:fid,name});closeModal('freq-modal');if($('freq-edit-id'))$('freq-edit-id').value='';if($('freq-name'))$('freq-name').value='';toast(id?'Atualizada!':'Adicionada!','success');renderFrequencies();populateSelects();}
+function renderReferrals(){const p=db.referrals.filter(r=>r.status==='pending'),ap=db.referrals.filter(r=>r.status==='approved'),rej=db.referrals.filter(r=>r.status==='rejected');if($('referral-stats'))$('referral-stats').innerHTML='<div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">'+p.length+'</div></div><div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value">'+ap.length+'</div></div><div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">❌ Rejeitadas</div><div class="stat-value">'+rej.length+'</div></div>';if($('referrals-list'))$('referrals-list').innerHTML=db.referrals.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>':db.referrals.map(r=>{const emp=getEmployee(r.referrer_employee_id);return'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div style="font-weight:600">'+r.client_name+'</div><div style="font-size:12px;color:var(--text-muted)">👤 '+(emp?emp.name:'?')+' • '+fmtDate(r.created_at)+'</div>'+(r.bonus>0?'<div style="font-size:12px;color:var(--secondary);font-weight:600">Bônus: '+fmt(r.bonus)+'</div>':'')+'</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="badge '+(r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning')+'">'+(r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente')+'</span>'+(r.status==='pending'?'<button class="btn btn-outline btn-sm" data-approve-ref="'+r.id+'">✅</button><button class="btn btn-danger btn-sm" data-reject-ref="'+r.id+'">❌</button>':'')+'<button class="btn btn-danger btn-icon btn-sm" data-del-ref="'+r.id+'">🗑</button></div></div></div>';}).join('');}
 let empPeriodStart='',empPeriodEnd='';
 function setEmpPeriod(p,c){const today=new Date().toISOString().split('T')[0],ym=today.substr(0,7);if(p==='mes'){empPeriodStart=ym+'-01';empPeriodEnd=today;}else if(p==='semana'){empPeriodStart=getWeekStart(new Date()).toISOString().split('T')[0];empPeriodEnd=today;}else if(c){empPeriodStart=c.start;empPeriodEnd=c.end;}renderEmpGanhos();}
-function renderEmpGanhos(){if(!currentEmpId)return;const ml=db.workLogs.filter(l=>l.work_date>=empPeriodStart&&l.work_date<=empPeriodEnd&&l.status==='Confirmado'&&(l.work_log_employees||[]).some(e=>e.employee_id===currentEmpId));const total=ml.reduce((s,l)=>{const e=(l.work_log_employees||[]).find(e=>e.employee_id===currentEmpId);return s+(e?e.payment_amount:0);},0);if($('emp-total-ganhos'))$('emp-total-ganhos').textContent=fmt(total);if($('emp-ganhos-list'))$('emp-ganhos-list').innerHTML=ml.length===0?'<div class="empty"><div class="icon">💰</div>Nenhum ganho</div>':ml.map(l=>{const cl=getClient(l.client_id);const e=(l.work_log_employees||[]).find(e=>e.employee_id===currentEmpId);return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div></div><strong style="color:var(--secondary)">${fmt(e?e.payment_amount:0)}</strong></div></div>`;}).join('');}
-function renderEmpAgenda(){if(!currentEmpId)return;const today=new Date().toISOString().split('T')[0];const up=db.scheduleEntries.filter(e=>e.work_date>=today&&(e.employee_ids||[]).includes(currentEmpId)).sort((a,b)=>a.work_date.localeCompare(b.work_date)).slice(0,10);if($('emp-agenda-list'))$('emp-agenda-list').innerHTML=up.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>':up.map(e=>{const cl=getClient(e.client_id);return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div></div><span class="badge ${e.status==='confirmado'?'badge-secondary':'badge-warning'}">${e.status}</span></div></div>`;}).join('');}
-function renderEmpClients(){if(!currentEmpId)return;const mc=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===currentEmpId));if($('emp-clients-list'))$('emp-clients-list').innerHTML=mc.length===0?'<div class="empty"><div class="icon">👥</div>Nenhum cliente</div>':mc.map(c=>{const ce=(c.client_employees||[]).find(e=>e.employee_id===currentEmpId);return`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:600">${c.name}</div><div style="font-size:12px;color:var(--text-muted)">${c.frequency||'—'}</div></div><strong style="color:var(--secondary)">${fmt(ce?ce.payment_amount:0)}/vez</strong></div></div>`;}).join('');}
-function renderEmpReferrals(){if(!currentEmpId)return;const mine=db.referrals.filter(r=>r.referrer_employee_id===currentEmpId);if($('emp-referrals-list'))$('emp-referrals-list').innerHTML=mine.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>':mine.map(r=>`<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:600">${r.client_name}</div><div style="font-size:12px;color:var(--text-muted)">${fmtDate(r.created_at)}</div></div><span class="badge ${r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning'}">${r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente'}</span></div></div>`).join('');}
+function renderEmpGanhos(){if(!currentEmpId)return;const ml=db.workLogs.filter(l=>l.work_date>=empPeriodStart&&l.work_date<=empPeriodEnd&&l.status==='Confirmado'&&(l.work_log_employees||[]).some(e=>e.employee_id===currentEmpId));const total=ml.reduce((s,l)=>{const e=(l.work_log_employees||[]).find(e=>e.employee_id===currentEmpId);return s+(e?e.payment_amount:0);},0);if($('emp-total-ganhos'))$('emp-total-ganhos').textContent=fmt(total);if($('emp-ganhos-list'))$('emp-ganhos-list').innerHTML=ml.length===0?'<div class="empty"><div class="icon">💰</div>Nenhum ganho</div>':ml.map(l=>{const cl=getClient(l.client_id),e=(l.work_log_employees||[]).find(e=>e.employee_id===currentEmpId);return'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="log-date">'+fmtDate(l.work_date)+'</div><div class="log-client">'+(cl?cl.name:'?')+'</div></div><strong style="color:var(--secondary)">'+fmt(e?e.payment_amount:0)+'</strong></div></div>';}).join('');}
+function renderEmpAgenda(){if(!currentEmpId)return;const today=new Date().toISOString().split('T')[0];const up=db.scheduleEntries.filter(e=>e.work_date>=today&&(e.employee_ids||[]).includes(currentEmpId)).sort((a,b)=>a.work_date.localeCompare(b.work_date)).slice(0,10);if($('emp-agenda-list'))$('emp-agenda-list').innerHTML=up.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento</div>':up.map(e=>{const cl=getClient(e.client_id);return'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="log-date">'+fmtDate(e.work_date)+'</div><div class="log-client">'+(cl?cl.name:'?')+'</div></div><span class="badge '+(e.status==='confirmado'?'badge-secondary':'badge-warning')+'">'+e.status+'</span></div></div>';}).join('');}
+function renderEmpClients(){if(!currentEmpId)return;const mc=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===currentEmpId));if($('emp-clients-list'))$('emp-clients-list').innerHTML=mc.length===0?'<div class="empty"><div class="icon">👥</div>Nenhum cliente</div>':mc.map(c=>{const ce=(c.client_employees||[]).find(e=>e.employee_id===currentEmpId);return'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:600">'+c.name+'</div><div style="font-size:12px;color:var(--text-muted)">'+(c.frequency||'—')+'</div></div><strong style="color:var(--secondary)">'+fmt(ce?ce.payment_amount:0)+'/vez</strong></div></div>';}).join('');}
+function renderEmpReferrals(){if(!currentEmpId)return;const mine=db.referrals.filter(r=>r.referrer_employee_id===currentEmpId);if($('emp-referrals-list'))$('emp-referrals-list').innerHTML=mine.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>':mine.map(r=>'<div class="log-row"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:600">'+r.client_name+'</div><div style="font-size:12px;color:var(--text-muted)">'+fmtDate(r.created_at)+'</div></div><span class="badge '+(r.status==='approved'?'badge-secondary':r.status==='rejected'?'badge-destructive':'badge-warning')+'">'+(r.status==='approved'?'Aprovada':r.status==='rejected'?'Rejeitada':'Pendente')+'</span></div></div>').join('');}
 
-/* ════════════════════════════════════════════════════
-   DOMContentLoaded — listeners registrados IMEDIATAMENTE
-   ensureAdminExists roda em BACKGROUND
-════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded',()=>{
-  ensureAdminExists(); /* background — sem await */
+/* ════ DOMContentLoaded ════ */
+document.addEventListener('DOMContentLoaded', function(){
+  ensureAdminExists();
 
-  $('btn-login').addEventListener('click',doLogin);
-  $('login-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  document.querySelectorAll('#sidebar .nav-item').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.tab)));
-  $('mobile-menu-btn')?.addEventListener('click',()=>{$('sidebar')?.classList.toggle('open');$('sidebar-overlay')?.classList.toggle('show');});
-  $('sidebar-overlay')?.addEventListener('click',()=>{$('sidebar')?.classList.remove('open');$('sidebar-overlay')?.classList.remove('show');});
-  document.querySelectorAll('.emp-tab-btn').forEach(btn=>btn.addEventListener('click',()=>empNavigate(btn.dataset.etab)));
-  $('btn-logout')?.addEventListener('click',doLogout);$('btn-emp-logout')?.addEventListener('click',doLogout);
-  $('dash-apply')?.addEventListener('click',renderDashboard);
-  $('btn-export-csv')?.addEventListener('click',exportRankingCSV);
-  $('btn-print-dash')?.addEventListener('click',()=>window.print());
-  $('prev-week')?.addEventListener('click',()=>{weekOffset--;renderSchedule();});
-  $('next-week')?.addEventListener('click',()=>{weekOffset++;renderSchedule();});
-  $('btn-add-schedule')?.addEventListener('click',()=>{if($('sch-edit-id'))$('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';$('sch-date').value='';$('sch-notes').value='';$('sch-status').value='pendente';populateSelects();openModal('schedule-modal');});
-  $('btn-save-schedule')?.addEventListener('click',saveSchedule);$('btn-cancel-schedule')?.addEventListener('click',()=>closeModal('schedule-modal'));
-  $('btn-add-log')?.addEventListener('click',openAddWorkLog);$('btn-add-emp-row')?.addEventListener('click',()=>addEmpRow());$('btn-save-log')?.addEventListener('click',saveWorkLog);$('btn-cancel-log')?.addEventListener('click',()=>closeModal('checklist-modal'));
-  $('btn-add-client')?.addEventListener('click',openAddClient);$('btn-add-client-emp')?.addEventListener('click',()=>addClientEmpRow());$('btn-save-client')?.addEventListener('click',saveClient);$('btn-cancel-client')?.addEventListener('click',()=>closeModal('client-modal'));
-  $('btn-add-emp')?.addEventListener('click',()=>openModal('emp-modal'));$('btn-save-emp')?.addEventListener('click',saveEmployee);$('btn-cancel-emp')?.addEventListener('click',()=>closeModal('emp-modal'));
-  $('btn-save-edit-emp')?.addEventListener('click',saveEditEmployee);$('btn-cancel-edit-emp')?.addEventListener('click',()=>closeModal('edit-emp-modal'));
-  $('btn-approve-user')?.addEventListener('click',approveUser);$('btn-cancel-approve')?.addEventListener('click',()=>closeModal('approve-modal'));
-  $('btn-add-cost')?.addEventListener('click',()=>openModal('cost-modal'));$('btn-save-cost')?.addEventListener('click',saveCost);$('btn-cancel-cost')?.addEventListener('click',()=>closeModal('cost-modal'));
-  document.querySelectorAll('.cost-filter-btn').forEach(btn=>btn.addEventListener('click',()=>{costsFilter=btn.dataset.filter;document.querySelectorAll('.cost-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCosts();}));
-  $('btn-add-freq')?.addEventListener('click',()=>{$('freq-edit-id').value='';$('freq-name').value='';openModal('freq-modal');});$('btn-save-freq')?.addEventListener('click',saveFreq);$('btn-cancel-freq')?.addEventListener('click',()=>closeModal('freq-modal'));
-  $('btn-mark-all-read')?.addEventListener('click',async()=>{await Promise.all(db.notifications.map(n=>{n.status='read';return sbUpdate('notifications',n.id,{status:'read'});}));toast('Todas lidas','success');updateNotifBadge();renderNotifications();});
-  $('btn-del-all-notifs')?.addEventListener('click',async()=>{if(!db.notifications.length)return;if(!confirm('Excluir todas?'))return;await Promise.all(db.notifications.map(n=>sbDelete('notifications',n.id)));db.notifications=[];toast('Excluídas','success');updateNotifBadge();renderNotifications();});
-  $('btn-approve-ref')?.addEventListener('click',async()=>{const id=$('ref-edit-id').value,bonus=parseFloat($('ref-bonus').value)||0;if(bonus<=0){toast('Informe bônus','error');return;}const r=db.referrals.find(r=>r.id===id);if(r){r.status='approved';r.bonus=bonus;await sbUpsert('referrals',r);}closeModal('ref-modal');toast('Aprovada!','success');renderReferrals();});
-  $('btn-cancel-ref')?.addEventListener('click',()=>closeModal('ref-modal'));
-  $('btn-save-note')?.addEventListener('click',async()=>{const clientId=$('note-client-sel')?.value,note=($('note-text')?.value||'').trim();if(!note){toast('Escreva uma nota','error');return;}const rec={id:uid(),client_id:clientId,employee_id:currentEmpId,note,status:'pending',created_at:new Date().toISOString()};db.notifications.unshift(rec);await sbUpsert('notifications',rec);if($('note-text'))$('note-text').value='';closeModal('emp-note-modal');toast('Enviada!','success');});
-  $('btn-cancel-note')?.addEventListener('click',()=>closeModal('emp-note-modal'));$('btn-add-note')?.addEventListener('click',()=>openModal('emp-note-modal'));
-  $('btn-save-emp-ref')?.addEventListener('click',async()=>{const cn=($('emp-ref-client')?.value||'').trim();if(!cn){toast('Informe o nome','error');return;}const rec={id:uid(),referrer_employee_id:currentEmpId,client_name:cn,bonus:0,status:'pending',created_at:new Date().toISOString().split('T')[0]};db.referrals.push(rec);await sbUpsert('referrals',rec);if($('emp-ref-client'))$('emp-ref-client').value='';closeModal('emp-ref-modal');toast('Enviada!','success');renderEmpReferrals();});
-  $('btn-cancel-emp-ref')?.addEventListener('click',()=>closeModal('emp-ref-modal'));$('btn-add-emp-ref')?.addEventListener('click',()=>openModal('emp-ref-modal'));
-  document.querySelectorAll('.period-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');setEmpPeriod(btn.dataset.period,null);}));
+  var btnLogin = document.getElementById('btn-login');
+  if(btnLogin) btnLogin.addEventListener('click', doLogin);
+  var lpass = document.getElementById('login-pass');
+  if(lpass) lpass.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 
-  document.addEventListener('click',async e=>{
-    const t=e.target;
-    const esch=t.closest('[data-edit-schedule]');if(esch){editSchedule(esch.dataset.editSchedule);return;}
-    if(t.dataset.editLog){editWorkLog(t.dataset.editLog);return;}
-    if(t.dataset.editClient){editClient(t.dataset.editClient);return;}
-    const eemp=t.closest('[data-edit-emp]');if(eemp){openEditEmpModal(eemp.dataset.editEmp);return;}
-    if(t.dataset.editFreq){$('freq-edit-id').value=t.dataset.editFreq;const f=db.frequencies.find(f=>f.id===t.dataset.editFreq);if(f)$('freq-name').value=f.name;openModal('freq-modal');return;}
-    if(t.dataset.approveRef){$('ref-edit-id').value=t.dataset.approveRef;$('ref-bonus').value='';openModal('ref-modal');return;}
-    if(t.dataset.rejectRef){if(!confirm('Rejeitar?'))return;const r=db.referrals.find(r=>r.id===t.dataset.rejectRef);if(r){r.status='rejected';await sbUpsert('referrals',r);}toast('Rejeitada','success');renderReferrals();return;}
-    if(t.dataset.approveUser){$('approve-user-id').value=t.dataset.approveUser;$('approve-name').value='';$('approve-pass').value='123456';openModal('approve-modal');return;}
-    if(t.dataset.notifRead){const n=db.notifications.find(n=>n.id===t.dataset.notifRead);if(n){n.status='read';await sbUpdate('notifications',n.id,{status:'read'});}updateNotifBadge();renderNotifications();return;}
-    if(t.dataset.delEmp){const em=db.employees.find(x=>x.id===t.dataset.delEmp);if(!confirm(`Remover "${em?.name||'?'}"?`))return;const uk=Object.keys(USERS).find(k=>USERS[k].email===em?.email);const ulId=uk?USERS[uk].ulId:'ul_'+t.dataset.delEmp;if(uk)delete USERS[uk];await Promise.all([sbDelete('employees',t.dataset.delEmp),sbDelete('users_login',ulId)]);db.employees=db.employees.filter(x=>x.id!==t.dataset.delEmp);toast('Removido','success');renderEmployees();return;}
-    if(t.dataset.delClient){if(!confirm('Remover?'))return;await sbDelete('clients',t.dataset.delClient);db.clients=db.clients.filter(c=>c.id!==t.dataset.delClient);toast('Removido','success');renderClients();return;}
-    if(t.dataset.delSchedule){if(!confirm('Remover?'))return;await sbDelete('schedule_entries',t.dataset.delSchedule);db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==t.dataset.delSchedule);toast('Removido','success');renderSchedule();return;}
-    if(t.dataset.delLog){if(!confirm('Remover?'))return;await sbDelete('work_logs',t.dataset.delLog);db.workLogs=db.workLogs.filter(l=>l.id!==t.dataset.delLog);toast('Removido','success');renderChecklist();renderDashboard();return;}
-    if(t.dataset.delCost){if(!confirm('Remover?'))return;await sbDelete('costs',t.dataset.delCost);db.costs=db.costs.filter(c=>c.id!==t.dataset.delCost);toast('Removido','success');renderCosts();return;}
-    if(t.dataset.delFreq){if(!confirm('Remover?'))return;await sbDelete('frequencies',t.dataset.delFreq);db.frequencies=db.frequencies.filter(f=>f.id!==t.dataset.delFreq);toast('Removida','success');renderFrequencies();return;}
-    if(t.dataset.delRef){if(!confirm('Remover?'))return;await sbDelete('referrals',t.dataset.delRef);db.referrals=db.referrals.filter(r=>r.id!==t.dataset.delRef);toast('Removida','success');renderReferrals();return;}
-    if(t.dataset.notifDel){if(!confirm('Excluir?'))return;await sbDelete('notifications',t.dataset.notifDel);db.notifications=db.notifications.filter(n=>n.id!==t.dataset.notifDel);updateNotifBadge();renderNotifications();return;}
-    if(t.dataset.rejectUser){if(!confirm('Rejeitar?'))return;await sbDelete('pending_users',t.dataset.rejectUser);db.pendingUsers=db.pendingUsers.filter(p=>p.id!==t.dataset.rejectUser);toast('Rejeitado','success');renderEmployees();return;}
+  document.querySelectorAll('#sidebar .nav-item').forEach(function(btn){
+    btn.addEventListener('click', function(){ navigate(btn.getAttribute('data-tab')); });
+  });
+
+  var mmb = document.getElementById('mobile-menu-btn');
+  if(mmb) mmb.addEventListener('click', function(){
+    var sb=document.getElementById('sidebar'),ov=document.getElementById('sidebar-overlay');
+    if(sb)sb.classList.toggle('open');if(ov)ov.classList.toggle('show');
+  });
+  var ov = document.getElementById('sidebar-overlay');
+  if(ov) ov.addEventListener('click', function(){
+    var sb=document.getElementById('sidebar');
+    if(sb)sb.classList.remove('open');ov.classList.remove('show');
+  });
+
+  document.querySelectorAll('.emp-tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ empNavigate(btn.getAttribute('data-etab')); });
+  });
+
+  var bl=document.getElementById('btn-logout');if(bl)bl.addEventListener('click',doLogout);
+  var bel=document.getElementById('btn-emp-logout');if(bel)bel.addEventListener('click',doLogout);
+  var da=document.getElementById('dash-apply');if(da)da.addEventListener('click',renderDashboard);
+  var ec=document.getElementById('btn-export-csv');if(ec)ec.addEventListener('click',exportRankingCSV);
+  var pd=document.getElementById('btn-print-dash');if(pd)pd.addEventListener('click',function(){window.print();});
+  var pw=document.getElementById('prev-week');if(pw)pw.addEventListener('click',function(){weekOffset--;renderSchedule();});
+  var nw=document.getElementById('next-week');if(nw)nw.addEventListener('click',function(){weekOffset++;renderSchedule();});
+  var bas=document.getElementById('btn-add-schedule');if(bas)bas.addEventListener('click',function(){
+    if($('sch-edit-id'))$('sch-edit-id').value='';if($('sch-modal-title'))$('sch-modal-title').textContent='📅 Novo Agendamento';
+    if($('sch-date'))$('sch-date').value='';if($('sch-notes'))$('sch-notes').value='';if($('sch-status'))$('sch-status').value='pendente';
+    populateSelects();openModal('schedule-modal');
+  });
+  var bss=document.getElementById('btn-save-schedule');if(bss)bss.addEventListener('click',saveSchedule);
+  var bcs=document.getElementById('btn-cancel-schedule');if(bcs)bcs.addEventListener('click',function(){closeModal('schedule-modal');});
+  var bal=document.getElementById('btn-add-log');if(bal)bal.addEventListener('click',openAddWorkLog);
+  var baer=document.getElementById('btn-add-emp-row');if(baer)baer.addEventListener('click',function(){addEmpRow();});
+  var bsl=document.getElementById('btn-save-log');if(bsl)bsl.addEventListener('click',saveWorkLog);
+  var bcl=document.getElementById('btn-cancel-log');if(bcl)bcl.addEventListener('click',function(){closeModal('checklist-modal');});
+  var bac=document.getElementById('btn-add-client');if(bac)bac.addEventListener('click',openAddClient);
+  var bace=document.getElementById('btn-add-client-emp');if(bace)bace.addEventListener('click',function(){addClientEmpRow();});
+  var bsc=document.getElementById('btn-save-client');if(bsc)bsc.addEventListener('click',saveClient);
+  var bcc=document.getElementById('btn-cancel-client');if(bcc)bcc.addEventListener('click',function(){closeModal('client-modal');});
+  var bae=document.getElementById('btn-add-emp');if(bae)bae.addEventListener('click',function(){openModal('emp-modal');});
+  var bse=document.getElementById('btn-save-emp');if(bse)bse.addEventListener('click',saveEmployee);
+  var bce=document.getElementById('btn-cancel-emp');if(bce)bce.addEventListener('click',function(){closeModal('emp-modal');});
+  var bsee=document.getElementById('btn-save-edit-emp');if(bsee)bsee.addEventListener('click',saveEditEmployee);
+  var bcee=document.getElementById('btn-cancel-edit-emp');if(bcee)bcee.addEventListener('click',function(){closeModal('edit-emp-modal');});
+  var bau=document.getElementById('btn-approve-user');if(bau)bau.addEventListener('click',approveUser);
+  var bca=document.getElementById('btn-cancel-approve');if(bca)bca.addEventListener('click',function(){closeModal('approve-modal');});
+  var baco=document.getElementById('btn-add-cost');if(baco)baco.addEventListener('click',function(){openModal('cost-modal');});
+  var bsco=document.getElementById('btn-save-cost');if(bsco)bsco.addEventListener('click',saveCost);
+  var bcco=document.getElementById('btn-cancel-cost');if(bcco)bcco.addEventListener('click',function(){closeModal('cost-modal');});
+  document.querySelectorAll('.cost-filter-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){costsFilter=btn.getAttribute('data-filter');document.querySelectorAll('.cost-filter-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderCosts();});
+  });
+  var baf=document.getElementById('btn-add-freq');if(baf)baf.addEventListener('click',function(){if($('freq-edit-id'))$('freq-edit-id').value='';if($('freq-name'))$('freq-name').value='';openModal('freq-modal');});
+  var bsf=document.getElementById('btn-save-freq');if(bsf)bsf.addEventListener('click',saveFreq);
+  var bcf=document.getElementById('btn-cancel-freq');if(bcf)bcf.addEventListener('click',function(){closeModal('freq-modal');});
+  var bmar=document.getElementById('btn-mark-all-read');if(bmar)bmar.addEventListener('click',async function(){await Promise.all(db.notifications.map(function(n){n.status='read';return sbUpdate('notifications',n.id,{status:'read'});}));toast('Todas lidas','success');updateNotifBadge();renderNotifications();});
+  var bdan=document.getElementById('btn-del-all-notifs');if(bdan)bdan.addEventListener('click',async function(){if(!db.notifications.length)return;if(!confirm('Excluir todas?'))return;await Promise.all(db.notifications.map(function(n){return sbDelete('notifications',n.id);}));db.notifications=[];toast('Excluídas','success');updateNotifBadge();renderNotifications();});
+  var bar=document.getElementById('btn-approve-ref');if(bar)bar.addEventListener('click',async function(){const id=($('ref-edit-id')&&$('ref-edit-id').value)||'',bonus=parseFloat(($('ref-bonus')&&$('ref-bonus').value)||0)||0;if(bonus<=0){toast('Informe bônus','error');return;}const r=db.referrals.find(function(r){return r.id===id;});if(r){r.status='approved';r.bonus=bonus;await sbUpsert('referrals',r);}closeModal('ref-modal');toast('Aprovada!','success');renderReferrals();});
+  var bcr=document.getElementById('btn-cancel-ref');if(bcr)bcr.addEventListener('click',function(){closeModal('ref-modal');});
+  var bsn=document.getElementById('btn-save-note');if(bsn)bsn.addEventListener('click',async function(){const cid=($('note-client-sel')&&$('note-client-sel').value)||'',note=($('note-text')&&$('note-text').value||'').trim();if(!note){toast('Escreva uma nota','error');return;}const rec={id:uid(),client_id:cid,employee_id:currentEmpId,note,status:'pending',created_at:new Date().toISOString()};db.notifications.unshift(rec);await sbUpsert('notifications',rec);if($('note-text'))$('note-text').value='';closeModal('emp-note-modal');toast('Enviada!','success');});
+  var bcn=document.getElementById('btn-cancel-note');if(bcn)bcn.addEventListener('click',function(){closeModal('emp-note-modal');});
+  var ban=document.getElementById('btn-add-note');if(ban)ban.addEventListener('click',function(){openModal('emp-note-modal');});
+  var bser=document.getElementById('btn-save-emp-ref');if(bser)bser.addEventListener('click',async function(){const cn=($('emp-ref-client')&&$('emp-ref-client').value||'').trim();if(!cn){toast('Informe o nome','error');return;}const rec={id:uid(),referrer_employee_id:currentEmpId,client_name:cn,bonus:0,status:'pending',created_at:new Date().toISOString().split('T')[0]};db.referrals.push(rec);await sbUpsert('referrals',rec);if($('emp-ref-client'))$('emp-ref-client').value='';closeModal('emp-ref-modal');toast('Enviada!','success');renderEmpReferrals();});
+  var bcer=document.getElementById('btn-cancel-emp-ref');if(bcer)bcer.addEventListener('click',function(){closeModal('emp-ref-modal');});
+  var baer2=document.getElementById('btn-add-emp-ref');if(baer2)baer2.addEventListener('click',function(){openModal('emp-ref-modal');});
+  document.querySelectorAll('.period-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){document.querySelectorAll('.period-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');setEmpPeriod(btn.getAttribute('data-period'),null);});
+  });
+
+  document.addEventListener('click', async function(e){
+    var t=e.target;
+    var esch=t.closest&&t.closest('[data-edit-schedule]');if(esch){editSchedule(esch.getAttribute('data-edit-schedule'));return;}
+    if(t.getAttribute('data-edit-log')){editWorkLog(t.getAttribute('data-edit-log'));return;}
+    if(t.getAttribute('data-edit-client')){editClient(t.getAttribute('data-edit-client'));return;}
+    var eemp=t.closest&&t.closest('[data-edit-emp]');if(eemp){openEditEmpModal(eemp.getAttribute('data-edit-emp'));return;}
+    if(t.getAttribute('data-edit-freq')){var fi=t.getAttribute('data-edit-freq');if($('freq-edit-id'))$('freq-edit-id').value=fi;var ff=db.frequencies.find(function(f){return f.id===fi;});if(ff&&$('freq-name'))$('freq-name').value=ff.name;openModal('freq-modal');return;}
+    if(t.getAttribute('data-approve-ref')){if($('ref-edit-id'))$('ref-edit-id').value=t.getAttribute('data-approve-ref');if($('ref-bonus'))$('ref-bonus').value='';openModal('ref-modal');return;}
+    if(t.getAttribute('data-reject-ref')){if(!confirm('Rejeitar?'))return;var rr=db.referrals.find(function(r){return r.id===t.getAttribute('data-reject-ref');});if(rr){rr.status='rejected';await sbUpsert('referrals',rr);}toast('Rejeitada','success');renderReferrals();return;}
+    if(t.getAttribute('data-approve-user')){if($('approve-user-id'))$('approve-user-id').value=t.getAttribute('data-approve-user');if($('approve-name'))$('approve-name').value='';if($('approve-pass'))$('approve-pass').value='123456';openModal('approve-modal');return;}
+    if(t.getAttribute('data-notif-read')){var nr=db.notifications.find(function(n){return n.id===t.getAttribute('data-notif-read');});if(nr){nr.status='read';await sbUpdate('notifications',nr.id,{status:'read'});}updateNotifBadge();renderNotifications();return;}
+    if(t.getAttribute('data-del-emp')){var did=t.getAttribute('data-del-emp'),dem=db.employees.find(function(x){return x.id===did;});if(!confirm('Remover "'+(dem?dem.name:'?')+'"?'))return;var uk=Object.keys(USERS).find(function(k){return USERS[k].email===(dem&&dem.email);});var ulid=uk?USERS[uk].ulId:'ul_'+did;if(uk)delete USERS[uk];await Promise.all([sbDelete('employees',did),sbDelete('users_login',ulid)]);db.employees=db.employees.filter(function(x){return x.id!==did;});toast('Removido','success');renderEmployees();return;}
+    if(t.getAttribute('data-del-client')){var dcid=t.getAttribute('data-del-client');if(!confirm('Remover?'))return;await sbDelete('clients',dcid);db.clients=db.clients.filter(function(c){return c.id!==dcid;});toast('Removido','success');renderClients();return;}
+    if(t.getAttribute('data-del-schedule')){var dsid=t.getAttribute('data-del-schedule');if(!confirm('Remover?'))return;await sbDelete('schedule_entries',dsid);db.scheduleEntries=db.scheduleEntries.filter(function(s){return s.id!==dsid;});toast('Removido','success');renderSchedule();return;}
+    if(t.getAttribute('data-del-log')){var dlid=t.getAttribute('data-del-log');if(!confirm('Remover?'))return;await sbDelete('work_logs',dlid);db.workLogs=db.workLogs.filter(function(l){return l.id!==dlid;});toast('Removido','success');renderChecklist();renderDashboard();return;}
+    if(t.getAttribute('data-del-cost')){var dco=t.getAttribute('data-del-cost');if(!confirm('Remover?'))return;await sbDelete('costs',dco);db.costs=db.costs.filter(function(c){return c.id!==dco;});toast('Removido','success');renderCosts();return;}
+    if(t.getAttribute('data-del-freq')){var dfid=t.getAttribute('data-del-freq');if(!confirm('Remover?'))return;await sbDelete('frequencies',dfid);db.frequencies=db.frequencies.filter(function(f){return f.id!==dfid;});toast('Removida','success');renderFrequencies();return;}
+    if(t.getAttribute('data-del-ref')){var drid=t.getAttribute('data-del-ref');if(!confirm('Remover?'))return;await sbDelete('referrals',drid);db.referrals=db.referrals.filter(function(r){return r.id!==drid;});toast('Removida','success');renderReferrals();return;}
+    if(t.getAttribute('data-notif-del')){var ndid=t.getAttribute('data-notif-del');if(!confirm('Excluir?'))return;await sbDelete('notifications',ndid);db.notifications=db.notifications.filter(function(n){return n.id!==ndid;});updateNotifBadge();renderNotifications();return;}
+    if(t.getAttribute('data-reject-user')){var ruid=t.getAttribute('data-reject-user');if(!confirm('Rejeitar?'))return;await sbDelete('pending_users',ruid);db.pendingUsers=db.pendingUsers.filter(function(p){return p.id!==ruid;});toast('Rejeitado','success');renderEmployees();return;}
   });
 });
+
 </script>
 </body>
 </html>
