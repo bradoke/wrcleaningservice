@@ -259,45 +259,6 @@ textarea.form-control{resize:vertical;min-height:80px}
   .table tr:hover td{background:#1e3a5f}
 }
 
-
-/* Gráficos ocultados */
-.charts-grid { display: none !important; }
-
-/* === MOBILE === */
-@media (max-width: 768px) {
-  .app-header { padding: 0 12px; }
-  .header-logo h2 { font-size: 14px; }
-  .header-logo span { display: none; }
-  .user-info { display: none; }
-  .main-content { padding: 12px; }
-  .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .page-header h2 { font-size: 18px; }
-  .grid-4 { grid-template-columns: 1fr 1fr; }
-  .grid-3 { grid-template-columns: 1fr 1fr; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .stat-card .stat-value { font-size: 20px; }
-  .card-header { flex-wrap: wrap; gap: 6px; padding: 12px 14px 8px; }
-  .card-body { padding: 12px 14px; }
-  .modal { padding: 20px 16px; }
-  .login-card { padding: 28px 18px; }
-  .table th, .table td { padding: 8px 10px; font-size: 12px; }
-  .log-row { flex-direction: column; gap: 6px; }
-  .btn { min-height: 40px; }
-  .btn-sm { min-height: 34px; }
-  .tabs-nav { overflow-x: auto; flex-wrap: nowrap; }
-  .tab-btn { white-space: nowrap; flex: none; padding: 7px 14px; }
-}
-@media (max-width: 480px) {
-  .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .main-content { padding: 10px; }
-  .modal { padding: 16px 12px; }
-  .login-card { padding: 22px 14px; }
-  .toast-container { bottom: 12px; right: 12px; left: 12px; }
-  .toast { min-width: unset; width: 100%; }
-  .btn-full { font-size: 15px; padding: 12px; }
-}
-/* =============== */
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -784,11 +745,12 @@ textarea.form-control{resize:vertical;min-height:80px}
 
 <script>
 
-// ═══ SUPABASE ═══
+// ═══════════ SUPABASE CONFIG ═══════════
 var SUPA_URL = 'https://uolstjzzytcelyoflwpw.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
 var sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-// ════════════════
+// ═══════════════════════════════════════
+
 // ════════════ DATA ════════════
 const db = {
   employees:[
@@ -887,11 +849,12 @@ function doLogin(){
   if(!email||!/\S+@\S+\.\S+/.test(email)){if(emailEl)emailEl.classList.add('is-error');if(errEmail)errEmail.classList.add('show');ok=false;}
   if(!pass){if(passEl)passEl.classList.add('is-error');if(errPass)errPass.classList.add('show');ok=false;}
   if(!ok)return;
+
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
     if(res.error){toast('Erro login: '+res.error.message,'error');return;}
     var user=res.data.user;
     sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
-      if(r.error||!r.data){toast('Perfil nao encontrado: '+(r.error?r.error.message:'vazio'),'error');return;}
+      if(r.error||!r.data){toast('Perfil não encontrado: '+(r.error?r.error.message:'vazio'),'error');return;}
       var nome=r.data.username||user.email;
       currentUser={role:r.data.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
@@ -919,8 +882,7 @@ function doLogin(){
 function doLogout(){
   sb.auth.signOut().then(function(){
     currentUser=null;
-    $('app-page').classList.add('hidden');
-    $('emp-app-page').classList.add('hidden');
+    ['app-page','emp-app-page'].forEach(function(id){$( id).classList.add('hidden');});
     $('login-page').classList.remove('hidden');
   });
 }
