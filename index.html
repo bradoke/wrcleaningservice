@@ -856,28 +856,29 @@ function doLogin(){
       return;
     }
     var user=res.data.user;
-    sb.from('profiles').select('role,display_name').eq('id',user.id).single().then(function(r){
+    sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
       if(r.error||!r.data){
-        toast('Perfil não encontrado (erro: '+(r.error?r.error.message:'null')+')','error');
+        toast('Perfil não encontrado: '+(r.error?r.error.message:'vazio'),'error');
         return;
       }
       var profile=r.data;
-      currentUser={role:profile.role,email:user.email,username:profile.display_name,employeeId:user.id};
+      var nome=profile.username||user.email;
+      currentUser={role:profile.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
       if(profile.role==='adm'){
         $('app-page').classList.remove('hidden');
-        if($('header-username'))$('header-username').textContent=profile.display_name;
+        if($('header-username'))$('header-username').textContent=nome;
         if($('header-email'))$('header-email').textContent=user.email;
-        if($('profile-name'))$('profile-name').textContent=profile.display_name;
+        if($('profile-name'))$('profile-name').textContent=nome;
         if($('profile-email-disp'))$('profile-email-disp').textContent=user.email;
-        if($('profile-avatar'))$('profile-avatar').textContent=profile.display_name.charAt(0).toUpperCase();
+        if($('profile-avatar'))$('profile-avatar').textContent=nome.charAt(0).toUpperCase();
         initApp();
       } else {
         $('emp-app-page').classList.remove('hidden');
-        if($('emp-header-username'))$('emp-header-username').textContent=profile.display_name;
+        if($('emp-header-username'))$('emp-header-username').textContent=nome;
         if($('emp-header-email'))$('emp-header-email').textContent=user.email;
-        if($('emp-profile-name'))$('emp-profile-name').textContent=profile.display_name;
-        if($('emp-profile-avatar'))$('emp-profile-avatar').textContent=profile.display_name.charAt(0).toUpperCase();
+        if($('emp-profile-name'))$('emp-profile-name').textContent=nome;
+        if($('emp-profile-avatar'))$('emp-profile-avatar').textContent=nome.charAt(0).toUpperCase();
         initEmpApp(user.id);
       }
     });
@@ -1245,26 +1246,26 @@ function renderEmpReferrals(){
 
 // ════════════ EVENT LISTENERS ════════════
 document.addEventListener('DOMContentLoaded',()=>{
-  // Restaurar sessão existente
   sb.auth.getSession().then(function(res){
     var session=res.data&&res.data.session;
     if(!session)return;
     var user=session.user;
-    sb.from('profiles').select('role,display_name').eq('id',user.id).single().then(function(r){
+    sb.from('profiles').select('role,username').eq('id',user.id).single().then(function(r){
       if(r.error||!r.data)return;
       var profile=r.data;
-      currentUser={role:profile.role,email:user.email,username:profile.display_name,employeeId:user.id};
+      var nome=profile.username||user.email;
+      currentUser={role:profile.role,email:user.email,username:nome,employeeId:user.id};
       $('login-page').classList.add('hidden');
       if(profile.role==='adm'){
         $('app-page').classList.remove('hidden');
-        if($('header-username'))$('header-username').textContent=profile.display_name;
+        if($('header-username'))$('header-username').textContent=nome;
         if($('header-email'))$('header-email').textContent=user.email;
-        if($('profile-name'))$('profile-name').textContent=profile.display_name;
-        if($('profile-avatar'))$('profile-avatar').textContent=profile.display_name.charAt(0).toUpperCase();
+        if($('profile-name'))$('profile-name').textContent=nome;
+        if($('profile-avatar'))$('profile-avatar').textContent=nome.charAt(0).toUpperCase();
         initApp();
       } else {
         $('emp-app-page').classList.remove('hidden');
-        if($('emp-header-username'))$('emp-header-username').textContent=profile.display_name;
+        if($('emp-header-username'))$('emp-header-username').textContent=nome;
         if($('emp-header-email'))$('emp-header-email').textContent=user.email;
         initEmpApp(user.id);
       }
