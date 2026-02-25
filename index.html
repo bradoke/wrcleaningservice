@@ -744,203 +744,854 @@ textarea.form-control{resize:vertical;min-height:80px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// CONFIGURAÇÃO SUPABASE
-const SUPABASE_URL = 'https://gdemuefknpfaajfrzvpu.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ESTADO GLOBAL (Substituindo db e USERS)
-let currentUser = null;
-let currentTab = 'dashboard';
-let costsFilter = 'all';
-let weekOffset = 0;
-let empWeekOffset = 0;
-let currentEmpId = null;
-let empPeriodDates = {start:'', end:''};
+// ═══════════ SUPABASE CLIENT ═══════════
+var sb = window.supabase.createClient(
+  'https://gdemuefknpfaajfrzvpu.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU'
+);
+// ═══════════════════════════════════════
 
-// UTILITÁRIOS
-const fmt = v => 'R$ ' + Number(v).toFixed(2);
-const fmtDate = s => {
-  if(!s) return '-';
-  const d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
-  return d.toLocaleDateString('pt-BR');
+// ════════════ DATA ════════════
+const db = {
+  employees:[
+    {id:'e1',name:'Ana Silva',email:'ana@exemplo.com',created_at:'2025-01-10'},
+    {id:'e2',name:'Maria Santos',email:'maria@exemplo.com',created_at:'2025-02-15'},
+    {id:'e3',name:'Renata Oliveira',email:'renata@exemplo.com',created_at:'2025-03-20'},
+  ],
+  frequencies:[{id:'f1',name:'Semanal'},{id:'f2',name:'Quinzenal'},{id:'f3',name:'Mensal'},{id:'f4',name:'A cada 3 semanas'}],
+  clients:[
+    {id:'c1',name:'Família Johnson',frequency:'Semanal',price:180,no_transport_cost:false,client_employees:[{employee_id:'e1',payment_amount:60},{employee_id:'e2',payment_amount:60}]},
+    {id:'c2',name:'Escritório Tech Co',frequency:'Quinzenal',price:320,no_transport_cost:true,client_employees:[{employee_id:'e1',payment_amount:90},{employee_id:'e3',payment_amount:80}]},
+    {id:'c3',name:'Sra. Williams',frequency:'Mensal',price:150,no_transport_cost:false,client_employees:[{employee_id:'e2',payment_amount:55}]},
+    {id:'c4',name:'Apartamento Davis',frequency:'Quinzenal',price:200,no_transport_cost:false,client_employees:[{employee_id:'e3',payment_amount:70}]},
+    {id:'c5',name:'Casa Martinez',frequency:'Semanal',price:160,no_transport_cost:false,client_employees:[{employee_id:'e1',payment_amount:50},{employee_id:'e2',payment_amount:50}]},
+  ],
+  costs:[
+    {id:'co1',category:'Transporte',description:'Gasolina mensal',amount:150,cost_type:'recorrente',created_at:'2026-02-01'},
+    {id:'co2',category:'Produtos de Limpeza',description:'Fornecedor mensal',amount:220,cost_type:'recorrente',created_at:'2026-02-01'},
+    {id:'co3',category:'Manutenção',description:'Aspirador de pó novo',amount:350,cost_type:'unico',created_at:'2026-02-10'},
+    {id:'co4',category:'Outros',description:'Uniformes',amount:180,cost_type:'unico',created_at:'2026-02-14'},
+  ],
+  workLogs:[
+    {id:'w1',client_id:'c1',work_date:'2026-02-03',status:'Confirmado',revenue:180,work_log_employees:[{employee_id:'e1',payment_amount:60},{employee_id:'e2',payment_amount:60}]},
+    {id:'w2',client_id:'c2',work_date:'2026-02-05',status:'Confirmado',revenue:320,work_log_employees:[{employee_id:'e1',payment_amount:90},{employee_id:'e3',payment_amount:80}]},
+    {id:'w3',client_id:'c3',work_date:'2026-02-07',status:'Pendente',revenue:150,work_log_employees:[{employee_id:'e2',payment_amount:55}]},
+    {id:'w4',client_id:'c4',work_date:'2026-02-10',status:'Confirmado',revenue:200,work_log_employees:[{employee_id:'e3',payment_amount:70}]},
+    {id:'w5',client_id:'c1',work_date:'2026-02-10',status:'Confirmado',revenue:180,work_log_employees:[{employee_id:'e1',payment_amount:60},{employee_id:'e2',payment_amount:60}]},
+    {id:'w6',client_id:'c5',work_date:'2026-02-12',status:'Cancelado',revenue:0,cancellation_reason:'Cliente desmarcou',work_log_employees:[]},
+    {id:'w7',client_id:'c5',work_date:'2026-02-17',status:'Confirmado',revenue:160,work_log_employees:[{employee_id:'e1',payment_amount:50},{employee_id:'e2',payment_amount:50}]},
+    {id:'w8',client_id:'c2',work_date:'2026-02-19',status:'Pendente',revenue:320,work_log_employees:[{employee_id:'e1',payment_amount:90},{employee_id:'e3',payment_amount:80}]},
+  ],
+  scheduleEntries:[
+    {id:'s1',work_date:'2026-02-23',client_id:'c1',employee_ids:['e1','e2'],status:'confirmado',notes:''},
+    {id:'s2',work_date:'2026-02-24',client_id:'c2',employee_ids:['e1','e3'],status:'confirmado',notes:''},
+    {id:'s3',work_date:'2026-02-25',client_id:'c3',employee_ids:['e2'],status:'pendente',notes:'Ligar antes'},
+    {id:'s4',work_date:'2026-02-26',client_id:'c5',employee_ids:['e1','e2'],status:'cancelado',notes:''},
+  ],
+  notifications:[
+    {id:'n1',client_id:'c1',employee_id:'e1',note:'Cliente pediu produto específico.',status:'pending',created_at:'2026-02-22T10:30:00'},
+    {id:'n2',client_id:'c3',employee_id:'e2',note:'Porta do banheiro com problema.',status:'pending',created_at:'2026-02-23T14:00:00'},
+    {id:'n3',client_id:'c2',employee_id:'e3',note:'Chave extra na recepção.',status:'read',created_at:'2026-02-20T09:00:00'},
+  ],
+  referrals:[
+    {id:'r1',employee_id:'e1',client_name:'Família Brown',phone:'(11) 99999-1111',address:'Rua das Flores, 123',zip_code:'01234-567',status:'pending',bonus_amount:0,created_at:'2026-02-20'},
+    {id:'r2',employee_id:'e2',client_name:'Sr. Anderson',phone:'(11) 88888-2222',address:'Av. Principal, 456',zip_code:'04567-890',status:'approved',bonus_amount:50,created_at:'2026-02-15'},
+    {id:'r3',employee_id:'e3',client_name:'Escritório XYZ',phone:'(11) 77777-3333',address:'Centro, 789',zip_code:'07890-123',status:'rejected',bonus_amount:0,created_at:'2026-02-10'},
+  ],
+  pendingUsers:[{id:'pu1',email:'novafunc@exemplo.com',created_at:'2026-02-23T08:00:00'}],
 };
-const $ = id => document.getElementById(id);
 
-function toast(msg, type='success') {
-  const c = $('toast-container');
-  if(!c) return;
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `${type === 'success' ? '✓' : '✕'} ${msg}`;
-  c.appendChild(el);
-  setTimeout(() => el.remove(), 3500);
+const USERS={
+  'adm':{role:'adm',email:'adm@wrcleaning.com',username:'Admin',password:'123456'},
+  'adm@wrcleaning.com':{role:'adm',email:'adm@wrcleaning.com',username:'Admin',password:'123456'},
+  'renatawaldehm@gmail.com':{role:'adm',email:'renatawaldehm@gmail.com',username:'Renata',password:'angelina123@'},
+  'belami.viagens@gmail.com':{role:'colaborador',email:'belami.viagens@gmail.com',username:'Ana Silva',employeeId:'e1',password:'123456'},
+  'vd273108@gmail.com':{role:'colaborador',email:'vd273108@gmail.com',username:'Maria Santos',employeeId:'e2',password:'123456'},
+};
+
+let currentUser=null,currentTab='dashboard',costsFilter='all',weekOffset=0,empWeekOffset=0,currentEmpId=null,empPeriodDates={start:'',end:''};
+
+// ════════════ UTILS ════════════
+const fmt=v=>'R$ '+Number(v).toFixed(2);
+const fmtDate=s=>{const d=new Date(s+(s.length===10?'T00:00:00':''));return d.toLocaleDateString('pt-BR')};
+const uid=()=>'_'+Math.random().toString(36).substr(2,9);
+const getClient=id=>db.clients.find(c=>c.id===id);
+const getEmployee=id=>db.employees.find(e=>e.id===id);
+const $=id=>document.getElementById(id);
+
+function toast(msg,type='success'){
+  const c=$('toast-container'),el=document.createElement('div');
+  el.className=`toast ${type}`;el.innerHTML=`${type==='success'?'✓':'✕'} ${msg}`;
+  c.appendChild(el);setTimeout(()=>el.remove(),3500);
+}
+function openModal(id){$(id).classList.remove('hidden')}
+function closeModal(id){$(id).classList.add('hidden')}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.add('hidden')}));
+
+// ════════════ AUTH ════════════
+function toggleView(v){
+  $('login-form').classList.add('hidden');
+  $('register-form').classList.add('hidden');
+  $('forgot-form').classList.add('hidden');
+  $(v).classList.remove('hidden');
 }
 
-function openModal(id) { $(id).classList.remove('hidden'); }
-function closeModal(id) { $(id).classList.add('hidden'); }
-
-// FECHAR MODAIS NO CLIQUE FORA
-document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => {
-  if(e.target === o) o.classList.add('hidden');
-}));
-
-// AUTENTICAÇÃO SUPABASE
-async function doLogin() {
-  const emailEl = $('login-email'), passEl = $('login-pass');
-  const email = (emailEl.value || '').trim().toLowerCase();
-  const pass = passEl.value;
-
-  if(!email || !pass) {
-    toast('Preencha email e senha', 'error');
-    return;
+function doLogin(){
+  var emailEl=$('login-email'), passEl=$('login-pass');
+  var errEmail=$('login-email-err'), errPass=$('login-pass-err');
+  if(emailEl){ emailEl.classList.remove('is-error'); errEmail && errEmail.classList.remove('show'); }
+  if(passEl){  passEl.classList.remove('is-error');  errPass  && errPass.classList.remove('show');  }
+  var email=(emailEl?emailEl.value:'').trim().toLowerCase();
+  var pass=passEl?passEl.value:'';
+  var ok=true;
+  if(!email||!/\S+@\S+\.\S+/.test(email)){
+    if(emailEl) emailEl.classList.add('is-error');
+    if(errEmail) errEmail.classList.add('show');
+    ok=false;
   }
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  
-  if(error) {
-    toast('Erro no login: ' + error.message, 'error');
-    return;
+  if(!pass){
+    if(passEl) passEl.classList.add('is-error');
+    if(errPass) errPass.classList.add('show');
+    ok=false;
   }
+  if(!ok) return;
 
-  currentUser = data.user;
-  const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-  
-  if(!profile) {
-    toast('Perfil não encontrado!', 'error');
-    return;
-  }
-
-  $('login-page').classList.add('hidden');
-  if(profile.role === 'adm') {
-    $('app-page').classList.remove('hidden');
-    $('header-username').textContent = profile.display_name;
-    $('header-email').textContent = currentUser.email;
-    initApp();
-  } else {
-    $('emp-app-page').classList.remove('hidden');
-    $('emp-header-username').textContent = profile.display_name;
-    $('emp-header-email').textContent = currentUser.email;
-    initEmpApp(currentUser.id);
-  }
+  sb.auth.signInWithPassword({ email: email, password: pass })
+    .then(function(res){
+      if(res.error){ toast('Email ou senha incorretos','error'); return; }
+      var user = res.data.user;
+      sb.from('profiles').select('role, display_name').eq('id', user.id).single()
+        .then(function(r){
+          var profile = r.data;
+          if(!profile){ toast('Perfil não encontrado. Contate o admin.','error'); return; }
+          currentUser = { role: profile.role, email: user.email, username: profile.display_name, employeeId: user.id };
+          $('login-page').classList.add('hidden');
+          if(profile.role==='adm'){
+            $('app-page').classList.remove('hidden');
+            $('header-username').textContent = profile.display_name;
+            $('header-email').textContent    = user.email;
+            $('profile-name').textContent    = profile.display_name;
+            $('profile-email-disp').textContent = user.email;
+            $('profile-avatar').textContent  = profile.display_name.charAt(0).toUpperCase();
+            initApp();
+          } else {
+            $('emp-app-page').classList.remove('hidden');
+            $('emp-header-username').textContent = profile.display_name;
+            $('emp-header-email').textContent    = user.email;
+            $('emp-profile-name').textContent    = profile.display_name;
+            $('emp-profile-email').textContent   = user.email;
+            $('emp-profile-avatar').textContent  = profile.display_name.charAt(0).toUpperCase();
+            var emp = db.employees.find(function(e){ return e.email===user.email; });
+            $('emp-header-sub').textContent = emp ? emp.name : 'Colaboradora';
+            initEmpApp(currentUser.employeeId);
+          }
+        });
+    });
 }
 
-async function doLogout() {
-  await sb.auth.signOut();
-  location.reload();
+
+function doLogout(){
+  sb.auth.signOut().then(function(){
+    currentUser = null;
+    $('app-page').classList.add('hidden');
+    $('emp-app-page').classList.add('hidden');
+    $('login-page').classList.remove('hidden');
+  });
 }
 
-// NAVEGAÇÃO
-function navigate(tab) {
-  document.querySelectorAll('#sidebar .nav-item').forEach(b => b.classList.remove('active'));
-  const nb = document.querySelector(`#sidebar [data-tab="${tab}"]`);
-  if(nb) nb.classList.add('active');
-  
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  const targetTab = $('tab-' + tab);
-  if(targetTab) targetTab.classList.add('active');
-  
-  currentTab = tab;
+
+function navigate(tab){
+  document.querySelectorAll('#sidebar .nav-item').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current')});
+  const nb=document.querySelector(`#sidebar [data-tab="${tab}"]`);
+  nb.classList.add('active');nb.setAttribute('aria-current','page');
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  $('tab-'+tab).classList.add('active');
+  currentTab=tab;
+  updateNotifBadge();
   renderTab(tab);
 }
 
-async function renderTab(tab) {
-  const renderers = {
-    dashboard: renderDashboard,
-    schedule: renderSchedule,
-    checklist: renderChecklist,
-    clients: renderClients,
-    employees: renderEmployees,
-    costs: renderCosts,
-    notifications: renderNotifications,
-    referrals: renderReferrals
-  };
-  if(renderers[tab]) await renderers[tab]();
+function renderTab(tab){
+  ({dashboard:renderDashboard,schedule:renderSchedule,checklist:renderChecklist,clients:renderClients,employees:renderEmployees,costs:renderCosts,notifications:renderNotifications,frequencies:renderFrequencies,referrals:renderReferrals}[tab]||(() => {}))();
 }
 
-// EXPLO: RENDERIZAR CLIENTES (Conectado ao Supabase)
-async function renderClients() {
-  const { data: clients, error } = await sb.from('clients').select('*, client_employees(employee_id, payment_amount)');
-  if(error) { toast('Erro ao carregar clientes', 'error'); return; }
-  
-  const { data: employees } = await sb.from('employees').select('id, name');
-  const empMap = Object.fromEntries(employees.map(e => [e.id, e.name]));
+// ════════════ INIT ════════════
+function initApp(){
+  populateSelects();updateNotifBadge();renderDashboard();
+}
 
-  $('clients-table-body').innerHTML = clients.map(c => {
-    const emps = (c.client_employees || []).map(ce => 
-      `<span class="emp-pill">${empMap[ce.employee_id] || '?'} ${fmt(ce.payment_amount)}</span>`
-    ).join(' ');
-    
-    return `<tr>
-      <td><strong>${c.name}</strong></td>
-      <td><span class="badge badge-gray">${c.frequency}</span></td>
-      <td><strong style="color:var(--secondary)">${fmt(c.price)}</strong></td>
-      <td>${emps || '<span style="color:var(--text-muted)">Nenhuma</span>'}</td>
-      <td>${c.no_transport_cost ? '<span class="badge badge-secondary">Sim</span>' : '<span class="badge badge-gray">Não</span>'}</td>
-      <td>
-        <div style="display:flex;gap:4px">
-          <button class="btn btn-ghost btn-icon btn-sm" onclick="editClient('${c.id}')">✏</button>
-          <button class="btn btn-danger btn-icon btn-sm" onclick="deleteClient('${c.id}')">🗑</button>
-        </div>
-      </td>
-    </tr>`;
+function populateSelects(){
+  const clientOpts='<option value="">Selecione...</option>'+db.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  $('sch-client').innerHTML=clientOpts;
+  $('cl-client').innerHTML=clientOpts;
+  const empOpts='<option value="">Selecione...</option>'+db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  $('sch-emp').innerHTML=empOpts;
+  $('client-freq').innerHTML='<option value="">Selecione...</option>'+db.frequencies.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');
+  const today=new Date().toISOString().split('T')[0];
+  if(!$('sch-date').value)$('sch-date').value=today;
+  if(!$('cl-date').value)$('cl-date').value=today;
+}
+
+function updateNotifBadge(){
+  const p=db.notifications.filter(n=>n.status==='pending').length;
+  const badge=$('notif-badge');
+  const banner=$('main-notif-banner');
+  if(p>0){badge.textContent=p;badge.classList.remove('hidden');if(currentTab!=='notifications'){banner.classList.remove('hidden');$('banner-title').textContent=`${p} Nova${p>1?'s':''} Notificaç${p>1?'ões':'ão'}`}}
+  else{badge.classList.add('hidden');banner.classList.add('hidden')}
+  const cb=$('notif-count-badge');if(cb)cb.textContent=p?`${p} pendentes`:'';
+}
+
+// ════════════ DASHBOARD ════════════
+function renderDashboard(){
+  const start=$('dash-start').value,end=$('dash-end').value;
+  const filtered=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end);
+  const confirmed=filtered.filter(l=>l.status==='Confirmado');
+  const totalRevenue=confirmed.reduce((s,l)=>s+l.revenue,0);
+  const totalPayments=confirmed.reduce((s,l)=>s+(l.work_log_employees||[]).reduce((ps,e)=>ps+e.payment_amount,0),0);
+  const startD=new Date(start+'T00:00:00'),endD=new Date(end+'T00:00:00');
+  const days=Math.ceil((endD-startD)/86400000)+1;
+  const recurrentTotal=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0);
+  const propRecurrent=(recurrentTotal/30)*days;
+  const uniqueTotal=db.costs.filter(c=>c.cost_type==='unico'&&c.created_at>=start&&c.created_at<=end).reduce((s,c)=>s+c.amount,0);
+  const totalCosts=propRecurrent+uniqueTotal;
+  const netProfit=totalRevenue-totalPayments-totalCosts;
+  $('dash-stats').innerHTML=`
+    <div class="stat-card" style="border-left:4px solid var(--primary)"><div class="stat-label">💵 Faturamento Real</div><div class="stat-value" style="color:var(--primary)">${fmt(totalRevenue)}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">📤 Pagamentos Equipe</div><div class="stat-value" style="color:var(--destructive)">${fmt(totalPayments)}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">🧾 Custos do Período</div><div class="stat-value" style="color:var(--warning)">${fmt(totalCosts)}</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Recorrente: ${fmt(propRecurrent)} | Único: ${fmt(uniqueTotal)}<br><span style="opacity:.7">${days} dias</span></div></div>
+    <div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">📈 Lucro Líquido</div><div class="stat-value" style="color:var(--secondary)">${fmt(netProfit)}</div></div>`;
+  $('dash-secondary').innerHTML=`
+    <div class="stat-card"><div class="stat-label">👥 Total de Clientes</div><div class="stat-value">${db.clients.length}</div></div>
+    <div class="stat-card"><div class="stat-label">✅ Confirmados</div><div class="stat-value" style="color:var(--secondary)">${confirmed.length}</div></div>
+    <div class="stat-card"><div class="stat-label">❌ Cancelados</div><div class="stat-value" style="color:var(--destructive)">${filtered.filter(l=>l.status==='Cancelado').length}</div></div>`;
+  const ranking=db.clients.map(c=>{const lc=(c.client_employees||[]).reduce((s,ce)=>s+ce.payment_amount,0);return{...c,laborCost:lc,profit:c.price-lc}}).sort((a,b)=>b.profit-a.profit);
+  $('ranking-body').innerHTML=ranking.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td><td style="text-align:right">${fmt(c.price)}</td><td style="text-align:right">${fmt(c.laborCost)}</td><td style="text-align:right;font-weight:700;color:var(--secondary)">${fmt(c.profit)}</td></tr>`).join('');
+  renderCharts(confirmed);
+}
+
+// ════════════ SCHEDULE ════════════
+function getWeekStart(d){const dd=new Date(d);dd.setDate(dd.getDate()-dd.getDay());dd.setHours(0,0,0,0);return dd}
+
+function renderSchedule(){
+  const base=getWeekStart(new Date());base.setDate(base.getDate()+weekOffset*7);
+  const days=[];for(let i=0;i<7;i++){const d=new Date(base);d.setDate(base.getDate()+i);days.push(d)}
+  const startStr=days[0].toISOString().split('T')[0],endStr=days[6].toISOString().split('T')[0],todayStr=new Date().toISOString().split('T')[0];
+  $('week-label').textContent=`${days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} – ${days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}`;
+  const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  $('week-grid').innerHTML=days.map((d,i)=>{const ds=d.toISOString().split('T')[0];const entries=db.scheduleEntries.filter(e=>e.work_date===ds);return`<div class="day-col ${ds===todayStr?'today':''}"><div class="day-label">${dn[i]}</div><div class="day-num">${d.getDate()}</div>${entries.map(e=>{const cl=getClient(e.client_id);return`<div class="schedule-item ${e.status}"><div style="font-weight:600">${cl?cl.name:'?'}</div><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}" style="font-size:10px">${e.status}</span></div>`}).join('')}</div>`}).join('');
+  const weekEntries=db.scheduleEntries.filter(e=>e.work_date>=startStr&&e.work_date<=endStr).sort((a,b)=>a.work_date.localeCompare(b.work_date));
+  $('schedule-list').innerHTML=weekEntries.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento esta semana</div>':weekEntries.map(e=>{const cl=getClient(e.client_id);const emps=(e.employee_ids||[]).map(id=>getEmployee(id)?.name||id).join(', ');return`<div class="log-row"><div class="log-info"><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?cl.name:'?'}</div><div class="log-employees">👤 ${emps||'Nenhuma'}</div>${e.notes?`<div style="font-size:12px;color:var(--text-muted);font-style:italic">"${e.notes}"</div>`:''}</div><div style="display:flex;align-items:center;gap:8px"><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}">${e.status}</span><button class="btn btn-danger btn-icon btn-sm" data-del-schedule="${e.id}">🗑</button></div></div>`}).join('');
+}
+
+// ════════════ CHECKLIST ════════════
+function renderChecklist(){
+  const start=$('cl-start').value,end=$('cl-end').value;
+  const filtered=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end).sort((a,b)=>b.work_date.localeCompare(a.work_date));
+  const empSummary=db.employees.map(e=>{
+    const total=filtered.filter(l=>l.status==='Confirmado').reduce((s,l)=>s+((l.work_log_employees||[]).find(we=>we.employee_id===e.id)?.payment_amount||0),0);
+    const count=filtered.filter(l=>l.status==='Confirmado'&&(l.work_log_employees||[]).some(we=>we.employee_id===e.id)).length;
+    return{...e,total,count};
+  }).filter(e=>e.total>0);
+  $('emp-payments-summary').innerHTML=empSummary.length===0?'<p style="color:var(--text-muted);font-size:13px">Nenhum pagamento no período</p>':empSummary.map(e=>`<div class="summary-block"><div><div class="emp-name">${e.name}</div><div class="emp-count">${e.count} trabalho(s)</div></div><div class="emp-total">${fmt(e.total)}</div></div>`).join('');
+  const confirmed=filtered.filter(l=>l.status==='Confirmado'),cancelled=filtered.filter(l=>l.status==='Cancelado'),pending=filtered.filter(l=>l.status==='Pendente');
+  const totalRev=confirmed.reduce((s,l)=>s+l.revenue,0),totalPay=confirmed.reduce((s,l)=>s+(l.work_log_employees||[]).reduce((ps,e)=>ps+e.payment_amount,0),0);
+  $('cl-period-stats').innerHTML=`
+    <div class="summary-block"><span>Pendentes</span><span class="badge badge-pending">${pending.length}</span></div>
+    <div class="summary-block"><span>Confirmados</span><span class="badge badge-secondary">${confirmed.length}</span></div>
+    <div class="summary-block"><span>Cancelados</span><span class="badge badge-destructive">${cancelled.length}</span></div>
+    <div class="summary-block"><span>Faturamento</span><strong style="color:var(--secondary)">${fmt(totalRev)}</strong></div>
+    <div class="summary-block"><span>Pagamentos</span><strong style="color:var(--destructive)">${fmt(totalPay)}</strong></div>`;
+  $('work-logs-list').innerHTML=filtered.length===0?'<div class="empty"><div class="icon">📋</div>Nenhum registro no período</div>':filtered.map(l=>{
+    const cl=getClient(l.client_id);
+    const emps=(l.work_log_employees||[]).map(we=>`${getEmployee(we.employee_id)?.name||'?'}: ${fmt(we.payment_amount)}`).join(' | ');
+    const sb=l.status==='Confirmado'?'badge-secondary':l.status==='Cancelado'?'badge-destructive':'badge-pending';
+    return`<div class="log-row"><div class="log-info"><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?.name||'?'}</div>${emps?`<div class="log-employees">${emps}</div>`:''} ${l.cancellation_reason?`<div style="font-size:12px;color:var(--destructive);margin-top:2px">Cancelado: ${l.cancellation_reason}</div>`:''}</div><div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="badge ${sb}">${l.status}</span>${l.status==='Confirmado'?`<div class="log-revenue">${fmt(l.revenue)}</div>`:''}<div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-log="${l.id}" title="Editar">✏</button><button class="btn btn-danger btn-icon btn-sm" data-del-log="${l.id}" title="Apagar">🗑</button></div></div></div>`;
   }).join('');
 }
 
-// INICIALIZAÇÃO
-async function initApp() {
-  await renderDashboard();
-  // Carregar outros dados conforme necessário
+function openAddWorkLog(){
+  $('checklist-modal-title').textContent='💵 Novo Registro de Trabalho';
+  $('cl-edit-id').value='';$('cl-client').value='';$('cl-date').value=new Date().toISOString().split('T')[0];
+  $('cl-status').value='Pendente';$('cl-reason').value='';$('cl-reason-group').classList.add('hidden');
+  $('cl-revenue').value='';$('cl-emp-rows').innerHTML='';openModal('checklist-modal');
 }
 
-// EVENTOS DE CLICK (Delegation ou diretos)
-document.addEventListener('DOMContentLoaded', () => {
-  // Restaura sessão ativa ao recarregar página
-  sb.auth.getSession().then(async function(res) {
+function editWorkLog(id){
+  const l=db.workLogs.find(w=>w.id===id);if(!l)return;
+  $('checklist-modal-title').textContent='✏ Editar Registro';$('cl-edit-id').value=id;
+  $('cl-client').value=l.client_id;$('cl-date').value=l.work_date;$('cl-status').value=l.status;
+  $('cl-reason').value=l.cancellation_reason||'';
+  $('cl-reason-group').classList.toggle('hidden',l.status!=='Cancelado');
+  $('cl-revenue').value=l.revenue||'';
+  const c=$('cl-emp-rows');c.innerHTML='';
+  (l.work_log_employees||[]).forEach(we=>{
+    const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:center';
+    div.innerHTML=`<select class="form-control emp-row-emp" style="flex:1">${db.employees.map(e=>`<option value="${e.id}"${e.id===we.employee_id?' selected':''}>${e.name}</option>`).join('')}</select><input type="number" class="form-control emp-row-pay" value="${we.payment_amount}" step="0.01" style="width:100px"/><button class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;
+    c.appendChild(div);
+  });openModal('checklist-modal');
+}
+
+function addEmpRow(){
+  const c=$('cl-emp-rows');const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:center';
+  div.innerHTML=`<select class="form-control emp-row-emp" style="flex:1">${db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')}</select><input type="number" class="form-control emp-row-pay" placeholder="R$" step="0.01" style="width:100px"/><button class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;
+  c.appendChild(div);
+}
+
+function saveWorkLog(){
+  const editId=$('cl-edit-id').value,clientId=$('cl-client').value,date=$('cl-date').value,status=$('cl-status').value,reason=$('cl-reason').value,revenue=parseFloat($('cl-revenue').value)||0;
+  if(!clientId||!date){toast('Preencha cliente e data','error');return;}
+  const emps=[...document.querySelectorAll('#cl-emp-rows > div')].map(div=>({employee_id:div.querySelector('.emp-row-emp').value,payment_amount:parseFloat(div.querySelector('.emp-row-pay').value)||0}));
+  if(editId){const l=db.workLogs.find(w=>w.id===editId);if(l){l.client_id=clientId;l.work_date=date;l.status=status;l.cancellation_reason=reason;l.revenue=status==='Confirmado'?revenue:0;l.work_log_employees=emps;}toast('Registro atualizado!','success');}
+  else{db.workLogs.push({id:uid(),client_id:clientId,work_date:date,status,cancellation_reason:reason,revenue:status==='Confirmado'?revenue:0,work_log_employees:emps});toast('Registro adicionado!','success');}
+  closeModal('checklist-modal');$('cl-emp-rows').innerHTML='';renderChecklist();renderDashboard();
+}
+
+// ════════════ CLIENTS ════════════
+function renderClients(){
+  $('clients-table-body').innerHTML=db.clients.map(c=>{
+    const emps=(c.client_employees||[]).map(ce=>`<span class="emp-pill">${getEmployee(ce.employee_id)?.name||'?'} ${fmt(ce.payment_amount)}</span>`).join(' ');
+    return`<tr><td><strong>${c.name}</strong></td><td><span class="badge badge-gray">${c.frequency}</span></td><td><strong style="color:var(--secondary)">${fmt(c.price)}</strong></td><td>${emps||'<span style="color:var(--text-muted)">Nenhuma</span>'}</td><td>${c.no_transport_cost?'<span class="badge badge-secondary">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-client="${c.id}">✏</button><button class="btn btn-danger btn-icon btn-sm" data-del-client="${c.id}">🗑</button></div></td></tr>`;
+  }).join('');
+}
+
+function addClientEmpRow(empId='',pay=''){
+  const c=$('client-emp-rows');const div=document.createElement('div');div.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:center';
+  div.innerHTML=`<select class="form-control cemp-row-emp" style="flex:1">${db.employees.map(e=>`<option value="${e.id}"${e.id===empId?' selected':''}>${e.name}</option>`).join('')}</select><input type="number" class="form-control cemp-row-pay" value="${pay}" placeholder="R$" step="0.01" style="width:100px"/><button class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">✕</button>`;
+  c.appendChild(div);
+}
+
+function openAddClient(){
+  $('client-modal-title').textContent='👥 Adicionar Cliente';$('client-edit-id').value='';
+  $('client-name').value='';$('client-freq').value='';$('client-price').value='';$('client-transport').checked=false;$('client-emp-rows').innerHTML='';openModal('client-modal');
+}
+
+function editClient(id){
+  const c=db.clients.find(cl=>cl.id===id);if(!c)return;
+  $('client-modal-title').textContent='✏ Editar Cliente';$('client-edit-id').value=id;
+  $('client-name').value=c.name;$('client-freq').value=c.frequency;$('client-price').value=c.price;$('client-transport').checked=c.no_transport_cost;
+  $('client-emp-rows').innerHTML='';(c.client_employees||[]).forEach(ce=>addClientEmpRow(ce.employee_id,ce.payment_amount));openModal('client-modal');
+}
+
+function saveClient(){
+  const id=$('client-edit-id').value,name=$('client-name').value.trim(),freq=$('client-freq').value,price=parseFloat($('client-price').value)||0,noT=$('client-transport').checked;
+  if(!name||!freq){toast('Preencha nome e frequência','error');return;}
+  const emps=[...document.querySelectorAll('#client-emp-rows > div')].map(div=>({employee_id:div.querySelector('.cemp-row-emp').value,payment_amount:parseFloat(div.querySelector('.cemp-row-pay').value)||0}));
+  if(id){const c=db.clients.find(cl=>cl.id===id);if(c){c.name=name;c.frequency=freq;c.price=price;c.no_transport_cost=noT;c.client_employees=emps;}toast('Cliente atualizado!','success');}
+  else{db.clients.push({id:uid(),name,frequency:freq,price,no_transport_cost:noT,client_employees:emps});toast('Cliente adicionado!','success');}
+  closeModal('client-modal');renderClients();populateSelects();
+}
+
+// ════════════ EMPLOYEES ════════════
+function renderEmployees(){
+  $('emp-table-body').innerHTML=db.employees.map(e=>{
+    const u=Object.values(USERS).find(u=>u.email===e.email);
+    const roleBadge=u?(u.role==='adm'?`<span class="role-badge-adm">Admin</span>`:`<span class="role-badge-col">Colaborador</span>`):`<span class="no-login-badge">Sem login</span>`;
+    return`<tr>
+      <td><strong>${e.name}</strong></td>
+      <td style="font-size:12px">${e.email}</td>
+      <td>${roleBadge}</td>
+      <td>${fmtDate(e.created_at)}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="${e.id}" title="Editar">✏️</button>
+        <button class="btn btn-danger btn-icon btn-sm" data-del-emp="${e.id}" title="Remover">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  $('pending-list').innerHTML=db.pendingUsers.length===0?'<div class="empty"><div class="icon">✅</div>Nenhum usuário pendente</div>':db.pendingUsers.map(u=>`<div class="log-row"><div class="log-info"><div class="log-client">${u.email}</div><div class="log-date">${fmtDate(u.created_at.split('T')[0])}</div></div><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" data-approve-user="${u.id}" data-approve-email="${u.email}">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-user="${u.id}">❌ Rejeitar</button></div></div>`).join('');
+}
+
+function saveEmployee(){
+  const name=$('emp-name').value.trim();
+  const email=$('emp-email').value.trim().toLowerCase();
+  const pass=$('emp-pass').value;
+  const role=$('emp-role').value;
+  if(!name||!email){toast('Preencha nome e email','error');return;}
+  if(!pass||pass.length<6){toast('Senha precisa ter pelo menos 6 caracteres','error');return;}
+  if(USERS[email]){toast('Este email já está cadastrado','error');return;}
+  const newId=uid();
+  const empRecord={id:newId,name,email,created_at:new Date().toISOString().split('T')[0]};
+  db.employees.push(empRecord);
+  // Cria login válido no USERS
+  USERS[email]={role,email,username:name,password:pass,employeeId:newId};
+  closeModal('emp-modal');
+  $('emp-name').value='';$('emp-email').value='';$('emp-pass').value='';$('emp-role').value='colaborador';
+  toast(`Funcionário "${name}" criado com login!`,'success');
+  renderEmployees();populateSelects();
+}
+
+function approveUser(){
+  const id=$('approve-user-id').value;
+  const name=$('approve-name').value.trim();
+  const pass=$('approve-pass').value||'123456';
+  const role=$('approve-role').value||'colaborador';
+  if(!name){toast('Informe o nome','error');return;}
+  const u=db.pendingUsers.find(p=>p.id===id);
+  if(u){
+    const newId=uid();
+    db.employees.push({id:newId,name,email:u.email,created_at:new Date().toISOString().split('T')[0]});
+    db.pendingUsers=db.pendingUsers.filter(p=>p.id!==id);
+    // Cria login válido no USERS
+    USERS[u.email]={role,email:u.email,username:name,password:pass,employeeId:newId};
+    toast(`"${name}" aprovado(a) com login criado!`,'success');
+  }
+  closeModal('approve-modal');renderEmployees();
+}
+
+// ════════════ COSTS ════════════
+function renderCosts(){
+  const rec=db.costs.filter(c=>c.cost_type==='recorrente').reduce((s,c)=>s+c.amount,0);
+  const uniq=db.costs.filter(c=>c.cost_type==='unico').reduce((s,c)=>s+c.amount,0);
+  $('cost-recurrent').textContent=fmt(rec);$('cost-unique').textContent=fmt(uniq);
+  const list=costsFilter==='all'?db.costs:db.costs.filter(c=>c.cost_type===costsFilter);
+  $('costs-list').innerHTML=list.length===0?'<div class="empty"><div class="icon">🧾</div>Nenhum custo encontrado</div>':list.map(c=>`<div class="cost-item"><div><div class="cost-cat">${c.category} • <span class="badge ${c.cost_type==='recorrente'?'badge-primary':'badge-warning'}">${c.cost_type}</span></div><div class="cost-desc">${c.description}</div></div><div style="display:flex;align-items:center;gap:10px"><div class="cost-amount" style="color:${c.cost_type==='recorrente'?'var(--primary)':'var(--warning)'}">${fmt(c.amount)}</div><button class="btn btn-danger btn-icon btn-sm" data-del-cost="${c.id}">🗑</button></div></div>`).join('');
+}
+
+function saveCost(){
+  const cat=$('cost-cat').value,desc=$('cost-desc').value.trim(),amount=parseFloat($('cost-amount').value)||0,type=$('cost-type').value;
+  if(!desc||amount<=0){toast('Preencha todos os campos','error');return;}
+  db.costs.push({id:uid(),category:cat,description:desc,amount,cost_type:type,created_at:new Date().toISOString().split('T')[0]});
+  closeModal('cost-modal');toast('Custo adicionado!','success');renderCosts();
+}
+
+// ════════════ NOTIFICATIONS ════════════
+function renderNotifications(){
+  const pending=db.notifications.filter(n=>n.status==='pending'),read=db.notifications.filter(n=>n.status==='read');
+  const html=n=>{const cl=getClient(n.client_id),emp=getEmployee(n.employee_id),d=new Date(n.created_at);return`<div class="notif-item ${n.status}"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div><div style="font-weight:700">Cliente: ${cl?.name||'?'}</div><div style="font-size:13px;color:var(--primary);margin-top:2px">👤 ${emp?.name||'?'}</div></div><div style="font-size:11px;color:var(--text-muted)">${d.toLocaleDateString('pt-BR')} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div></div><div style="background:var(--bg);border-radius:6px;padding:10px;font-size:13px;margin-bottom:10px">"${n.note}"</div><div style="display:flex;gap:6px">${n.status==='pending'?`<button class="btn btn-primary btn-sm" data-notif-read="${n.id}">✓ Marcar como lida</button>`:''}<button class="btn btn-danger btn-sm" data-notif-del="${n.id}">🗑 Excluir</button></div></div>`};
+  $('notifications-list').innerHTML=(pending.length?`<h3 style="font-size:16px;font-weight:700;color:var(--destructive);margin-bottom:10px">Pendentes</h3>`+pending.map(html).join(''):'')+(read.length?`<hr class="divider"><h3 style="font-size:16px;font-weight:700;color:var(--text-muted);margin-bottom:10px">Lidas</h3>`+read.map(html).join(''):'')||'<div class="empty"><div class="icon">🔔</div>Nenhuma notificação</div>';
+}
+
+// ════════════ FREQUENCIES ════════════
+function renderFrequencies(){
+  $('freq-list').innerHTML=db.frequencies.length===0?'<div class="empty"><div class="icon">📆</div>Nenhuma frequência</div>':db.frequencies.map(f=>`<div class="freq-item"><span style="font-weight:600">${f.name}</span><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-icon btn-sm" data-edit-freq="${f.id}">✏</button><button class="btn btn-danger btn-icon btn-sm" data-del-freq="${f.id}">🗑</button></div></div>`).join('');
+}
+
+function saveFreq(){
+  const id=$('freq-edit-id').value,name=$('freq-name').value.trim();
+  if(!name){toast('Digite o nome','error');return;}
+  if(id){const f=db.frequencies.find(f=>f.id===id);if(f)f.name=name;toast('Frequência atualizada!','success');}
+  else{db.frequencies.push({id:uid(),name});toast('Frequência adicionada!','success');}
+  closeModal('freq-modal');$('freq-edit-id').value='';$('freq-name').value='';renderFrequencies();populateSelects();
+}
+
+// ════════════ REFERRALS ════════════
+function renderReferrals(){
+  const pending=db.referrals.filter(r=>r.status==='pending'),approved=db.referrals.filter(r=>r.status==='approved'),rejected=db.referrals.filter(r=>r.status==='rejected');
+  $('referral-stats').innerHTML=`
+    <div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">${pending.length}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value" style="color:var(--secondary)">${approved.length}</div></div>
+    <div class="stat-card" style="border-left:4px solid var(--destructive)"><div class="stat-label">❌ Rejeitadas</div><div class="stat-value" style="color:var(--destructive)">${rejected.length}</div></div>`;
+  const refHtml=r=>{const emp=getEmployee(r.employee_id);return`<div class="referral-item ${r.status}" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div><div style="font-weight:700;font-size:15px">${r.client_name}</div><div style="font-size:12px;color:var(--text-muted)">👤 ${emp?.name||'?'}</div></div><div style="display:flex;align-items:center;gap:6px"><span class="badge ${r.status==='pending'?'badge-warning':r.status==='approved'?'badge-secondary':'badge-destructive'}">${r.status==='pending'?'Pendente':r.status==='approved'?'Aprovado':'Rejeitado'}</span><button class="btn btn-danger btn-icon btn-sm" data-del-ref="${r.id}">🗑</button></div></div><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">📞 ${r.phone} | 📍 ${r.address} | 📮 ${r.zip_code}</div>${r.bonus_amount>0?`<div style="font-size:13px;font-weight:600;color:var(--secondary);margin-bottom:8px">🎁 Bônus: ${fmt(r.bonus_amount)}</div>`:''}<div style="display:flex;gap:6px;flex-wrap:wrap">${r.status==='pending'?`<button class="btn btn-secondary btn-sm" data-approve-ref="${r.id}">✅ Aprovar</button><button class="btn btn-danger btn-sm" data-reject-ref="${r.id}">❌ Rejeitar</button>`:''}${r.status==='approved'?`<button class="btn btn-outline btn-sm" data-pending-ref="${r.id}">↩ Pendente</button><button class="btn btn-danger btn-sm" data-reject-ref="${r.id}">❌ Rejeitar</button>`:''}${r.status==='rejected'?`<button class="btn btn-outline btn-sm" data-pending-ref="${r.id}">↩ Pendente</button><button class="btn btn-secondary btn-sm" data-approve-ref="${r.id}">✅ Aprovar</button>`:''}</div></div>`};
+  $('referrals-list').innerHTML=(pending.length?`<h3 style="font-weight:700;margin-bottom:10px;color:var(--warning)">Pendentes</h3>`+pending.map(refHtml).join(''):'')+(approved.length?`<h3 style="font-weight:700;margin:16px 0 10px;color:var(--secondary)">Aprovadas</h3>`+approved.map(refHtml).join(''):'')+(rejected.length?`<h3 style="font-weight:700;margin:16px 0 10px;color:var(--destructive)">Rejeitadas</h3>`+rejected.map(refHtml).join(''):'')||'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação</div>';
+}
+
+// ════════════ EMPLOYEE APP ════════════
+function initEmpApp(empId){
+  currentEmpId=empId;
+  const myClients=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===empId));
+  $('note-client-sel').innerHTML=myClients.length
+    ?myClients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')
+    :'<option value="">Nenhum cliente</option>';
+  setEmpPeriod('mes',null); // chama renderEmpGanhos internamente
+  renderEmpAgenda();renderEmpClients();renderEmpReferrals();
+  const empObj=db.employees.find(e=>e.id===empId);
+  if(empObj)$('emp-header-sub').textContent=empObj.name;
+}
+
+function empNavigate(tab){
+  document.querySelectorAll('.emp-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.emp-tab-btn[data-etab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('#emp-app-page .tab-content').forEach(t=>t.classList.remove('active'));
+  $('tab-'+tab).classList.add('active');
+  const renders={'emp-ganhos':renderEmpGanhos,'emp-agenda':renderEmpAgenda,'emp-clientes':renderEmpClients,'emp-indique':renderEmpReferrals};
+  if(renders[tab])renders[tab]();
+}
+
+function setEmpPeriod(period,btn){
+  const now=new Date();
+  if(btn){document.querySelectorAll('#tab-emp-ganhos .btn').forEach(b=>{b.className=b.className.replace('btn-primary','btn-outline')});btn.className=btn.className.replace('btn-outline','btn-primary')}
+  if(period==='semana'){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());const we=new Date(ws);we.setDate(ws.getDate()+6);empPeriodDates={start:ws.toISOString().split('T')[0],end:we.toISOString().split('T')[0]};}
+  else if(period==='mes'){empPeriodDates={start:new Date(now.getFullYear(),now.getMonth(),1).toISOString().split('T')[0],end:new Date(now.getFullYear(),now.getMonth()+1,0).toISOString().split('T')[0]};}
+  else{empPeriodDates={start:new Date(now.getFullYear(),0,1).toISOString().split('T')[0],end:new Date(now.getFullYear(),11,31).toISOString().split('T')[0]};}
+  renderEmpGanhos();
+}
+
+function renderEmpGanhos(){
+  const{start,end}=empPeriodDates,empId=currentEmpId;
+  const myLogs=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado'&&(l.work_log_employees||[]).some(we=>we.employee_id===empId));
+  const myEarnings=myLogs.reduce((s,l)=>s+((l.work_log_employees||[]).find(we=>we.employee_id===empId)?.payment_amount||0),0);
+  const myBonuses=db.referrals.filter(r=>r.employee_id===empId&&r.status==='approved').reduce((s,r)=>s+r.bonus_amount,0);
+  $('emp-stats').innerHTML=`<div class="stat-card" style="border-left:4px solid var(--primary)"><div class="stat-label">💵 Meus Ganhos</div><div class="stat-value" style="color:var(--primary)">${fmt(myEarnings)}</div></div><div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">🎁 Bônus de Indicações</div><div class="stat-value" style="color:var(--secondary)">${fmt(myBonuses)}</div></div><div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">📅 Trabalhos</div><div class="stat-value" style="color:var(--warning)">${myLogs.length}</div></div>`;
+  $('emp-work-list').innerHTML=myLogs.length===0?'<div class="empty"><div class="icon">💵</div>Nenhum trabalho no período</div>':myLogs.sort((a,b)=>b.work_date.localeCompare(a.work_date)).map(l=>{const cl=getClient(l.client_id),we=(l.work_log_employees||[]).find(we=>we.employee_id===empId);return`<div class="log-row"><div class="log-info"><div class="log-date">${fmtDate(l.work_date)}</div><div class="log-client">${cl?.name||'?'}</div><div class="log-employees">${cl?.frequency||''}</div></div><div class="log-revenue">${fmt(we?.payment_amount||0)}</div></div>`}).join('');
+}
+
+function renderEmpAgenda(){
+  const base=getWeekStart(new Date());base.setDate(base.getDate()+empWeekOffset*7);
+  const days=[];for(let i=0;i<7;i++){const d=new Date(base);d.setDate(base.getDate()+i);days.push(d)}
+  const startStr=days[0].toISOString().split('T')[0],endStr=days[6].toISOString().split('T')[0],todayStr=new Date().toISOString().split('T')[0],dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  $('emp-week-label').textContent=`${days[0].toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} – ${days[6].toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}`;
+  const myEntries=db.scheduleEntries.filter(e=>(e.employee_ids||[]).includes(currentEmpId)&&e.work_date>=startStr&&e.work_date<=endStr);
+  $('emp-week-grid').innerHTML=days.map((d,i)=>{const ds=d.toISOString().split('T')[0];const de=myEntries.filter(e=>e.work_date===ds);return`<div class="day-col ${ds===todayStr?'today':''}"><div class="day-label">${dn[i]}</div><div class="day-num">${d.getDate()}</div>${de.map(e=>{const cl=getClient(e.client_id);return`<div class="schedule-item ${e.status}"><div style="font-weight:600">${cl?.name||'?'}</div><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}" style="font-size:10px">${e.status}</span></div>`}).join('')}</div>`}).join('');
+  $('emp-schedule-list').innerHTML=myEntries.length===0?'<div class="empty"><div class="icon">📅</div>Nenhum agendamento esta semana para você</div>':myEntries.sort((a,b)=>a.work_date.localeCompare(b.work_date)).map(e=>{const cl=getClient(e.client_id);return`<div class="log-row"><div class="log-info"><div class="log-date">${fmtDate(e.work_date)}</div><div class="log-client">${cl?.name||'?'}</div>${e.notes?`<div style="font-size:12px;color:var(--text-muted);font-style:italic">"${e.notes}"</div>`:''}</div><span class="badge ${e.status==='confirmado'?'badge-secondary':e.status==='cancelado'?'badge-destructive':'badge-warning'}">${e.status}</span></div>`}).join('');
+}
+
+function renderEmpClients(){
+  const empId=currentEmpId,myClients=db.clients.filter(c=>(c.client_employees||[]).some(ce=>ce.employee_id===empId));
+  $('emp-clients-list').innerHTML=myClients.length===0?'<div class="empty"><div class="icon">👥</div>Nenhum cliente designado</div>':myClients.map(c=>{const ce=(c.client_employees||[]).find(ce=>ce.employee_id===empId);return`<div class="log-row" style="margin-bottom:8px"><div class="log-info"><div class="log-client">${c.name}</div><div class="log-employees">${c.frequency}</div></div><div style="text-align:right"><div style="font-size:12px;color:var(--text-muted)">Meu pagamento</div><div style="font-weight:700;color:var(--primary)">${fmt(ce?.payment_amount||0)}</div></div></div>`}).join('');
+  const myNotes=db.notifications.filter(n=>n.employee_id===empId);
+  $('emp-notes-list').innerHTML=myNotes.length===0?'<p style="color:var(--text-muted);font-size:13px;padding:8px 0">Nenhuma observação enviada ainda</p>':myNotes.map(n=>{const cl=getClient(n.client_id);return`<div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px"><strong>${cl?.name||'?'}</strong><span class="badge ${n.status==='pending'?'badge-warning':'badge-secondary'}">${n.status==='pending'?'Pendente':'Lida'}</span></div><div style="font-size:13px;color:var(--text-muted)">"${n.note}"</div></div>`}).join('');
+}
+
+function renderEmpReferrals(){
+  const empId=currentEmpId,myRefs=db.referrals.filter(r=>r.employee_id===empId);
+  const ap=myRefs.filter(r=>r.status==='approved'),tb=ap.reduce((s,r)=>s+r.bonus_amount,0);
+  $('emp-referrals-stats').innerHTML=`<div class="stat-card" style="border-left:4px solid var(--warning)"><div class="stat-label">⏳ Pendentes</div><div class="stat-value">${myRefs.filter(r=>r.status==='pending').length}</div></div><div class="stat-card" style="border-left:4px solid var(--secondary)"><div class="stat-label">✅ Aprovadas</div><div class="stat-value" style="color:var(--secondary)">${ap.length}</div></div><div class="stat-card" style="border-left:4px solid var(--primary)"><div class="stat-label">🎁 Total Bônus</div><div class="stat-value" style="color:var(--primary)">${fmt(tb)}</div></div>`;
+  $('emp-referrals-list').innerHTML=myRefs.length===0?'<div class="empty"><div class="icon">🎁</div>Nenhuma indicação ainda</div>':myRefs.map(r=>`<div class="referral-item ${r.status}" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-weight:700">${r.client_name}</div><div style="font-size:12px;color:var(--text-muted)">📞 ${r.phone} | 📍 ${r.address}</div></div><span class="badge ${r.status==='pending'?'badge-warning':r.status==='approved'?'badge-secondary':'badge-destructive'}">${r.status==='pending'?'Pendente':r.status==='approved'?'Aprovado':'Rejeitado'}</span></div>${r.bonus_amount>0?`<div style="margin-top:8px;font-weight:700;color:var(--secondary)">🎁 Bônus: ${fmt(r.bonus_amount)}</div>`:''}</div>`).join('');
+}
+
+// ════════════ EVENT LISTENERS ════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  // Restaurar sessão ativa
+  sb.auth.getSession().then(function(res){
     var session = res.data.session;
-    if (!session) return;
+    if(!session) return;
     var user = session.user;
     sb.from('profiles').select('role, display_name').eq('id', user.id).single()
-      .then(function(r) {
+      .then(function(r){
         var profile = r.data;
-        if (!profile) return;
+        if(!profile) return;
         currentUser = { role: profile.role, email: user.email, username: profile.display_name, employeeId: user.id };
         $('login-page').classList.add('hidden');
-        if (profile.role === 'adm') {
+        if(profile.role==='adm'){
           $('app-page').classList.remove('hidden');
-          if($('header-username')) $('header-username').textContent = profile.display_name;
-          if($('header-email'))    $('header-email').textContent    = user.email;
-          if($('profile-name'))    $('profile-name').textContent    = profile.display_name;
-          if($('profile-avatar'))  $('profile-avatar').textContent  = profile.display_name.charAt(0).toUpperCase();
+          $('header-username').textContent = profile.display_name;
+          $('header-email').textContent    = user.email;
+          $('profile-name').textContent    = profile.display_name;
+          $('profile-avatar').textContent  = profile.display_name.charAt(0).toUpperCase();
           initApp();
         } else {
           $('emp-app-page').classList.remove('hidden');
-          if($('emp-header-username')) $('emp-header-username').textContent = profile.display_name;
-          if($('emp-header-email'))    $('emp-header-email').textContent    = user.email;
+          $('emp-header-username').textContent = profile.display_name;
+          $('emp-header-email').textContent    = user.email;
           initEmpApp(user.id);
         }
       });
   });
 
-  const loginBtn = $('btn-login');
-  if(loginBtn) loginBtn.onclick = doLogin;
-  
-  const logoutBtn = $('btn-logout');
-  if(logoutBtn) logoutBtn.onclick = doLogout;
-  const logoutAdmBtn = $('btn-logout-adm');
-  if(logoutAdmBtn) logoutAdmBtn.onclick = doLogout;
-  
-  const logoutEmpBtn = $('btn-logout-emp');
-  if(logoutEmpBtn) logoutEmpBtn.onclick = doLogout;
+  // Login
+  $('btn-login').addEventListener('click',doLogin);
+  $('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+  $('btn-to-forgot').addEventListener('click',()=>toggleView('forgot-form'));
+  $('btn-to-register').addEventListener('click',()=>toggleView('register-form'));
+  $('btn-reg-back').addEventListener('click',()=>toggleView('login-form'));
+  $('btn-forgot-back').addEventListener('click',()=>toggleView('login-form'));
+  $('btn-send-otp').addEventListener('click',()=>toast('Código enviado!','success'));
+  $('btn-send-forgot').addEventListener('click',()=>toast('Código enviado!','success'));
+  $('btn-logout-adm').addEventListener('click',doLogout);
+  $('btn-logout-emp').addEventListener('click',doLogout);
 
-  // Sidebar navigation
-  document.querySelectorAll('#sidebar .nav-item').forEach(item => {
-    item.onclick = () => navigate(item.dataset.tab);
+  // Sidebar
+  $('menu-toggle').addEventListener('click',()=>{$('sidebar').classList.toggle('open');$('sidebar-overlay').classList.toggle('open')});
+  $('sidebar-overlay').addEventListener('click',()=>{$('sidebar').classList.remove('open');$('sidebar-overlay').classList.remove('open')});
+
+  // ADM nav
+  document.querySelectorAll('#sidebar .nav-item').forEach(btn=>{
+    btn.addEventListener('click',()=>{navigate(btn.dataset.tab);$('sidebar').classList.remove('open');$('sidebar-overlay').classList.remove('open')});
+  });
+
+  // Banner
+  $('btn-banner-ver').addEventListener('click',()=>navigate('notifications'));
+
+  // Dashboard filters
+  $('dash-month').addEventListener('change',()=>{const[y,m]=$('dash-month').value.split('-');$('dash-start').value=new Date(+y,+m-1,1).toISOString().split('T')[0];$('dash-end').value=new Date(+y,+m,0).toISOString().split('T')[0];renderDashboard()});
+  $('dash-start').addEventListener('change',renderDashboard);
+  $('dash-end').addEventListener('change',renderDashboard);
+
+  // Schedule
+  $('prev-week').addEventListener('click',()=>{weekOffset--;renderSchedule()});
+  $('next-week').addEventListener('click',()=>{weekOffset++;renderSchedule()});
+  $('btn-add-schedule').addEventListener('click',()=>openModal('schedule-modal'));
+  $('btn-save-schedule').addEventListener('click',()=>{
+    const date=$('sch-date').value,clientId=$('sch-client').value,empId=$('sch-emp').value,status=$('sch-status').value,notes=$('sch-notes').value;
+    if(!date||!clientId){toast('Preencha data e cliente','error');return;}
+    db.scheduleEntries.push({id:uid(),work_date:date,client_id:clientId,employee_ids:empId?[empId]:[],status,notes});
+    closeModal('schedule-modal');toast('Agendamento criado!','success');renderSchedule();
+  });
+  $('btn-cancel-schedule').addEventListener('click',()=>closeModal('schedule-modal'));
+
+  // Checklist
+  $('btn-add-worklog').addEventListener('click',openAddWorkLog);
+  $('btn-save-worklog').addEventListener('click',saveWorkLog);
+  $('btn-cancel-worklog').addEventListener('click',()=>closeModal('checklist-modal'));
+  $('btn-add-emp-row').addEventListener('click',addEmpRow);
+  $('cl-status').addEventListener('change',function(){$('cl-reason-group').classList.toggle('hidden',this.value!=='Cancelado')});
+  $('cl-month').addEventListener('change',()=>{const[y,m]=$('cl-month').value.split('-');$('cl-start').value=new Date(+y,+m-1,1).toISOString().split('T')[0];$('cl-end').value=new Date(+y,+m,0).toISOString().split('T')[0];renderChecklist()});
+  $('cl-start').addEventListener('change',renderChecklist);
+  $('cl-end').addEventListener('change',renderChecklist);
+
+  // Clients
+  $('btn-add-client').addEventListener('click',openAddClient);
+  $('btn-save-client').addEventListener('click',saveClient);
+  $('btn-cancel-client').addEventListener('click',()=>closeModal('client-modal'));
+  $('btn-add-client-emp').addEventListener('click',()=>addClientEmpRow());
+
+  // Employees
+  $('btn-add-emp').addEventListener('click',()=>openModal('emp-modal'));
+  $('btn-save-emp').addEventListener('click',saveEmployee);
+  $('btn-cancel-emp').addEventListener('click',()=>closeModal('emp-modal'));
+  $('btn-save-edit-emp').addEventListener('click',saveEditEmployee);
+  $('btn-cancel-edit-emp').addEventListener('click',()=>closeModal('edit-emp-modal'));
+  $('emp-tab-active').addEventListener('click',()=>{$('emp-tab-active').classList.add('active');$('emp-tab-pending').classList.remove('active');$('active-emps').classList.remove('hidden');$('pending-users').classList.add('hidden')});
+  $('emp-tab-pending').addEventListener('click',()=>{$('emp-tab-pending').classList.add('active');$('emp-tab-active').classList.remove('active');$('pending-users').classList.remove('hidden');$('active-emps').classList.add('hidden')});
+  $('btn-approve-user').addEventListener('click',approveUser);
+  $('btn-cancel-approve').addEventListener('click',()=>closeModal('approve-modal'));
+
+  // Costs
+  $('btn-add-cost').addEventListener('click',()=>openModal('cost-modal'));
+  $('btn-save-cost').addEventListener('click',saveCost);
+  $('btn-cancel-cost').addEventListener('click',()=>closeModal('cost-modal'));
+  $('filter-all').addEventListener('click',()=>{costsFilter='all';renderCosts()});
+  $('filter-recorrente').addEventListener('click',()=>{costsFilter='recorrente';renderCosts()});
+  $('filter-unico').addEventListener('click',()=>{costsFilter='unico';renderCosts()});
+
+  // Frequencies
+  $('btn-add-freq').addEventListener('click',()=>{$('freq-modal-title').textContent='📆 Adicionar Frequência';$('freq-edit-id').value='';$('freq-name').value='';openModal('freq-modal')});
+  $('btn-save-freq').addEventListener('click',saveFreq);
+  $('btn-cancel-freq').addEventListener('click',()=>closeModal('freq-modal'));
+
+  // Referrals
+  $('btn-approve-ref').addEventListener('click',()=>{
+    const id=$('ref-edit-id').value,bonus=parseFloat($('ref-bonus').value)||0;
+    if(bonus<=0){toast('Informe um valor de bônus válido','error');return;}
+    const r=db.referrals.find(r=>r.id===id);if(r){r.status='approved';r.bonus_amount=bonus;}
+    closeModal('ref-modal');toast('Indicação aprovada!','success');renderReferrals();
+  });
+  $('btn-cancel-ref').addEventListener('click',()=>closeModal('ref-modal'));
+
+  // Profile
+  $('btn-save-profile').addEventListener('click',()=>toast('Perfil atualizado!','success'));
+
+  // Employee app
+  document.querySelectorAll('.emp-tab-btn').forEach(btn=>btn.addEventListener('click',()=>empNavigate(btn.dataset.etab)));
+  document.querySelectorAll('[data-period]').forEach(btn=>btn.addEventListener('click',()=>setEmpPeriod(btn.dataset.period,btn)));
+  $('emp-prev-week').addEventListener('click',()=>{empWeekOffset--;renderEmpAgenda()});
+  $('emp-next-week').addEventListener('click',()=>{empWeekOffset++;renderEmpAgenda()});
+  $('btn-emp-note').addEventListener('click',()=>openModal('emp-note-modal'));
+  $('btn-save-note').addEventListener('click',()=>{
+    const clientId=$('note-client-sel').value,note=$('note-text').value.trim();
+    if(!note){toast('Escreva sua observação','error');return;}
+    db.notifications.push({id:uid(),client_id:clientId,employee_id:currentEmpId,note,status:'pending',created_at:new Date().toISOString()});
+    $('note-text').value='';closeModal('emp-note-modal');toast('Observação enviada!','success');renderEmpClients();
+  });
+  $('btn-cancel-note').addEventListener('click',()=>closeModal('emp-note-modal'));
+  $('btn-emp-ref').addEventListener('click',()=>openModal('emp-ref-modal'));
+  $('btn-save-emp-ref').addEventListener('click',()=>{
+    const name=$('eref-name').value.trim(),phone=$('eref-phone').value.trim(),address=$('eref-address').value.trim(),zip=$('eref-zip').value.trim();
+    if(!name||!phone||!address||!zip){toast('Preencha todos os campos','error');return;}
+    db.referrals.push({id:uid(),employee_id:currentEmpId,client_name:name,phone,address,zip_code:zip,status:'pending',bonus_amount:0,created_at:new Date().toISOString().split('T')[0]});
+    $('eref-name').value='';$('eref-phone').value='';$('eref-address').value='';$('eref-zip').value='';
+    closeModal('emp-ref-modal');toast('Indicação enviada!','success');renderEmpReferrals();
+  });
+  $('btn-cancel-emp-ref').addEventListener('click',()=>closeModal('emp-ref-modal'));
+  $('btn-save-emp-profile').addEventListener('click',()=>toast('Senha atualizada!','success'));
+
+  // Delegated clicks (dynamic content)
+  document.addEventListener('click',e=>{
+    // Schedule delete
+    const ds=e.target.dataset.delSchedule;
+    if(ds){if(!confirm('Remover agendamento?'))return;db.scheduleEntries=db.scheduleEntries.filter(s=>s.id!==ds);toast('Agendamento removido','success');renderSchedule();return;}
+    // Work log edit/delete
+    const el=e.target.dataset.editLog;if(el){editWorkLog(el);return;}
+    const dl=e.target.dataset.delLog;if(dl){if(!confirm('Remover registro?'))return;db.workLogs=db.workLogs.filter(l=>l.id!==dl);toast('Registro removido','success');renderChecklist();renderDashboard();return;}
+    // Client edit/delete
+    // Employee edit
+    const editEmpId=e.target.dataset.editEmp;if(editEmpId){openEditEmpModal(editEmpId);return;}
+    const ec=e.target.dataset.editClient;if(ec){editClient(ec);return;}
+    const dc=e.target.dataset.delClient;if(dc){if(!confirm('Remover cliente?'))return;db.clients=db.clients.filter(c=>c.id!==dc);toast('Cliente removido','success');renderClients();return;}
+    // Employee delete
+    const de=e.target.dataset.delEmp;if(de){
+      const empToRemove=db.employees.find(em=>em.id===de);
+      if(!confirm(`Remover "${empToRemove?.name||'funcionário'}"? O acesso ao sistema será revogado.`))return;
+      // Remove do USERS também
+      if(empToRemove){
+        const uk=Object.keys(USERS).find(k=>USERS[k].email===empToRemove.email);
+        if(uk)delete USERS[uk];
+      }
+      db.employees=db.employees.filter(em=>em.id!==de);
+      toast('Funcionário removido','success');renderEmployees();return;
+    }
+    // Pending user approve/reject
+    const au=e.target.dataset.approveUser;if(au){$('approve-user-id').value=au;$('approve-name').value=(e.target.dataset.approveEmail||'').split('@')[0];openModal('approve-modal');return;}
+    const ru=e.target.dataset.rejectUser;if(ru){if(!confirm('Rejeitar usuário?'))return;db.pendingUsers=db.pendingUsers.filter(p=>p.id!==ru);toast('Usuário rejeitado','success');renderEmployees();return;}
+    // Cost delete
+    const dco=e.target.dataset.delCost;if(dco){if(!confirm('Remover custo?'))return;db.costs=db.costs.filter(c=>c.id!==dco);toast('Custo removido','success');renderCosts();return;}
+    // Notifications
+    const nr=e.target.dataset.notifRead;if(nr){const n=db.notifications.find(n=>n.id===nr);if(n)n.status='read';toast('Notificação marcada como lida','success');updateNotifBadge();renderNotifications();return;}
+    const nd=e.target.dataset.notifDel;if(nd){if(!confirm('Excluir notificação?'))return;db.notifications=db.notifications.filter(n=>n.id!==nd);toast('Notificação excluída','success');updateNotifBadge();renderNotifications();return;}
+    // Frequencies
+    const ef=e.target.dataset.editFreq;if(ef){const f=db.frequencies.find(f=>f.id===ef);if(f){$('freq-modal-title').textContent='✏ Editar Frequência';$('freq-edit-id').value=ef;$('freq-name').value=f.name;openModal('freq-modal');}return;}
+    const df=e.target.dataset.delFreq;if(df){if(!confirm('Remover frequência?'))return;db.frequencies=db.frequencies.filter(f=>f.id!==df);toast('Frequência removida','success');renderFrequencies();return;}
+    // Referrals
+    const ar=e.target.dataset.approveRef;if(ar){$('ref-edit-id').value=ar;$('ref-bonus').value='';openModal('ref-modal');return;}
+    const rr=e.target.dataset.rejectRef;if(rr){if(!confirm('Rejeitar indicação?'))return;const r=db.referrals.find(r=>r.id===rr);if(r)r.status='rejected';toast('Indicação rejeitada','success');renderReferrals();return;}
+    const pr=e.target.dataset.pendingRef;if(pr){const r=db.referrals.find(r=>r.id===pr);if(r){r.status='pending';r.bonus_amount=0;}toast('Voltou para Pendente','success');renderReferrals();return;}
+    const dr=e.target.dataset.delRef;if(dr){if(!confirm('Apagar indicação?'))return;db.referrals=db.referrals.filter(r=>r.id!==dr);toast('Indicação apagada','success');renderReferrals();return;}
   });
 });
 
-// NOTA: Esta é uma versão simplificada para mostrar a estrutura.
-// Para um sistema completo, cada função (saveClient, saveEmployee, etc) 
-// deve ser convertida para usar sb.from('tabela').insert/update().
+// ════════════ SHOW/HIDE PASSWORD (login) ════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  const toggleBtn=$('toggle-pass'),passInp=$('login-pass'),eyeIco=$('eye-icon');
+  if(toggleBtn){
+    toggleBtn.addEventListener('click',()=>{
+      if(passInp.type==='password'){
+        passInp.type='text';
+        eyeIco.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        toggleBtn.setAttribute('aria-label','Ocultar senha');
+      } else {
+        passInp.type='password';
+        eyeIco.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        toggleBtn.setAttribute('aria-label','Mostrar senha');
+      }
+    });
+  }
+  document.getElementById('btn-export-csv')?.addEventListener('click',exportRankingCSV);
+  document.getElementById('btn-print-dash')?.addEventListener('click',()=>window.print());
+});
+
+// ════════════ TOGGLE SENHA EM QUALQUER CAMPO ════════════
+function toggleFieldPass(fieldId, btn){
+  const inp=document.getElementById(fieldId);
+  if(!inp)return;
+  const isPass=inp.type==='password';
+  inp.type=isPass?'text':'password';
+  btn.setAttribute('aria-label',isPass?'Ocultar senha':'Mostrar senha');
+  // Troca ícone
+  const svgPath=isPass
+    ?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  btn.querySelector('svg').innerHTML=svgPath;
+}
+
+// ════════════ ABRIR MODAL DE EDIÇÃO DE FUNCIONÁRIO ════════════
+function openEditEmpModal(empId){
+  const emp=db.employees.find(e=>e.id===empId);
+  if(!emp)return;
+  const u=Object.values(USERS).find(u=>u.email===emp.email);
+  $('edit-emp-id').value=emp.id;
+  $('edit-emp-name').value=emp.name;
+  $('edit-emp-email').value=emp.email;
+  $('edit-emp-pass').value=''; // sempre em branco por segurança
+  $('edit-emp-role').value=u?u.role:'colaborador';
+  openModal('edit-emp-modal');
+}
+
+// ════════════ SALVAR EDIÇÃO DE FUNCIONÁRIO ════════════
+function saveEditEmployee(){
+  const empId=$('edit-emp-id').value;
+  const name=$('edit-emp-name').value.trim();
+  const newEmail=$('edit-emp-email').value.trim().toLowerCase();
+  const newPass=$('edit-emp-pass').value;
+  const newRole=$('edit-emp-role').value;
+
+  if(!name||!newEmail){toast('Nome e email são obrigatórios','error');return;}
+  if(newPass&&newPass.length<6){toast('Nova senha precisa ter pelo menos 6 caracteres','error');return;}
+
+  const emp=db.employees.find(e=>e.id===empId);
+  if(!emp)return;
+
+  // Verifica se o novo email já está em uso por outro usuário
+  const emailConflict=Object.values(USERS).find(u=>u.email===newEmail&&u.email!==emp.email);
+  if(emailConflict){toast('Este email já está em uso por outro usuário','error');return;}
+
+  const oldEmail=emp.email;
+
+  // Atualiza db.employees
+  emp.name=name;
+  emp.email=newEmail;
+
+  // Atualiza USERS — remove entrada antiga e cria nova
+  const oldKey=Object.keys(USERS).find(k=>USERS[k].email===oldEmail);
+  const existingPass=oldKey?USERS[oldKey].password:'123456';
+
+  if(oldKey)delete USERS[oldKey];
+
+  USERS[newEmail]={
+    role:newRole,
+    email:newEmail,
+    username:name,
+    password:newPass||existingPass, // mantém senha se campo vazio
+    employeeId:empId
+  };
+
+  closeModal('edit-emp-modal');
+  toast(`Dados de "${name}" atualizados com sucesso!`,'success');
+  renderEmployees();
+  populateSelects();
+}
+
+// ════════════ CHARTS ════════════
+let _chartRC=null,_chartP=null;
+function renderCharts(confirmed){
+  const cm={};
+  confirmed.forEach(l=>{
+    const c=getClient(l.client_id);if(!c)return;
+    if(!cm[c.name])cm[c.name]={rev:0,pay:0};
+    cm[c.name].rev+=l.revenue;
+    cm[c.name].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);
+  });
+  const labels=Object.keys(cm);
+  const ctx1=document.getElementById('chart-revenue-cost');
+  if(ctx1){
+    if(_chartRC)_chartRC.destroy();
+    _chartRC=new Chart(ctx1,{type:'bar',
+      data:{labels,datasets:[
+        {label:'Receita',data:labels.map(k=>cm[k].rev),backgroundColor:'rgba(37,99,235,0.82)',borderRadius:5},
+        {label:'Custo M.O.',data:labels.map(k=>cm[k].pay),backgroundColor:'rgba(239,68,68,0.78)',borderRadius:5}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top'}},
+        scales:{y:{beginAtZero:true,ticks:{callback:v=>'R$'+v}}}}
+    });
+  }
+  const sorted=[...confirmed].sort((a,b)=>a.work_date.localeCompare(b.work_date));
+  const bd={};
+  sorted.forEach(l=>{const pay=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);bd[l.work_date]=(bd[l.work_date]||0)+(l.revenue-pay);});
+  const ctx2=document.getElementById('chart-profit');
+  if(ctx2){
+    if(_chartP)_chartP.destroy();
+    _chartP=new Chart(ctx2,{type:'line',
+      data:{labels:Object.keys(bd).map(d=>fmtDate(d)),
+        datasets:[{label:'Lucro',data:Object.values(bd),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.12)',fill:true,tension:0.4,pointRadius:5,pointHoverRadius:7}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top'}},
+        scales:{y:{beginAtZero:true,ticks:{callback:v=>'R$'+v}}}}
+    });
+  }
+}
+
+// ════════════ EXPORT CSV ════════════
+function exportRankingCSV(){
+  const start=$('dash-start').value,end=$('dash-end').value;
+  const confirmed=db.workLogs.filter(l=>l.work_date>=start&&l.work_date<=end&&l.status==='Confirmado');
+  const cm={};
+  confirmed.forEach(l=>{
+    const c=getClient(l.client_id);if(!c)return;
+    if(!cm[c.id])cm[c.id]={name:c.name,freq:c.frequency,rev:0,pay:0};
+    cm[c.id].rev+=l.revenue;
+    cm[c.id].pay+=(l.work_log_employees||[]).reduce((s,e)=>s+e.payment_amount,0);
+  });
+  const rows=[['#','Cliente','Frequência','Receita','Custo M.O.','Lucro']];
+  Object.values(cm).sort((a,b)=>(b.rev-b.pay)-(a.rev-a.pay)).forEach((c,i)=>{
+    rows.push([i+1,c.name,c.freq,c.rev.toFixed(2),c.pay.toFixed(2),(c.rev-c.pay).toFixed(2)]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`ranking-${start}-${end}.csv`;a.click();
+}
 </script>
-</body></html>
+</body>
+</html>
