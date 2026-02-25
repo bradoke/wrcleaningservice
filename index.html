@@ -747,8 +747,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 // CONFIGURAÇÃO SUPABASE
 const SUPABASE_URL = 'https://gdemuefknpfaajfrzvpu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvbHN0anp6eXRjZWx5b2Zsd3B3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMzY2MzksImV4cCI6MjA4NzYxMjYzOX0.roprEFZUN5r8Z5c-f_D06SHm0xSoSU0ecCjCiGDtqbU';
-const { createClient } = window.supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ESTADO GLOBAL (Substituindo db e USERS)
 let currentUser = null;
@@ -896,7 +895,7 @@ async async function initApp() {
 
 // EVENTOS DE CLICK (Delegation ou diretos)
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Restaura sessão existente ao carregar a página ──────────────────
+  // Restaura sessão ativa (usuário não precisa logar de novo ao recarregar)
   sb.auth.getSession().then(async ({ data: { session } }) => {
     if (!session) return;
     const user = session.user;
@@ -910,18 +909,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profile.role === 'adm') {
       $('app-page').classList.remove('hidden');
       if($('header-username')) $('header-username').textContent = profile.display_name;
-      if($('header-email')) $('header-email').textContent = user.email;
-      if($('profile-name')) $('profile-name').textContent = profile.display_name;
-      if($('profile-avatar')) $('profile-avatar').textContent = profile.display_name.charAt(0).toUpperCase();
+      if($('header-email'))    $('header-email').textContent    = user.email;
+      if($('profile-name'))    $('profile-name').textContent    = profile.display_name;
+      if($('profile-avatar'))  $('profile-avatar').textContent  = profile.display_name.charAt(0).toUpperCase();
       await initApp();
     } else {
       $('emp-app-page').classList.remove('hidden');
       if($('emp-header-username')) $('emp-header-username').textContent = profile.display_name;
-      if($('emp-header-email')) $('emp-header-email').textContent = user.email;
+      if($('emp-header-email'))    $('emp-header-email').textContent    = user.email;
       initEmpApp(user.id);
     }
   });
-  // ────────────────────────────────────────────────────────────────────
 
   const loginBtn = $('btn-login');
   if(loginBtn) loginBtn.onclick = doLogin;
@@ -942,6 +940,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // NOTA: Esta é uma versão simplificada para mostrar a estrutura.
 // Para um sistema completo, cada função (saveClient, saveEmployee, etc) 
-// deve ser convertida para usar /* sb.from('tabela') */.insert/update().
+// deve ser convertida para usar sb.from('tabela').insert/update().
 </script>
 </body></html>
