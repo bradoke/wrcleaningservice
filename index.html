@@ -611,12 +611,11 @@ textarea.form-control{resize:vertical;min-height:80px}
   <div class="modal modal-lg"><h2>📅 Novo Agendamento</h2>
     <div class="form-group"><label>Data</label><input type="date" class="form-control" id="sch-date"/></div>
     <div class="form-group"><label>Cliente</label><select class="form-control" id="sch-client"><option value="">Selecione...</option></select></div>
-    <div class="form-group">
-      <label>Funcionárias <span style="font-size:11px;color:var(--text-muted);font-weight:400">(selecione uma ou mais)</span></label>
-      <div id="sch-emp-list" style="border:1.5px solid var(--border);border-radius:8px;padding:8px;max-height:160px;overflow-y:auto;background:#fff;display:flex;flex-direction:column;gap:6px;">
-        <div style="color:var(--text-muted);font-size:13px">Carregando...</div>
-      </div>
-    </div>
+    <hr class="divider">
+    <div style="margin-bottom:10px;font-weight:600;font-size:14px">Funcionárias no Agendamento</div>
+    <div id="sch-emp-rows"></div>
+    <button class="btn btn-ghost btn-sm" id="btn-add-sch-emp-row">+ Adicionar Funcionária</button>
+    <hr class="divider">
     <div class="form-group"><label>Status</label><select class="form-control" id="sch-status"><option value="pendente">Pendente</option><option value="confirmado">Confirmado</option><option value="cancelado">Cancelado</option></select></div>
     <div class="form-group"><label>Observações</label><textarea class="form-control" id="sch-notes" placeholder="Opcional..."></textarea></div>
     <div style="display:flex;gap:8px"><button class="btn btn-primary" id="btn-save-schedule">Salvar</button><button class="btn btn-outline" id="btn-cancel-schedule">Cancelar</button></div>
@@ -851,8 +850,14 @@ function loadAllData(cb){
     sb.from('notifications').select('*').order('created_at',{ascending:false}),
     sb.from('referrals').select('*').order('created_at',{ascending:false}),
     sb.from('frequencies').select('*').order('name'),
+    sb.from('profiles').select('id,role,username,employee_id'),
   ]).then(function(r){
-    db.employees      =(r[0].data||[]).map(mapEmp);
+    var profilesList=(r[8].data||[]);
+    db.employees=(r[0].data||[]).map(function(row){
+      var prof=profilesList.find(function(p){return p.employee_id===row.id;})||null;
+      return {id:row.id,name:row.name,email:row.email,createdAt:row.created_at,
+        role:(prof?prof.role:null),authId:(prof?prof.id:null),hasLogin:!!(prof&&prof.id)};
+    });
     db.clients        =(r[1].data||[]).map(mapClient);
     db.workLogs       =(r[2].data||[]).map(mapWorkLog);
     db.costs          =(r[3].data||[]).map(mapCost);
@@ -888,7 +893,17 @@ function doLogin(){
 }
 function _loginSuccess(user){
   sb.from('profiles').select('role,username,employee_id').eq('id',user.id).single().then(function(r){
-    if(r.error||!r.data){hideLoading();toast('Perfil não encontrado. Contate o administrador.','error');return;}
+    if(r.error||!r.data){
+      hideLoading();
+      sb.from('employees').select('id,name').eq('email',user.email).single().then(function(er){
+        if(er.error||!er.data){toast('Acesso nao autorizado. Contate o administrador.','error');sb.auth.signOut();return;}
+        sb.from('profiles').insert({id:user.id,role:'colaborador',username:er.data.name||user.email,employee_id:er.data.id}).then(function(ins){
+          if(ins.error){toast('Erro ao configurar perfil: '+ins.error.message,'error');sb.auth.signOut();return;}
+          _startEmpApp(user,er.data.name||user.email,er.data.id);
+        });
+      });
+      return;
+    }
     var nome=r.data.username||user.email;
     currentUser={role:r.data.role,email:user.email,username:nome,userId:user.id,empRecordId:r.data.employee_id};
     var lp=$('login-page');if(lp)lp.classList.add('hidden');
@@ -958,17 +973,6 @@ function initApp(){
 function populateSelects(){
   var cOpts='<option value="">Selecione...</option>'+db.clients.map(function(c){return'<option value="'+c.id+'">'+c.name+'</option>';}).join('');
   ['sch-client','cl-client'].forEach(function(id){if($(id))$(id).innerHTML=cOpts;});
-  if($('sch-emp-list')){
-    if(db.employees.length===0){
-      $('sch-emp-list').innerHTML='<div style="color:var(--text-muted);font-size:13px">Nenhuma funcionaria cadastrada</div>';
-    }else{
-      $('sch-emp-list').innerHTML=db.employees.map(function(e){
-        return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:5px 6px;border-radius:6px">'
-          +'<input type="checkbox" class="sch-emp-check" value="'+e.id+'" style="width:16px;height:16px;cursor:pointer">'
-          +'<span style="font-size:13px;font-weight:500">'+e.name+'</span></label>';
-      }).join('');
-    }
-  }
   if($('client-freq'))$('client-freq').innerHTML='<option value="">Selecione...</option>'+
     db.frequencies.map(function(f){return'<option value="'+f.name+'">'+f.name+'</option>';}).join('');
   var today=new Date().toISOString().split('T')[0];
@@ -1072,8 +1076,7 @@ function saveSchedule(){
   var date=$('sch-date')?$('sch-date').value:'';
   var status=$('sch-status')?$('sch-status').value:'pendente';
   var notes=$('sch-notes')?$('sch-notes').value:'';
-  var checks=document.querySelectorAll('.sch-emp-check:checked');
-  var empIds=Array.prototype.slice.call(checks).map(function(cb){return cb.value;});
+  var empIds=[].slice.call(document.querySelectorAll('#sch-emp-rows .sch-row-emp')).map(function(s){return s.value;}).filter(function(v){return v;});
   if(!clientId||!date){toast('Preencha cliente e data','error');return;}
   sb.from('schedule_entries').insert({client_id:clientId,work_date:date,status:status,notes:notes}).select().single().then(function(res){
     if(res.error){toast('Erro: '+res.error.message,'error');return;}
@@ -1093,21 +1096,24 @@ function openEditScheduleModal(schedId){
   if($('sch-client'))$('sch-client').value=entry.clientId;
   if($('sch-status'))$('sch-status').value=entry.status;
   if($('sch-notes'))$('sch-notes').value=entry.notes||'';
-  // Marca checkboxes dos funcionarios ja vinculados
-  document.querySelectorAll('.sch-emp-check').forEach(function(cb){
-    cb.checked=entry.employeeIds.indexOf(cb.value)>=0;
-  });
+  // Preenche linhas de funcionarias
+  if($('sch-emp-rows')){
+    $('sch-emp-rows').innerHTML='';
+    if(entry.employeeIds.length===0){
+      addSchEmpRow('');
+    }else{
+      entry.employeeIds.forEach(function(eid){addSchEmpRow(eid);});
+    }
+  }
   var h2=document.querySelector('#schedule-modal h2');
-  if(h2)h2.textContent='Editar Agendamento';
-  // Troca o botao salvar para modo edicao
+  if(h2)h2.textContent='\uD83D\uDCC5 Editar Agendamento';
   var btn=$('btn-save-schedule');
   if(btn){
     btn.onclick=null;
     btn.onclick=function(){
       var newDate=$('sch-date').value,newClient=$('sch-client').value;
       var newStatus=$('sch-status').value,newNotes=$('sch-notes').value||'';
-      var checks=document.querySelectorAll('.sch-emp-check:checked');
-      var newEmpIds=Array.prototype.slice.call(checks).map(function(cb){return cb.value;});
+      var newEmpIds=[].slice.call(document.querySelectorAll('#sch-emp-rows .sch-row-emp')).map(function(s){return s.value;}).filter(function(v){return v;});
       if(!newClient||!newDate){toast('Preencha cliente e data','error');return;}
       sb.from('schedule_entries').update({client_id:newClient,work_date:newDate,status:newStatus,notes:newNotes}).eq('id',schedId).then(function(r){
         if(r.error){toast('Erro: '+r.error.message,'error');return;}
@@ -1117,7 +1123,6 @@ function openEditScheduleModal(schedId){
           p.then(function(){
             toast('Agendamento atualizado!','success');
             closeModal('schedule-modal');
-            // Restaura botao para modo novo
             var b=$('btn-save-schedule');
             if(b){b.onclick=null;b.addEventListener('click',saveSchedule);}
             loadAllData(function(){renderSchedule();});
@@ -1196,6 +1201,17 @@ function editWorkLog(id){
     });
   }
   openModal('checklist-modal');
+}
+function addSchEmpRow(selectedId){
+  var c=$('sch-emp-rows');if(!c)return;
+  var div=document.createElement('div');
+  div.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:center';
+  var opts=db.employees.map(function(e){
+    return'<option value="'+e.id+'"'+(selectedId===e.id?' selected':'')+'>'+e.name+'</option>';
+  }).join('');
+  div.innerHTML='<select class="form-control sch-row-emp" style="flex:1">'+opts+'</select>'
+    +'<button class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove()">&#x1F5D1;&#xFE0F;</button>';
+  c.appendChild(div);
 }
 function addEmpRow(){
   var c=$('cl-emp-rows');if(!c)return;
@@ -1295,31 +1311,94 @@ function saveClient(){
 // ── FUNCIONÁRIOS ──────────────────────────────────────────────────────────────
 function renderEmployees(){
   if(!$('emp-table-body'))return;
-  $('emp-table-body').innerHTML=db.employees.map(function(e){
-    return'<tr><td><strong>'+e.name+'</strong></td><td style="font-size:12px">'+e.email+'</td>'+
-      '<td><span class="role-badge-col">Colaborador</span></td><td>'+fmtDate(e.createdAt)+'</td>'+
-      '<td><div style="display:flex;gap:4px">'+
-      '<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">✏️</button>'+
-      '<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">🗑</button>'+
-      '</div></td></tr>';
-  }).join('');
-  if($('pending-list'))$('pending-list').innerHTML='<div class="empty"><div class="icon">👥</div>Gerencie usuários no painel do Supabase</div>';
+  if(db.employees.length===0){
+    $('emp-table-body').innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum funcionario cadastrado</td></tr>';
+  }else{
+    $('emp-table-body').innerHTML=db.employees.map(function(e){
+      var roleBadge=(e.role==='adm')
+        ?'<span class="role-badge-adm">Admin</span>'
+        :'<span class="role-badge-col">Colaborador</span>';
+      var loginBadge=e.hasLogin
+        ?'<span style="font-size:10px;background:#d1fae5;color:#065f46;padding:2px 7px;border-radius:99px;font-weight:600">Com login</span>'
+        :'<span style="font-size:10px;background:#fff7ed;color:#c2410c;padding:2px 7px;border-radius:99px;font-weight:600">Sem login</span>';
+      return '<tr>'
+        +'<td><strong>'+e.name+'</strong><br><div style="margin-top:3px">'+loginBadge+'</div></td>'
+        +'<td style="font-size:12px">'+e.email+'</td>'
+        +'<td>'+roleBadge+'</td>'
+        +'<td>'+fmtDate(e.createdAt)+'</td>'
+        +'<td><div style="display:flex;gap:4px">'
+        +'<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">&#x270F;&#xFE0F;</button>'
+        +'<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">&#x1F5D1;&#xFE0F;</button>'
+        +'</div></td></tr>';
+    }).join('');
+  }
+  var semLogin=db.employees.filter(function(e){return !e.hasLogin;});
+  if($('pending-list')){
+    if(semLogin.length===0){
+      $('pending-list').innerHTML='<div class="empty">Todos os funcionarios tem login ativo</div>';
+    }else{
+      $('pending-list').innerHTML=semLogin.map(function(e){
+        return '<div class="log-row"><div class="log-row-inner">'
+          +'<div><div class="log-client">'+e.name+'</div>'
+          +'<div class="log-employees">'+e.email+'</div></div>'
+          +'<button class="btn btn-primary btn-sm" onclick="promptCreateLoginFor(\''+e.id+'\',\''+e.name+'\',\''+e.email+'\')">Criar Login</button>'
+          +'</div></div>';
+      }).join('');
+    }
+  }
+  var tabPend=document.getElementById('emp-tab-pending');
+  if(tabPend){tabPend.textContent='Usuarios Pendentes'+(semLogin.length>0?' ('+semLogin.length+')':'');}
+}
+function promptCreateLoginFor(empId,empName,empEmail){
+  var pass=prompt('Criar login para '+empName+'. Defina uma senha (minimo 6 caracteres):');
+  if(pass===null)return;
+  if(!pass||pass.length<6){toast('Senha muito curta','error');return;}
+  sb.auth.getSession().then(function(res){
+    var session=res.data.session;
+    if(!session){toast('Sessao expirada','error');return;}
+    fetch(SUPA_URL+'/functions/v1/admin-create-user',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({name:empName,email:empEmail,password:pass,role:'colaborador',existing_employee_id:empId})
+    }).then(function(r){return r.json();})
+    .then(function(data){
+      if(data.error){toast('Erro: '+data.error,'error');return;}
+      toast('Login criado para '+empName+'!','success');
+      loadAllData(function(){renderEmployees();populateSelects();});
+    }).catch(function(err){toast('Erro: '+err.message,'error');});
+  });
 }
 function saveEmployee(){
   var name=$('emp-name').value.trim(),email=$('emp-email').value.trim().toLowerCase();
   var pass=$('emp-pass').value,role=$('emp-role').value;
   if(!name||!email){toast('Preencha nome e email','error');return;}
   if(!pass||pass.length<6){toast('Senha: mínimo 6 caracteres','error');return;}
-  sb.auth.signUp({email:email,password:pass}).then(function(res){
-    if(res.error){toast('Erro ao criar login: '+res.error.message,'error');return;}
-    var userId=res.data.user.id;
-    sb.from('employees').insert({name:name,email:email}).select().single().then(function(er){
-      if(er.error){toast('Erro: '+er.error.message,'error');return;}
-      sb.from('profiles').upsert({id:userId,role:role,username:name,employee_id:er.data.id}).then(function(){
-        toast('Funcionário '+name+' criado!','success');
-        closeModal('emp-modal');
-        loadAllData(function(){renderEmployees();populateSelects();});
-      });
+  var btn=$('btn-save-emp');
+  if(btn){btn.disabled=true;btn.textContent='Aguarde...';}
+  sb.auth.getSession().then(function(res){
+    var session=res.data.session;
+    if(!session){
+      toast('Sessao expirada. Faca login novamente.','error');
+      if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
+      return;
+    }
+    fetch(SUPA_URL+'/functions/v1/admin-create-user',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({name:name,email:email,password:pass,role:role})
+    }).then(function(r){return r.json();})
+    .then(function(data){
+      if(data.error){
+        toast('Erro: '+data.error,'error');
+        if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
+        return;
+      }
+      toast('Funcionario criado com sucesso!','success');
+      closeModal('emp-modal');
+      loadAllData(function(){renderEmployees();populateSelects();});
+    }).catch(function(err){
+      toast('Erro de conexao: '+err.message,'error');
+      if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
     });
   });
 }
@@ -1596,6 +1675,7 @@ function openEditEmpModal(empId){
   if($('edit-emp-name'))$('edit-emp-name').value=e.name;
   if($('edit-emp-email'))$('edit-emp-email').value=e.email;
   if($('edit-emp-pass'))$('edit-emp-pass').value='';
+  if($('edit-emp-role'))$('edit-emp-role').value=(e.role||'colaborador');
   openModal('edit-emp-modal');
 }
 function saveEditEmployee(){
@@ -1689,11 +1769,19 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-banner-ver'))$('btn-banner-ver').addEventListener('click',function(){navigate('notifications');});
 
   // Agenda
-  if($('btn-add-schedule'))$('btn-add-schedule').addEventListener('click',function(){openModal('schedule-modal');});
+  if($('btn-add-schedule'))$('btn-add-schedule').addEventListener('click',function(){
+    if($('sch-emp-rows'))$('sch-emp-rows').innerHTML='';
+    if($('sch-date')){var t=new Date().toISOString().split('T')[0];$('sch-date').value=t;}
+    if($('sch-client'))$('sch-client').value='';
+    if($('sch-status'))$('sch-status').value='pendente';
+    if($('sch-notes'))$('sch-notes').value='';
+    var h2=document.querySelector('#schedule-modal h2');
+    if(h2)h2.textContent='\uD83D\uDCC5 Novo Agendamento';
+    openModal('schedule-modal');
+  });
   if($('btn-save-schedule'))$('btn-save-schedule').addEventListener('click',saveSchedule);
   if($('btn-cancel-schedule'))$('btn-cancel-schedule').addEventListener('click',function(){
     closeModal('schedule-modal');
-    // Garante que o botao salvar volta ao modo novo
     var btn=$('btn-save-schedule');
     if(btn){btn.onclick=null;btn.addEventListener('click',saveSchedule);}
   });
@@ -1704,6 +1792,7 @@ document.addEventListener('DOMContentLoaded',function(){
   if($('btn-add-worklog'))$('btn-add-worklog').addEventListener('click',openAddWorkLog);
   if($('btn-save-worklog'))$('btn-save-worklog').addEventListener('click',saveWorkLog);
   if($('btn-cancel-worklog'))$('btn-cancel-worklog').addEventListener('click',function(){closeModal('checklist-modal');});
+  if($('btn-add-sch-emp-row'))$('btn-add-sch-emp-row').addEventListener('click',function(){addSchEmpRow('');});
   if($('btn-add-emp-row'))$('btn-add-emp-row').addEventListener('click',addEmpRow);
   if($('cl-start'))$('cl-start').addEventListener('change',renderChecklist);
   if($('cl-end'))$('cl-end').addEventListener('change',renderChecklist);
