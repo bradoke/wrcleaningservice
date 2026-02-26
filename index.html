@@ -848,11 +848,11 @@ function loadAllData(cb){
     sb.from('frequencies').select('*').order('name'),
     sb.from('profiles').select('id,role,username,employee_id'),
   ]).then(function(r){
-    var profilesList=r[8].data||[];
+    var profilesList=(r[8].data||[]);
     db.employees=(r[0].data||[]).map(function(row){
       var prof=profilesList.find(function(p){return p.employee_id===row.id;})||null;
-      return{id:row.id,name:row.name,email:row.email,createdAt:row.created_at,
-        role:prof?prof.role:null,authId:prof?prof.id:null,hasLogin:!!(prof&&prof.id)};
+      return {id:row.id,name:row.name,email:row.email,createdAt:row.created_at,
+        role:(prof?prof.role:null),authId:(prof?prof.id:null),hasLogin:!!(prof&&prof.id)};
     });
     db.clients        =(r[1].data||[]).map(mapClient);
     db.workLogs       =(r[2].data||[]).map(mapWorkLog);
@@ -892,9 +892,9 @@ function _loginSuccess(user){
     if(r.error||!r.data){
       hideLoading();
       sb.from('employees').select('id,name').eq('email',user.email).single().then(function(er){
-        if(er.error||!er.data){toast('Acesso nao autorizado.','error');sb.auth.signOut();return;}
+        if(er.error||!er.data){toast('Acesso nao autorizado. Contate o administrador.','error');sb.auth.signOut();return;}
         sb.from('profiles').insert({id:user.id,role:'colaborador',username:er.data.name||user.email,employee_id:er.data.id}).then(function(ins){
-          if(ins.error){toast('Erro perfil: '+ins.error.message,'error');sb.auth.signOut();return;}
+          if(ins.error){toast('Erro ao configurar perfil: '+ins.error.message,'error');sb.auth.signOut();return;}
           _startEmpApp(user,er.data.name||user.email,er.data.id);
         });
       });
@@ -1241,22 +1241,24 @@ function saveClient(){
 function renderEmployees(){
   if(!$('emp-table-body'))return;
   if(db.employees.length===0){
-    $('emp-table-body').innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px">Nenhum funcionario cadastrado</td></tr>';
+    $('emp-table-body').innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum funcionario cadastrado</td></tr>';
   }else{
     $('emp-table-body').innerHTML=db.employees.map(function(e){
-      var roleBadge=e.role==='adm'?'<span class="role-badge-adm">Admin</span>':'<span class="role-badge-col">Colaborador</span>';
+      var roleBadge=(e.role==='adm')
+        ?'<span class="role-badge-adm">Admin</span>'
+        :'<span class="role-badge-col">Colaborador</span>';
       var loginBadge=e.hasLogin
         ?'<span style="font-size:10px;background:#d1fae5;color:#065f46;padding:2px 7px;border-radius:99px;font-weight:600">Com login</span>'
         :'<span style="font-size:10px;background:#fff7ed;color:#c2410c;padding:2px 7px;border-radius:99px;font-weight:600">Sem login</span>';
-      return '<tr>'+
-        '<td><strong>'+e.name+'</strong><br><div style="margin-top:3px">'+loginBadge+'</div></td>'+
-        '<td style="font-size:12px">'+e.email+'</td>'+
-        '<td>'+roleBadge+'</td>'+
-        '<td>'+fmtDate(e.createdAt)+'</td>'+
-        '<td><div style="display:flex;gap:4px">'+
-        '<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">&#x270F;&#xFE0F;</button>'+
-        '<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">&#x1F5D1;&#xFE0F;</button>'+
-        '</div></td></tr>';
+      return '<tr>'
+        +'<td><strong>'+e.name+'</strong><br><div style="margin-top:3px">'+loginBadge+'</div></td>'
+        +'<td style="font-size:12px">'+e.email+'</td>'
+        +'<td>'+roleBadge+'</td>'
+        +'<td>'+fmtDate(e.createdAt)+'</td>'
+        +'<td><div style="display:flex;gap:4px">'
+        +'<button class="btn btn-ghost btn-icon btn-sm" data-edit-emp="'+e.id+'">&#x270F;&#xFE0F;</button>'
+        +'<button class="btn btn-danger btn-icon btn-sm" data-del-emp="'+e.id+'">&#x1F5D1;&#xFE0F;</button>'
+        +'</div></td></tr>';
     }).join('');
   }
   var semLogin=db.employees.filter(function(e){return !e.hasLogin;});
@@ -1265,10 +1267,11 @@ function renderEmployees(){
       $('pending-list').innerHTML='<div class="empty">Todos os funcionarios tem login ativo</div>';
     }else{
       $('pending-list').innerHTML=semLogin.map(function(e){
-        return '<div class="log-row"><div class="log-row-inner">'+
-          '<div><div class="log-client">'+e.name+'</div>'+
-          '<div class="log-employees">'+e.email+'</div></div>'+
-          '</div></div>';
+        return '<div class="log-row"><div class="log-row-inner">'
+          +'<div><div class="log-client">'+e.name+'</div>'
+          +'<div class="log-employees">'+e.email+'</div></div>'
+          +'<button class="btn btn-primary btn-sm" onclick="promptCreateLoginFor(\''+e.id+'\',\''+e.name+'\',\''+e.email+'\')" >Criar Login</button>'
+          +'</div></div>';
       }).join('');
     }
   }
@@ -1281,21 +1284,30 @@ function saveEmployee(){
   if(!name||!email){toast('Preencha nome e email','error');return;}
   if(!pass||pass.length<6){toast('Senha: mínimo 6 caracteres','error');return;}
   var btn=$('btn-save-emp');
-  if(btn){btn.disabled=true;btn.textContent='Criando...';}
+  if(btn){btn.disabled=true;btn.textContent='Aguarde...';}
   sb.auth.getSession().then(function(res){
     var session=res.data.session;
-    if(!session){toast('Sessao expirada','error');if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}return;}
+    if(!session){
+      toast('Sessao expirada. Faca login novamente.','error');
+      if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
+      return;
+    }
     fetch(SUPA_URL+'/functions/v1/admin-create-user',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({name:name,email:email,password:pass,role:role})
-    }).then(function(r){return r.json();}).then(function(data){
-      if(data.error){toast('Erro: '+data.error,'error');if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}return;}
-      toast('Funcionario criado!','success');
+    }).then(function(r){return r.json();})
+    .then(function(data){
+      if(data.error){
+        toast('Erro: '+data.error,'error');
+        if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
+        return;
+      }
+      toast('Funcionario criado com sucesso!','success');
       closeModal('emp-modal');
       loadAllData(function(){renderEmployees();populateSelects();});
     }).catch(function(err){
-      toast('Erro: '+err.message,'error');
+      toast('Erro de conexao: '+err.message,'error');
       if(btn){btn.disabled=false;btn.textContent='Criar Funcionario';}
     });
   });
@@ -1573,7 +1585,7 @@ function openEditEmpModal(empId){
   if($('edit-emp-name'))$('edit-emp-name').value=e.name;
   if($('edit-emp-email'))$('edit-emp-email').value=e.email;
   if($('edit-emp-pass'))$('edit-emp-pass').value='';
-  if($('edit-emp-role'))$('edit-emp-role').value=e.role||'colaborador';
+  if($('edit-emp-role'))$('edit-emp-role').value=(e.role||'colaborador');
   openModal('edit-emp-modal');
 }
 function saveEditEmployee(){
